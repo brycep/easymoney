@@ -6,10 +6,17 @@
 
 package net.switchcase.easymoney.client.view;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.*;
 import net.switchcase.easymoney.client.presenter.BudgetPresenter;
 import net.switchcase.easymoney.shared.Budget;
+
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * User: bryce
@@ -31,17 +38,18 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
     public BudgetView()  {
 
         budgetPanel = new VerticalPanel();
-        budgetNameLabel = new Label();
-        saveButton = new Button();
         initWidget(budgetPanel);
+        
+        budgetNameLabel = new Label();
+        saveButton = new Button("Save");
 
         HorizontalPanel titlePanel = new HorizontalPanel();
         titlePanel.add(budgetNameLabel);
         titlePanel.add(saveButton);
+        titlePanel.addStyleName("bottom-spacing");
         budgetPanel.add(titlePanel);
 
         TabPanel tabPanel = new TabPanel();
-        initWidget(tabPanel);
 
         budgetNameLabel = new Label();
         saveButton = new Button();
@@ -55,11 +63,16 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         tabPanel.add(incomeView, "Income");
         tabPanel.add(billsView, "Bills");
         tabPanel.add(expenseCategoriesView, "Expenses");
+        tabPanel.selectTab(0);
         budgetPanel.add(tabPanel);
     }
 
     public void setData(Budget budget) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        budgetNameLabel.setText(budget.getName());
+        summaryView.setData(budget);
+        incomeView.setData(budget);
+        billsView.setData(budget);
+        expenseCategoriesView.setData(budget);
     }
 
     public String getBudgetName() {
@@ -67,7 +80,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
     }
 
     public HasClickHandlers getSaveButton() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return saveButton;
     }
 
     public Widget getSummaryView() {
@@ -87,6 +100,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
     }
 
     public Widget asWidget() {
-        return budgetPanel;
-    }
+        return this;
+    }    
+    
 }

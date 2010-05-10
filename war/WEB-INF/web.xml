@@ -7,13 +7,13 @@
   
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
+    <servlet-name>budgetServlet</servlet-name>
     <servlet-class>net.switchcase.easymoney.server.EasyMoneyServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
     <servlet-name>budgetServlet</servlet-name>
-    <url-pattern>/easymoney/budget</url-pattern>
+    <url-pattern>/easymoney/EasyMoneyService</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

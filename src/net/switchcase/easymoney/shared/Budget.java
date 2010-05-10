@@ -15,15 +15,26 @@ import java.util.List;
  * Date: May 4, 2010
  * Time: 7:10:49 PM
  */
+@SuppressWarnings("serial")
 public class Budget implements Serializable {
+	
+	private String name;
     private List<Income> incomes;
     private List<Bill> monthlyBills;
-    private List<ExpenseCategory> category;
+    private List<ExpenseCategory> categories;
     private Money balance;
     private Money savings;
     private Money monthlySavings;
 
     public Budget() {}
+    
+    public String getName()  {
+    	return name;
+    }
+    
+    public void setName(String name)  {
+    	this.name = name;
+    }
 
     public List<Income> getIncomes() {
         return incomes;
@@ -41,12 +52,12 @@ public class Budget implements Serializable {
         this.monthlyBills = monthlyBills;
     }
 
-    public List<ExpenseCategory> getCategory() {
-        return category;
+    public List<ExpenseCategory> getCategories() {
+        return categories;
     }
 
-    public void setCategory(List<ExpenseCategory> category) {
-        this.category = category;
+    public void setCategories(List<ExpenseCategory> category) {
+        this.categories = category;
     }
 
     public Money getBalance() {

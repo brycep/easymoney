@@ -6,8 +6,15 @@
 
 package net.switchcase.easymoney.client.view;
 
+import java.util.Arrays;
+
+import net.switchcase.easymoney.client.common.ColumnDefinition;
+import net.switchcase.easymoney.client.common.DataTable;
+import net.switchcase.easymoney.shared.Budget;
+
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * User: bryce
@@ -15,4 +22,23 @@ import com.google.gwt.user.client.ui.HasWidgets;
  * Time: 3:42:39 PM
  */
 public class IncomeView extends Composite  {
+	
+	private VerticalPanel incomeViewPanel;
+	private FlexTable incomeListTable;
+	
+	public IncomeView()  {
+		incomeViewPanel = new VerticalPanel();
+		initWidget(incomeViewPanel);
+		
+		incomeListTable = new DataTable(Arrays.asList(
+				new ColumnDefinition("Name", ""),
+				new ColumnDefinition("Amount", ""),
+				new ColumnDefinition("Frequency", ""),
+				new ColumnDefinition("Next Pay Date", "")
+		), new IncomeModelAdapter());
+	}
+	
+	public void setData(Budget budget)  {
+		
+	}
 }

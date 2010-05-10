@@ -6,14 +6,15 @@
 
 package net.switchcase.easymoney.client;
 
+import net.switchcase.easymoney.client.presenter.BudgetPresenter;
+import net.switchcase.easymoney.client.presenter.Presenter;
+import net.switchcase.easymoney.client.view.BudgetView;
+
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HasWidgets;
-import net.switchcase.easymoney.client.presenter.BudgetPresenter;
-import net.switchcase.easymoney.client.presenter.Presenter;
-import net.switchcase.easymoney.client.view.BudgetView;
 
 /**
  * User: bryce

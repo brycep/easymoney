@@ -6,8 +6,10 @@
 
 package net.switchcase.easymoney.client.view;
 
+import net.switchcase.easymoney.shared.Budget;
+
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * User: bryce
@@ -15,4 +17,15 @@ import com.google.gwt.user.client.ui.HasWidgets;
  * Time: 3:43:05 PM
  */
 public class ExpenseCategoriesView extends Composite {
+	
+	private VerticalPanel expensePanel;
+	
+	public ExpenseCategoriesView()  {
+		expensePanel = new VerticalPanel();
+		initWidget(expensePanel);
+	}
+	
+	public void setData(Budget budget)  {
+		
+	}
 }

@@ -8,6 +8,8 @@ package net.switchcase.easymoney.shared;
 
 import java.util.Date;
 
+import net.switchcase.easymoney.client.common.ModelObject;
+
 /**  This is a source of income.  It specifies when
  * the user gets paid and how much.
  * 
@@ -15,8 +17,9 @@ import java.util.Date;
  * Date: May 4, 2010
  * Time: 7:17:11 PM
  */
-public class Income {
+public class Income implements ModelObject {
 
+	private long id;
     private String name;
     private Money amount;
     private Frequency frequency;
@@ -24,6 +27,14 @@ public class Income {
 
     public Income() {}
 
+    public long getId()  {
+    	return id;
+    }
+    
+    public void setId(long id)  {
+    	this.id = id;
+    }
+    
     public String getName() {
         return name;
     }

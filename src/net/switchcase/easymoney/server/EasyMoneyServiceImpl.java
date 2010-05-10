@@ -1,7 +1,8 @@
 package net.switchcase.easymoney.server;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import net.switchcase.easymoney.client.EasyMoneyService;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * User: bryce
