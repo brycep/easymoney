@@ -35,13 +35,16 @@ public class DataTable extends FlexTable {
 		this.rows = rows;
 	}
 	
-	public void setData(List<ModelObject> dataList)  {
+	@SuppressWarnings("unchecked")
+	public void setData(List dataList)  {
 		createHeaderRow();
 
 		int rowIndex = 1;
-		for(ModelObject object : dataList)  {
-			modelAdapter.renderRow(rowIndex, object, this);
-			rowIndex++;
+		for(Object object : dataList)  {
+			if (object instanceof ModelObject)  {
+				modelAdapter.renderRow(rowIndex, (ModelObject)object, this);
+				rowIndex++;
+			}
 		}
 	}
 	
@@ -49,6 +52,7 @@ public class DataTable extends FlexTable {
 		int columnIndex = 0;
 		for(ColumnDefinition columnDef : columnDefinitions)  {
 			this.setWidget(0, columnIndex, new Label(columnDef.getHeaderLabel()));
+			this.getCellFormatter().addStyleName(0, columnIndex, "data-table-header");
 			columnIndex++;
 		}
 	}

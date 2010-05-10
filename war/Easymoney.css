@@ -33,10 +33,16 @@ h1 {
   margin: 15px 6px 6px;
 }
 
-.save-button  {
-	padding-bottom: 20px;
+#easyMoneyApp {
+	width: 700px;
+	height: 400px;
 }
 
 .bottom-spacing { 
 	padding-bottom:10px;
+}
+
+.data-table-header {
+	background-color: #E6FFCC;
+	font-weight: bold;
 }

@@ -13,7 +13,6 @@ import net.switchcase.easymoney.client.common.DataTable;
 import net.switchcase.easymoney.shared.Budget;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -24,7 +23,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class IncomeView extends Composite  {
 	
 	private VerticalPanel incomeViewPanel;
-	private FlexTable incomeListTable;
+	private DataTable incomeListTable;
 	
 	public IncomeView()  {
 		incomeViewPanel = new VerticalPanel();
@@ -36,9 +35,11 @@ public class IncomeView extends Composite  {
 				new ColumnDefinition("Frequency", ""),
 				new ColumnDefinition("Next Pay Date", "")
 		), new IncomeModelAdapter());
+
+		incomeViewPanel.add(incomeListTable);
 	}
 	
 	public void setData(Budget budget)  {
-		
+		incomeListTable.setData(budget.getIncomes());
 	}
 }

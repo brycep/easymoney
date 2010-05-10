@@ -47,6 +47,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         titlePanel.add(budgetNameLabel);
         titlePanel.add(saveButton);
         titlePanel.addStyleName("bottom-spacing");
+        budgetPanel.setWidth("100%");
         budgetPanel.add(titlePanel);
 
         TabPanel tabPanel = new TabPanel();
@@ -59,6 +60,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         billsView = new BillsView();
         expenseCategoriesView = new ExpenseCategoriesView();
 
+        tabPanel.setWidth("100%");
         tabPanel.add(summaryView, "Summary");
         tabPanel.add(incomeView, "Income");
         tabPanel.add(billsView, "Bills");
