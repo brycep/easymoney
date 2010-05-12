@@ -6,19 +6,33 @@
 
 package net.switchcase.easymoney.shared;
 
+import net.switchcase.easymoney.client.common.ModelObject;
+
 /**
  * User: bryce
  * Date: May 4, 2010
  * Time: 7:17:32 PM
  */
-public class Bill {
+public class BillTo implements ModelObject {
+	
+	private Long id;
     private boolean reminderActive;
     private int dayOfMonth;
     private int reminderDay;
 
-    public Bill() {}
+    public BillTo() {}
 
-    public boolean isReminderActive() {
+    
+    public Long getId() {
+		return id;
+	}
+    
+    public void setId(Long id)  {
+    	this.id = id;
+    }
+
+
+	public boolean isReminderActive() {
         return reminderActive;
     }
 

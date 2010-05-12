@@ -6,7 +6,7 @@
 
 package net.switchcase.easymoney.client.view;
 
-import net.switchcase.easymoney.shared.Budget;
+import net.switchcase.easymoney.shared.BudgetTo;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -25,7 +25,7 @@ public class BillsView extends Composite {
 		initWidget(billsPanel);
 	}
 	
-	public void setData(Budget budget)  {
+	public void setData(BudgetTo budget)  {
 		
 	}
 

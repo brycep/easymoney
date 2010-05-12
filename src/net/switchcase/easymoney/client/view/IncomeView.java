@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 import net.switchcase.easymoney.client.common.ColumnDefinition;
 import net.switchcase.easymoney.client.common.DataTable;
-import net.switchcase.easymoney.shared.Budget;
+import net.switchcase.easymoney.shared.BudgetTo;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -39,7 +39,7 @@ public class IncomeView extends Composite  {
 		incomeViewPanel.add(incomeListTable);
 	}
 	
-	public void setData(Budget budget)  {
+	public void setData(BudgetTo budget)  {
 		incomeListTable.setData(budget.getIncomes());
 	}
 }

@@ -13,7 +13,12 @@
   
   <servlet-mapping>
     <servlet-name>budgetServlet</servlet-name>
-    <url-pattern>/easymoney/EasyMoneyService</url-pattern>
+    <url-pattern>/easymoney/budget</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>budgetServlet</servlet-name>
+  	<url-pattern>/easymoney/EasyMoneyService</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

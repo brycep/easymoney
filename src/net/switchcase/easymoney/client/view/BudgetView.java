@@ -7,7 +7,7 @@
 package net.switchcase.easymoney.client.view;
 
 import net.switchcase.easymoney.client.presenter.BudgetPresenter;
-import net.switchcase.easymoney.shared.Budget;
+import net.switchcase.easymoney.shared.BudgetTo;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
@@ -69,7 +69,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         budgetPanel.add(tabPanel);
     }
 
-    public void setData(Budget budget) {
+    public void setData(BudgetTo budget) {
         budgetNameLabel.setText(budget.getName());
         summaryView.setData(budget);
         incomeView.setData(budget);

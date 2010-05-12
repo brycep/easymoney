@@ -6,22 +6,33 @@
 
 package net.switchcase.easymoney.shared;
 
+import net.switchcase.easymoney.client.common.ModelObject;
+
 /**
  * User: bryce
  * Date: May 4, 2010
  * Time: 7:17:23 PM
  */
-public class ExpenseCategory {
+public class ExpenseCategoryTo implements ModelObject {
 
+	private Long id;
     private String name;
-    private Money amount;
+    private MoneyTo amount;
     private Frequency frequencyToRefresh;
     private boolean accumulating;
 
-    private Money balance;
+    private MoneyTo balance;
 
-    public ExpenseCategory()  {}
+    public ExpenseCategoryTo()  {}
 
+    public Long getId()  {
+    	return id;
+    }
+    
+    public void setId(Long id)  {
+    	this.id = id;
+    }
+    
     public String getName() {
         return name;
     }
@@ -30,11 +41,11 @@ public class ExpenseCategory {
         this.name = name;
     }
 
-    public Money getAmount() {
+    public MoneyTo getAmount() {
         return amount;
     }
 
-    public void setAmount(Money amount) {
+    public void setAmount(MoneyTo amount) {
         this.amount = amount;
     }
 
@@ -54,11 +65,11 @@ public class ExpenseCategory {
         this.accumulating = accumulating;
     }
 
-    public Money getBalance() {
+    public MoneyTo getBalance() {
         return balance;
     }
 
-    public void setBalance(Money balance) {
+    public void setBalance(MoneyTo balance) {
         this.balance = balance;
     }
 }

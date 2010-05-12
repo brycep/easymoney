@@ -6,20 +6,13 @@
 
 package net.switchcase.easymoney.client.presenter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import net.switchcase.easymoney.client.EasyMoneyServiceAsync;
-import net.switchcase.easymoney.shared.Bill;
-import net.switchcase.easymoney.shared.Budget;
-import net.switchcase.easymoney.shared.ExpenseCategory;
-import net.switchcase.easymoney.shared.Frequency;
-import net.switchcase.easymoney.shared.Income;
-import net.switchcase.easymoney.shared.Money;
+import net.switchcase.easymoney.shared.BudgetTo;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -44,7 +37,7 @@ public class BudgetPresenter implements Presenter {
         Widget getBillsView();
         Widget getExpenseCategoriesView();
 
-        void setData(Budget budget);
+        void setData(BudgetTo budget);
 
         Widget asWidget();
     }
@@ -68,49 +61,16 @@ public class BudgetPresenter implements Presenter {
     }
     
     private void retrieveBudget()  {
-    		Budget testBudget = new Budget();
-    		testBudget.setName("Test Budget");
-    		
-    		testBudget.setBalance(new Money(400, 00));
-    		testBudget.setMonthlySavings(new Money(100, 00));
-    		
-    		List<Income> incomes = new ArrayList<Income>();
-    		Income income1 = new Income();
-    		income1.setAmount(new Money(2000, 00));
-    		income1.setFrequency(Frequency.BiWeekly);
-    		income1.setName("Salary");
-    		income1.setNextPayDate(new Date());
-    		
-    		incomes.add(income1);
-    		testBudget.setIncomes(incomes);
+    	easyMoneyService.getActiveBudget(new AsyncCallback<BudgetTo>()  {
 
-    		List<Bill> monthlyBills = new ArrayList<Bill>();
-    		Bill bill1 = new Bill();
-    		bill1.setReminderActive(false);
-    		bill1.setDayOfMonth(10);
-    		bill1.setReminderDay(5);
-    		monthlyBills.add(bill1);
-    		testBudget.setMonthlyBills(monthlyBills);
+			public void onFailure(Throwable caught) {
+				Window.alert("Could not retrieve your active budget.");
+			}
+
+			public void onSuccess(BudgetTo result) {
+				display.setData(result);
+			}
     		
-    		List<ExpenseCategory> expenseCategories = new ArrayList<ExpenseCategory>();
-    		ExpenseCategory expenseCategory1 = new ExpenseCategory();
-    		expenseCategory1.setAccumulating(false);
-    		expenseCategory1.setAmount(new Money(300, 00));
-    		expenseCategory1.setName("Groceries");
-    		expenseCategory1.setBalance(new Money(140, 30));
-    		expenseCategory1.setFrequencyToRefresh(Frequency.Monthly);
-    		expenseCategories.add(expenseCategory1);
-    		
-    		ExpenseCategory expenseCategory2 = new ExpenseCategory();
-    		expenseCategory2.setAccumulating(false);
-    		expenseCategory2.setAmount(new Money(250, 00));
-    		expenseCategory2.setName("Fuel");
-    		expenseCategory2.setBalance(new Money(102, 65));
-    		expenseCategory2.setFrequencyToRefresh(Frequency.Monthly);
-    		expenseCategories.add(expenseCategory2);
-    		
-    		testBudget.setCategories(expenseCategories);
-    		
-    		display.setData(testBudget);
+    	});
     }
 }

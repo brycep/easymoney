@@ -8,7 +8,7 @@ public class MoneyTest extends TestCase {
 
 	@Test
 	public void testAddInteger()   {
-		Money amount = new Money();
+		MoneyTo amount = new MoneyTo();
 		amount.setDollars(2);
 		amount.setCents(00);
 		
@@ -20,7 +20,7 @@ public class MoneyTest extends TestCase {
 
 	@Test
 	public void testAddIntegerHandlesNegativeValues()  {
-		Money amount = new Money();
+		MoneyTo amount = new MoneyTo();
 		amount.setDollars(-2);
 		amount.setCents(30);
 		
@@ -32,16 +32,16 @@ public class MoneyTest extends TestCase {
 	
 	@Test
 	public void testAddMoneyVo()  {
-		Money amount = new Money();
+		MoneyTo amount = new MoneyTo();
 		amount.setDollars(2);
 		amount.setCents(30);
 		
-		amount.add(new Money(2, 0));
+		amount.add(new MoneyTo(2, 0));
 		
 		assertEquals(4, (int)amount.getDollars());
 		assertEquals(30, (int)amount.getCents());
 		
-		amount.add(new Money(3, 85));
+		amount.add(new MoneyTo(3, 85));
 		
 		assertEquals(8, (int)amount.getDollars());
 		assertEquals(15, (int)amount.getCents());
@@ -49,14 +49,14 @@ public class MoneyTest extends TestCase {
 
 	@Test 
 	public void testSubtractMoney()  {
-		Money amount = new Money(10, 50);
+		MoneyTo amount = new MoneyTo(10, 50);
 		
-		amount.subtract(new Money(2, 25));
+		amount.subtract(new MoneyTo(2, 25));
 		
 		assertEquals(8, (int)amount.getDollars());
 		assertEquals(25, (int)amount.getCents());
 		
-		amount.subtract(new Money(3, 75));
+		amount.subtract(new MoneyTo(3, 75));
 		
 		assertEquals(4, (int)amount.getDollars());
 		assertEquals(50, (int)amount.getCents());
@@ -64,9 +64,9 @@ public class MoneyTest extends TestCase {
 	
 	@Test
 	public void testSubtractMoneyHandlesNegatives()  {
-		Money amount = new Money(2, 50);
+		MoneyTo amount = new MoneyTo(2, 50);
 		
-		amount.subtract(new Money(4, 25));
+		amount.subtract(new MoneyTo(4, 25));
 		
 		assertEquals(-1, (int)amount.getDollars());
 		assertEquals(75, (int)amount.getCents());

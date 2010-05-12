@@ -4,11 +4,13 @@
  * of switch{case} LLC.
  */
 
-package net.switchcase.easymoney.shared;
+package net.switchcase.easymoney.server.domain;
 
 import java.util.Date;
 
-import net.switchcase.easymoney.client.common.ModelObject;
+import javax.jdo.annotations.PersistenceCapable;
+
+import net.switchcase.easymoney.shared.Frequency;
 
 /**  This is a source of income.  It specifies when
  * the user gets paid and how much.
@@ -17,11 +19,13 @@ import net.switchcase.easymoney.client.common.ModelObject;
  * Date: May 4, 2010
  * Time: 7:17:11 PM
  */
-public class Income implements ModelObject {
+@PersistenceCapable
+public class Income {
 
 	private long id;
     private String name;
-    private Money amount;
+    private int amountDollars;
+    private int amountCents;
     private Frequency frequency;
     private Date nextPayDate;
 
@@ -43,15 +47,23 @@ public class Income implements ModelObject {
         this.name = name;
     }
 
-    public Money getAmount() {
-        return amount;
-    }
+    public int getAmountDollars() {
+		return amountDollars;
+	}
 
-    public void setAmount(Money amount) {
-        this.amount = amount;
-    }
+	public void setAmountDollars(int amountDollars) {
+		this.amountDollars = amountDollars;
+	}
 
-    public Frequency getFrequency() {
+	public int getAmountCents() {
+		return amountCents;
+	}
+
+	public void setAmountCents(int amountCents) {
+		this.amountCents = amountCents;
+	}
+
+	public Frequency getFrequency() {
         return frequency;
     }
 

@@ -6,6 +6,8 @@
 
 package net.switchcase.easymoney.shared;
 
+import java.io.Serializable;
+
 import com.google.gwt.i18n.client.NumberFormat;
 
 /**  This class represents money
@@ -14,14 +16,15 @@ import com.google.gwt.i18n.client.NumberFormat;
  * Date: May 4, 2010
  * Time: 7:17:40 PM
  */
-public class Money {
+@SuppressWarnings("serial")
+public class MoneyTo implements Serializable {
 
     private int dollars = 0;
     private int cents = 0;
 
-    public Money() {}
+    public MoneyTo() {}
 
-    public Money(int dollars, int cents) {
+    public MoneyTo(int dollars, int cents) {
         this.dollars = dollars;
         this.cents = cents;
     }
@@ -54,7 +57,7 @@ public class Money {
 	 * @param money
 	 * @return A money object representing the result.
 	 */
-	public void subtract(Money money)  {
+	public void subtract(MoneyTo money)  {
 		Integer leftValue = (dollars * 100) + cents;
 		Integer rightValue = (money.getDollars() * 100) + money.getCents();
 		this.setValue(leftValue - rightValue);
@@ -64,7 +67,7 @@ public class Money {
 		dollars = dollars + value;
 	}
 	
-	public void add(Money moneyValue)   {
+	public void add(MoneyTo moneyValue)   {
 		Integer currentValue = this.toInt();
 		currentValue = currentValue + moneyValue.toInt();
 		this.setValue(currentValue);

@@ -3,7 +3,7 @@ package net.switchcase.easymoney.client.view;
 import net.switchcase.easymoney.client.common.ModelAdapter;
 import net.switchcase.easymoney.client.common.ModelObject;
 import net.switchcase.easymoney.shared.Frequency;
-import net.switchcase.easymoney.shared.Income;
+import net.switchcase.easymoney.shared.IncomeTo;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.ListBox;
@@ -26,8 +26,8 @@ public class IncomeModelAdapter implements ModelAdapter {
 		
 		populateFrequency(frequency);
 		
-		if (dataObject instanceof Income)  {
-			Income income = (Income) dataObject;
+		if (dataObject instanceof IncomeTo)  {
+			IncomeTo income = (IncomeTo) dataObject;
 			if (null != income.getName())  {
 				name.setValue(income.getName());
 			}

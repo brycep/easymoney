@@ -1,5 +1,7 @@
 package net.switchcase.easymoney.client.common;
 
+import java.io.Serializable;
+
 /** In order to be used inside of the DataTable component, 
  *  the model should implement this interface. 
  *  
@@ -9,8 +11,8 @@ package net.switchcase.easymoney.client.common;
  * The content within is considered confidential intellectual property
  * of switch{case} LLC.
  */
-public interface ModelObject {
+public interface ModelObject extends Serializable {
 	
-	long getId();
+	Long getId();
 
 }
