@@ -13,6 +13,7 @@ import net.switchcase.easymoney.client.common.ModelObject;
  * Date: May 4, 2010
  * Time: 7:17:32 PM
  */
+@SuppressWarnings("serial")
 public class BillTo implements ModelObject {
 	
 	private Long id;

@@ -13,6 +13,7 @@ import net.switchcase.easymoney.client.common.ModelObject;
  * Date: May 4, 2010
  * Time: 7:17:23 PM
  */
+@SuppressWarnings("serial")
 public class ExpenseCategoryTo implements ModelObject {
 
 	private Long id;

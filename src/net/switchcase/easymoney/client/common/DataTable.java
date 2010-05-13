@@ -11,6 +11,8 @@ public class DataTable extends FlexTable {
 	private List<ColumnDefinition> columnDefinitions = new ArrayList<ColumnDefinition>();
 	private List<DataRow> rows = new ArrayList<DataRow>();
 	private ModelAdapter modelAdapter;
+	
+	private Label totalLabel;
 
 	public DataTable(List<ColumnDefinition> columnDefinitions,
 			ModelAdapter modelAdapter) {
@@ -35,6 +37,14 @@ public class DataTable extends FlexTable {
 		this.rows = rows;
 	}
 	
+	public Label getTotalLabel() {
+		return totalLabel;
+	}
+
+	public void setTotalLabel(Label totalLabel) {
+		this.totalLabel = totalLabel;
+	}
+
 	@SuppressWarnings("unchecked")
 	public void setData(List dataList)  {
 		createHeaderRow();
@@ -46,6 +56,10 @@ public class DataTable extends FlexTable {
 				rowIndex++;
 			}
 		}
+		
+		if (null != totalLabel)  {
+			createFooterRow(rowIndex);
+		}
 	}
 	
 	private void createHeaderRow()  {
@@ -55,6 +69,12 @@ public class DataTable extends FlexTable {
 			this.getCellFormatter().addStyleName(0, columnIndex, "data-table-header");
 			columnIndex++;
 		}
+	}
+	
+	private void createFooterRow(int row)  {
+		this.setWidget(row, this.getCellCount(row - 2), new Label("Total: "));
+		this.setWidget(row, this.getCellCount(row - 1), totalLabel);
+		this.getRowFormatter().addStyleName(row, "data-table-footer");
 	}
 
 }

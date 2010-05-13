@@ -5,6 +5,7 @@ import net.switchcase.easymoney.client.common.ModelObject;
 import net.switchcase.easymoney.shared.Frequency;
 import net.switchcase.easymoney.shared.IncomeTo;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -23,6 +24,7 @@ public class IncomeModelAdapter implements ModelAdapter {
 		TextBox amount = new TextBox();
 		ListBox frequency = new ListBox();
 		DateBox nextDate = new DateBox();
+		nextDate.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getShortDateFormat()));
 		
 		populateFrequency(frequency);
 		
@@ -42,9 +44,9 @@ public class IncomeModelAdapter implements ModelAdapter {
 		}
 		
 		table.setWidget(row, 0, name);
-		table.setWidget(row, 1, amount);
-		table.setWidget(row, 2, frequency);
-		table.setWidget(row, 3, nextDate);
+		table.setWidget(row, 1, frequency);
+		table.setWidget(row, 2, nextDate);
+		table.setWidget(row, 3, amount);
 
 	}
 	

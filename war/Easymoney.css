@@ -36,6 +36,15 @@ h1 {
 #easyMoneyApp {
 	width: 700px;
 	height: 400px;
+	padding-left: 35px;
+}
+
+.gwt-TabPanelBottom {
+	height: 100%;
+}
+
+.budget-tab-panel {
+	height: 350px;
 }
 
 .bottom-spacing { 
@@ -43,6 +52,18 @@ h1 {
 }
 
 .data-table-header {
-	background-color: #E6FFCC;
+	background-color: #C5D0FA;
 	font-weight: bold;
+	padding:4px;
+}
+
+.money-table {
+	border-style: solid;
+	border-width: 2px;
+	border-color: #C5D0FA;
+	
+}
+	
+.money-table td {
+	padding:4px;
 }

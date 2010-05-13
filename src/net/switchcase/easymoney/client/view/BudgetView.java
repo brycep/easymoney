@@ -61,6 +61,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         expenseCategoriesView = new ExpenseCategoriesView();
 
         tabPanel.setWidth("100%");
+        tabPanel.addStyleName("budget-tab-panel");
         tabPanel.add(summaryView, "Summary");
         tabPanel.add(incomeView, "Income");
         tabPanel.add(billsView, "Bills");

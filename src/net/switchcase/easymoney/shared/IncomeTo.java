@@ -17,6 +17,7 @@ import net.switchcase.easymoney.client.common.ModelObject;
  * Date: May 4, 2010
  * Time: 7:17:11 PM
  */
+@SuppressWarnings("serial")
 public class IncomeTo implements ModelObject {
 
 	private Long id;
