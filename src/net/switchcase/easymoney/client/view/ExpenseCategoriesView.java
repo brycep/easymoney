@@ -6,9 +6,12 @@
 
 package net.switchcase.easymoney.client.view;
 
+import net.switchcase.easymoney.client.common.DataTable;
 import net.switchcase.easymoney.shared.BudgetTo;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -18,14 +21,28 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class ExpenseCategoriesView extends Composite {
 	
-	private VerticalPanel expensePanel;
-	
+	private VerticalPanel expenseViewPanel;
+	private DataTable expenseListTable;
+	private Label totalLabel;
+
 	public ExpenseCategoriesView()  {
-		expensePanel = new VerticalPanel();
-		initWidget(expensePanel);
+		expenseViewPanel = new VerticalPanel();
+		initWidget(expenseViewPanel);
+		
+		expenseListTable = new DataTable(new ExpenseModelAdapter());
+		expenseListTable.addStyleName("money-table");
+		expenseListTable.setCellPadding(0);
+		expenseListTable.setCellSpacing(0);
+		expenseListTable.setTotalLabel(totalLabel);
+
+		expenseViewPanel.add(expenseListTable);
+	}
+	
+	public HasText totalExpenseLabel()  {
+		return totalLabel;
 	}
 	
 	public void setData(BudgetTo budget)  {
-		
+		expenseListTable.setData(budget.getCategories());
 	}
 }

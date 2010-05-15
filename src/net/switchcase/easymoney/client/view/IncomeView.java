@@ -32,12 +32,7 @@ public class IncomeView extends Composite  {
 		incomeViewPanel = new VerticalPanel();
 		initWidget(incomeViewPanel);
 		
-		incomeListTable = new DataTable(Arrays.asList(
-				new ColumnDefinition("Name", ""),
-				new ColumnDefinition("Frequency", ""),
-				new ColumnDefinition("Next Pay Date", ""),
-				new ColumnDefinition("Amount", "")
-		), new IncomeModelAdapter());
+		incomeListTable = new DataTable(new IncomeModelAdapter());
 		incomeListTable.addStyleName("money-table");
 		incomeListTable.setCellPadding(0);
 		incomeListTable.setCellSpacing(0);

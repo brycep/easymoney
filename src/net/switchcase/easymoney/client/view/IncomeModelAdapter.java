@@ -7,14 +7,34 @@ import net.switchcase.easymoney.shared.IncomeTo;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.datepicker.client.DateBox;
 
-public class IncomeModelAdapter implements ModelAdapter {
+public class IncomeModelAdapter extends BaseModelAdapter {
 
-	public ModelObject convertRowToDataObject(int row, ModelObject dataObject, FlexTable table) {
+	private static final int NAME_COLUMN = 0;
+	private static final int FREQUENCY_COLUMN = 1;
+	private static final int NEXT_DATE_COLUMN = 2;
+	private static final int AMOUNT_COLUMN = 3;
+	
+	public void renderHeaderRow(FlexTable table)  {
+		table.setWidget(0, NAME_COLUMN, new Label("Name"));
+		table.getCellFormatter().addStyleName(0, NAME_COLUMN, "data-table-header");
 		
+		table.setWidget(0, FREQUENCY_COLUMN, new Label("Frequency"));
+		table.getCellFormatter().addStyleName(0, FREQUENCY_COLUMN, "data-table-header");
+		
+		table.setWidget(0, NEXT_DATE_COLUMN, new Label("Next Date"));
+		table.getCellFormatter().addStyleName(0, NEXT_DATE_COLUMN, "data-table-header");
+		
+		table.setWidget(0, AMOUNT_COLUMN, new Label("Amount"));
+		table.getCellFormatter().addStyleName(0, AMOUNT_COLUMN, "data-table-header");
+
+	}
+	
+	public ModelObject convertRowToDataObject(int row, ModelObject dataObject, FlexTable table) {
 		return null;
 	}
 
@@ -43,27 +63,12 @@ public class IncomeModelAdapter implements ModelAdapter {
 			setSelectedFrequency(income.getFrequency(), frequency);
 		}
 		
-		table.setWidget(row, 0, name);
-		table.setWidget(row, 1, frequency);
-		table.setWidget(row, 2, nextDate);
-		table.setWidget(row, 3, amount);
+		table.setWidget(row, NAME_COLUMN, name);
+		table.setWidget(row, FREQUENCY_COLUMN, frequency);
+		table.setWidget(row, NEXT_DATE_COLUMN, nextDate);
+		table.setWidget(row, AMOUNT_COLUMN, amount);
 
 	}
 	
-	private void populateFrequency(ListBox frequency)  {
-		frequency.addItem("Bi-Weekly");
-		frequency.addItem("Semi-Monthly");
-	}
-	
-	// I know there are better ways to do this but I'm lazy right now...
-	private void setSelectedFrequency(Frequency freq, ListBox freqListBox)  {
-		if (null != freq)  {
-			if (Frequency.BiWeekly.equals(freq))  {
-				freqListBox.setSelectedIndex(0);
-			} else if (Frequency.SemiMonthly.equals(freq)) {
-				freqListBox.setSelectedIndex(1);
-			}
-		}
-	}
 
 }

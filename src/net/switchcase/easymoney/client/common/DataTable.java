@@ -8,25 +8,14 @@ import com.google.gwt.user.client.ui.Label;
 
 public class DataTable extends FlexTable {
 	
-	private List<ColumnDefinition> columnDefinitions = new ArrayList<ColumnDefinition>();
 	private List<DataRow> rows = new ArrayList<DataRow>();
 	private ModelAdapter modelAdapter;
 	
 	private Label totalLabel;
 
-	public DataTable(List<ColumnDefinition> columnDefinitions,
-			ModelAdapter modelAdapter) {
+	public DataTable(ModelAdapter modelAdapter) {
 		super();
-		this.columnDefinitions = columnDefinitions;
 		this.modelAdapter = modelAdapter;
-	}
-	
-	public List<ColumnDefinition> getColumnDefinitions() {
-		return columnDefinitions;
-	}
-	
-	public void setColumnDefinitions(List<ColumnDefinition> columnDefinitions) {
-		this.columnDefinitions = columnDefinitions;
 	}
 	
 	public List<DataRow> getRows() {
@@ -47,7 +36,7 @@ public class DataTable extends FlexTable {
 
 	@SuppressWarnings("unchecked")
 	public void setData(List dataList)  {
-		createHeaderRow();
+		modelAdapter.renderHeaderRow(this);
 
 		int rowIndex = 1;
 		for(Object object : dataList)  {
@@ -59,15 +48,6 @@ public class DataTable extends FlexTable {
 		
 		if (null != totalLabel)  {
 			createFooterRow(rowIndex);
-		}
-	}
-	
-	private void createHeaderRow()  {
-		int columnIndex = 0;
-		for(ColumnDefinition columnDef : columnDefinitions)  {
-			this.setWidget(0, columnIndex, new Label(columnDef.getHeaderLabel()));
-			this.getCellFormatter().addStyleName(0, columnIndex, "data-table-header");
-			columnIndex++;
 		}
 	}
 	
