@@ -44,6 +44,8 @@ public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMo
 		bill1.setReminderActive(false);
 		bill1.setDayOfMonth(10);
 		bill1.setReminderDay(5);
+		bill1.setAmount(new MoneyTo(50, 0));
+		bill1.setName("My Monthly bill");
 		monthlyBills.add(bill1);
 		testBudget.setMonthlyBills(monthlyBills);
 		

@@ -17,9 +17,11 @@ import net.switchcase.easymoney.client.common.ModelObject;
 public class BillTo implements ModelObject {
 	
 	private Long id;
+	private String name;
     private boolean reminderActive;
     private int dayOfMonth;
     private int reminderDay;
+    private MoneyTo amount;
 
     public BillTo() {}
 
@@ -31,6 +33,15 @@ public class BillTo implements ModelObject {
     public void setId(Long id)  {
     	this.id = id;
     }
+    
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 
 	public boolean isReminderActive() {
@@ -56,4 +67,16 @@ public class BillTo implements ModelObject {
     public void setReminderDay(int reminderDay) {
         this.reminderDay = reminderDay;
     }
+
+
+	public MoneyTo getAmount() {
+		return amount;
+	}
+
+
+	public void setAmount(MoneyTo amount) {
+		this.amount = amount;
+	}
+    
+    
 }
