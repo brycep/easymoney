@@ -6,11 +6,9 @@
 
 package net.switchcase.easymoney.client.view;
 
-import java.util.Arrays;
-
-import net.switchcase.easymoney.client.common.ColumnDefinition;
 import net.switchcase.easymoney.client.common.DataTable;
 import net.switchcase.easymoney.shared.BudgetTo;
+import net.switchcase.easymoney.shared.IncomeTo;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
@@ -25,14 +23,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class IncomeView extends Composite  {
 	
 	private VerticalPanel incomeViewPanel;
-	private DataTable incomeListTable;
+	private DataTable<IncomeTo> incomeListTable;
 	private Label totalLabel;
 	
 	public IncomeView()  {
 		incomeViewPanel = new VerticalPanel();
 		initWidget(incomeViewPanel);
 		
-		incomeListTable = new DataTable(new IncomeModelAdapter());
+		incomeListTable = new DataTable<IncomeTo>(new IncomeModelAdapter());
 		incomeListTable.addStyleName("money-table");
 		incomeListTable.setCellPadding(0);
 		incomeListTable.setCellSpacing(0);

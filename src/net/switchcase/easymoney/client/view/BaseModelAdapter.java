@@ -1,11 +1,11 @@
 package net.switchcase.easymoney.client.view;
 
+import net.switchcase.easymoney.client.common.ModelAdapter;
+import net.switchcase.easymoney.shared.Frequency;
+
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-
-import net.switchcase.easymoney.client.common.ModelAdapter;
-import net.switchcase.easymoney.shared.Frequency;
 
 public abstract class BaseModelAdapter implements ModelAdapter {
 

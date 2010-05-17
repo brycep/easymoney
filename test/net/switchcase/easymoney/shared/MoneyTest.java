@@ -1,10 +1,10 @@
 package net.switchcase.easymoney.shared;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class MoneyTest extends TestCase {
+public class MoneyTest {
 
 	@Test
 	public void testAddInteger()   {
@@ -71,5 +71,6 @@ public class MoneyTest extends TestCase {
 		assertEquals(-1, (int)amount.getDollars());
 		assertEquals(75, (int)amount.getCents());
 	}
+	
 }
 

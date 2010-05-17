@@ -8,6 +8,7 @@ package net.switchcase.easymoney.client.view;
 
 import net.switchcase.easymoney.client.common.DataTable;
 import net.switchcase.easymoney.shared.BudgetTo;
+import net.switchcase.easymoney.shared.ExpenseCategoryTo;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
@@ -22,14 +23,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class ExpenseCategoriesView extends Composite {
 	
 	private VerticalPanel expenseViewPanel;
-	private DataTable expenseListTable;
+	private DataTable<ExpenseCategoryTo> expenseListTable;
 	private Label totalLabel;
 
 	public ExpenseCategoriesView()  {
 		expenseViewPanel = new VerticalPanel();
 		initWidget(expenseViewPanel);
 		
-		expenseListTable = new DataTable(new ExpenseModelAdapter());
+		expenseListTable = new DataTable<ExpenseCategoryTo>(new ExpenseModelAdapter());
 		expenseListTable.addStyleName("money-table");
 		expenseListTable.setCellPadding(0);
 		expenseListTable.setCellSpacing(0);

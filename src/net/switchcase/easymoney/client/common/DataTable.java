@@ -6,9 +6,9 @@ import java.util.List;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 
-public class DataTable extends FlexTable {
+public class DataTable<ModelType> extends FlexTable {
 	
-	private List<DataRow> rows = new ArrayList<DataRow>();
+	private List<Row> rows = new ArrayList<Row>();
 	private ModelAdapter modelAdapter;
 	
 	private Label totalLabel;
@@ -18,11 +18,11 @@ public class DataTable extends FlexTable {
 		this.modelAdapter = modelAdapter;
 	}
 	
-	public List<DataRow> getRows() {
+	public List<Row> getRows() {
 		return rows;
 	}
 	
-	public void setRows(List<DataRow> rows) {
+	public void setRows(List<Row> rows) {
 		this.rows = rows;
 	}
 	
@@ -34,16 +34,15 @@ public class DataTable extends FlexTable {
 		this.totalLabel = totalLabel;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void setData(List dataList)  {
+	public void setData(List<ModelType> dataList)  {
 		modelAdapter.renderHeaderRow(this);
 
 		int rowIndex = 1;
-		for(Object object : dataList)  {
-			if (object instanceof ModelObject)  {
-				modelAdapter.renderRow(rowIndex, (ModelObject)object, this);
-				rowIndex++;
-			}
+		for(ModelType object : dataList)  {
+			Row row = modelAdapter.createRow(rowIndex);
+			row.setData(object);
+			modelAdapter.renderRow(row, this);
+			rowIndex++;
 		}
 		
 		if (null != totalLabel)  {

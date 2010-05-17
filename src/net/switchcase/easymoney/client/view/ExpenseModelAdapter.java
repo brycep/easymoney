@@ -1,8 +1,8 @@
 package net.switchcase.easymoney.client.view;
 
 import net.switchcase.easymoney.client.common.ModelObject;
+import net.switchcase.easymoney.client.common.Row;
 import net.switchcase.easymoney.shared.ExpenseCategoryTo;
-import net.switchcase.easymoney.shared.Frequency;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -65,5 +65,23 @@ public class ExpenseModelAdapter extends BaseModelAdapter {
 		table.setWidget(row, BALANCE_COLUMN, balance);
 
 	}
+
+	public ModelObject convertRowToDataObject(int rowIndex,
+			Row row, FlexTable table) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Row createRow(int row) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void renderRow(Row row, FlexTable table) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	
 }
