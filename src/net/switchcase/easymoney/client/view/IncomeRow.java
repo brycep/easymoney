@@ -50,12 +50,8 @@ public class IncomeRow implements Row {
 		this.rowIndex = rowIndex;
 	}
 	
-	public IncomeTo getDataObject() {
+	public IncomeTo getData() {
 		return dataObject;
-	}
-
-	public void setDataObject(IncomeTo dataObject) {
-		this.dataObject = dataObject;
 	}
 
 	public HasValue<String> getName() {

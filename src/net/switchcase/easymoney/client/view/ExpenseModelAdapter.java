@@ -1,13 +1,16 @@
 package net.switchcase.easymoney.client.view;
 
 import net.switchcase.easymoney.client.common.ModelObject;
+import net.switchcase.easymoney.client.common.MoneyTextBox;
 import net.switchcase.easymoney.client.common.Row;
+import net.switchcase.easymoney.client.common.ValueListBox;
 import net.switchcase.easymoney.shared.ExpenseCategoryTo;
+import net.switchcase.easymoney.shared.Frequency;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 
 public class ExpenseModelAdapter extends BaseModelAdapter {
 
@@ -26,62 +29,41 @@ public class ExpenseModelAdapter extends BaseModelAdapter {
 
 	}
 
-	public ModelObject convertRowToDataObject(int row, ModelObject dataObject, FlexTable table) {
-		return null;
+	public ModelObject convertRowToDataObject(Row row, FlexTable table) {
+		ExpenseRow expenseRow = (ExpenseRow) row;
+		ExpenseCategoryTo expenseCategory = (ExpenseCategoryTo) row.getData();
+		expenseCategory.setName(expenseRow.getName().getValue());
+		expenseCategory.setAccumulating(expenseRow.getAccumulating().getValue());
+		expenseCategory.setAmount(expenseRow.getAmount().getMoneyValue());
+		expenseCategory.setBalance(expenseRow.getBalance().getMoneyValue());
+		expenseCategory.setFrequencyToRefresh(getSelectedFrequency(expenseRow));
+		return expenseCategory;
 	}
 
-	public void renderRow(int row, ModelObject dataObject, FlexTable table) {
-		
-		TextBox name = new TextBox();
-		ListBox frequency = new ListBox();
-		CheckBox accumulating = new CheckBox();
-		TextBox amount = new TextBox();
-		TextBox balance = new TextBox();
-		
-		populateFrequency(frequency);
-		
-		if (dataObject instanceof ExpenseCategoryTo)  {
-			ExpenseCategoryTo category = (ExpenseCategoryTo) dataObject;
-			if (null != category.getName())  {
-				name.setValue(category.getName());
-			}
-			if (category.isAccumulating()) {
-				accumulating.setValue(true);
-			}
-			if (null != category.getAmount())  {
-				amount.setValue(category.getAmount().toString());
-			}
-			if (null != category.getBalance())  {
-				amount.setValue(category.getBalance().toString());
-			}
-			
-			setSelectedFrequency(category.getFrequencyToRefresh(), frequency);
-		}
-		
-		table.setWidget(row, NAME_COLUMN, name);
-		table.setWidget(row, FREQUENCY_COLUMN, frequency);
-		table.setWidget(row, ACCUMULATING_COLUMN, accumulating);
-		table.setWidget(row, AMOUNT_COLUMN, amount);
-		table.setWidget(row, BALANCE_COLUMN, balance);
-
-	}
-
-	public ModelObject convertRowToDataObject(int rowIndex,
-			Row row, FlexTable table) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Row createRow(int row) {
-		// TODO Auto-generated method stub
-		return null;
+	public Row createRow(int rowIndex) {
+		ExpenseRow row = new ExpenseRow(rowIndex);
+		row.setAccumulating(new CheckBox());
+		row.setAmount(new MoneyTextBox());
+		row.setBalance(new MoneyTextBox());
+		row.setFrequency(new ValueListBox());
+		row.setName(new TextBox());
+		return row;
 	}
 
 	public void renderRow(Row row, FlexTable table) {
-		// TODO Auto-generated method stub
+		ExpenseRow expenseRow = (ExpenseRow) row;
 		
+		table.setWidget(row.getRowIndex(), NAME_COLUMN, (Widget)expenseRow.getName());
+		table.setWidget(row.getRowIndex(), FREQUENCY_COLUMN, (Widget)expenseRow.getFrequency());
+		table.setWidget(row.getRowIndex(), ACCUMULATING_COLUMN, (Widget)expenseRow.getAccumulating());
+		table.setWidget(row.getRowIndex(), AMOUNT_COLUMN, (Widget)expenseRow.getAmount());
+		table.setWidget(row.getRowIndex(), BALANCE_COLUMN, (Widget)expenseRow.getBalance());
 	}
 
+	protected Frequency getSelectedFrequency(ExpenseRow row)  {
+		String frequencyValue = row.getFrequency().getSelected().getValue();
+		return Frequency.valueOf(frequencyValue);
+	}
 
 	
 }

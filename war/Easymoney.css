@@ -67,3 +67,7 @@ h1 {
 .money-table td {
 	padding:4px;
 }
+
+.money-textbox {
+	text-align: right;
+}

@@ -27,7 +27,7 @@ public abstract class BaseModelAdapter implements ModelAdapter {
 			freqListBox.setSelectedIndex(selectedItem);
 		}
 	}
-	
+		
 	private int getSelectedItem(Frequency freq, ListBox freqListBox)  {
 		if (null != freq)  {
 			for(int idx = 0; idx<freqListBox.getItemCount(); idx++)  {
