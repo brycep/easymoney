@@ -49,24 +49,26 @@ public class IncomeRowTest {
 		return row;
 	}
 	
-//	@Test
-//	public void testUpdateIncomeModel() throws Exception  {
-//		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-//		Date testDate = format.parse("01/01/2010");
-//		
-//		IncomeTo income = new IncomeTo();
-//		IncomeRow row = buildRow(income);
-//		
-//		row.getAmount().setValue(new MoneyTo(11, 11));
-//		row.getFrequency().setSelected("Weekly");
-//		row.getName().setValue("Unit test");
-//		row.getNextDate().setValue(testDate);
-//		
-//		assertTrue(new MoneyTo(11,11).equals(income.getAmount()));
-//		assertEquals(Frequency.Weekly, income.getFrequency());
-//		assertEquals("Unit test", income.getName());
-//		assertEquals(testDate, income.getNextPayDate());
-//	}
+	@Test
+	public void testUpdateIncomeModel() throws Exception  {
+		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		Date testDate = format.parse("01/01/2010");
+		
+		IncomeTo income = new IncomeTo();
+		IncomeRow row = buildRow(income);
+		
+		row.getAmount().setValue(new MoneyTo(11, 11));
+		row.getFrequency().setSelected("Weekly");
+		row.getName().setValue("Unit test");
+		row.getNextDate().setValue(testDate);
+		
+		row.updateModel();
+		
+		assertTrue(new MoneyTo(11,11).equals(income.getAmount()));
+		assertEquals(Frequency.Weekly, income.getFrequency());
+		assertEquals("Unit test", income.getName());
+		assertEquals(testDate, income.getNextPayDate());
+	}
 
 	
 }

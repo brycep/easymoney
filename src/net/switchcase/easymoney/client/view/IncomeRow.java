@@ -39,9 +39,20 @@ public class IncomeRow implements Row {
 				new ListItem(Frequency.SemiMonthly.toString(), "Semi-Monthly"),
 				new ListItem(Frequency.Weekly.toString(), "Weekly")
 		));
-		frequency.setSelected(incomeTo.getFrequency().toString());
+		if (null != incomeTo.getFrequency())  {
+			frequency.setSelected(incomeTo.getFrequency().toString());
+		}
 	}
 	
+	public void updateModel() {
+		dataObject.setName(name.getValue());
+		dataObject.setAmount(amount.getMoneyValue());
+		dataObject.setNextPayDate(nextDate.getValue());
+		if (null != frequency.getSelected())  {
+			dataObject.setFrequency(Frequency.valueOf(frequency.getSelected().getValue()) );
+		}
+	}
+
 	public int getRowIndex()  {
 		return rowIndex;
 	}

@@ -7,6 +7,7 @@
 package net.switchcase.easymoney.client.view;
 
 import net.switchcase.easymoney.client.presenter.BudgetPresenter;
+import net.switchcase.easymoney.client.presenter.BudgetPresenter.ExpenseDisplay;
 import net.switchcase.easymoney.shared.BudgetTo;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -98,7 +99,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         return billsView;
     }
 
-    public Widget getExpenseCategoriesView() {
+    public ExpenseDisplay getExpenseCategoriesView() {
         return expenseCategoriesView;
     }
 

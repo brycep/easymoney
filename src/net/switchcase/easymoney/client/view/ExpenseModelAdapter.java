@@ -17,8 +17,8 @@ public class ExpenseModelAdapter extends BaseModelAdapter {
 	private static final int NAME_COLUMN = 0;
 	private static final int FREQUENCY_COLUMN = 1;
 	private static final int ACCUMULATING_COLUMN = 2;
-	private static final int AMOUNT_COLUMN = 3;
-	private static final int BALANCE_COLUMN = 4;
+	private static final int AMOUNT_COLUMN = 4;
+	private static final int BALANCE_COLUMN = 3;
 		
 	public void renderHeaderRow(FlexTable table)  {
 		addHeaderLabel(table, "Name", NAME_COLUMN);
@@ -26,6 +26,9 @@ public class ExpenseModelAdapter extends BaseModelAdapter {
 		addHeaderLabel(table, "Accumulating", ACCUMULATING_COLUMN);
 		addHeaderLabel(table, "Amount", AMOUNT_COLUMN);
 		addHeaderLabel(table, "Balance", BALANCE_COLUMN);
+
+		table.getCellFormatter().addStyleName(0, BALANCE_COLUMN, "right-align");
+		table.getCellFormatter().addStyleName(0, AMOUNT_COLUMN, "right-align");
 
 	}
 
@@ -41,12 +44,13 @@ public class ExpenseModelAdapter extends BaseModelAdapter {
 	}
 
 	public Row createRow(int rowIndex) {
-		ExpenseRow row = new ExpenseRow(rowIndex);
+		final ExpenseRow row = new ExpenseRow(rowIndex);
 		row.setAccumulating(new CheckBox());
-		row.setAmount(new MoneyTextBox());
 		row.setBalance(new MoneyTextBox());
 		row.setFrequency(new ValueListBox());
 		row.setName(new TextBox());
+		row.setAmount(new MoneyTextBox());
+		
 		return row;
 	}
 

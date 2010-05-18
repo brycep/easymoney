@@ -3,10 +3,13 @@ package net.switchcase.easymoney.client.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.switchcase.easymoney.client.event.HasRowValueChangeHandler;
+import net.switchcase.easymoney.client.event.RowValueChangeHandler;
+
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 
-public class DataTable<ModelType> extends FlexTable {
+public class DataTable<ModelType> extends FlexTable implements HasRowValueChangeHandler {
 	
 	private List<Row> rows = new ArrayList<Row>();
 	private ModelAdapter modelAdapter;
@@ -51,9 +54,16 @@ public class DataTable<ModelType> extends FlexTable {
 	}
 	
 	private void createFooterRow(int row)  {
-		this.setWidget(row, this.getCellCount(row - 2), new Label("Total: "));
-		this.setWidget(row, this.getCellCount(row - 1), totalLabel);
+		this.setWidget(row, this.getCellCount(row - 1) - 2, new Label("Total: "));
+		this.getCellFormatter().addStyleName(row, this.getCellCount(row - 1) - 2, "right-align");
+		this.setWidget(row, this.getCellCount(row - 1) - 1, totalLabel);
+		this.getCellFormatter().addStyleName(row, this.getCellCount(row - 1) - 1, "right-align");
 		this.getRowFormatter().addStyleName(row, "data-table-footer");
 	}
+
+	public void addRowValueChangeHandler(RowValueChangeHandler handler) {
+	}
+	
+	
 
 }

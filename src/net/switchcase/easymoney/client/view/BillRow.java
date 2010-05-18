@@ -33,6 +33,10 @@ public class BillRow implements Row  {
 	public Object getData() {
 		return bill;
 	}
+	
+	public void updateModel() {
+//		dataObject.setName()
+	}
 
 	public void setData(Object dataObject) {
 		this.bill = (BillTo) dataObject;

@@ -7,12 +7,14 @@
 package net.switchcase.easymoney.client.view;
 
 import net.switchcase.easymoney.client.common.DataTable;
+import net.switchcase.easymoney.client.common.HasMoneyValue;
+import net.switchcase.easymoney.client.common.MoneyLabel;
+import net.switchcase.easymoney.client.event.HasRowValueChangeHandler;
+import net.switchcase.easymoney.client.presenter.BudgetPresenter;
 import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.ExpenseCategoryTo;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -20,11 +22,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * Date: May 8, 2010
  * Time: 3:43:05 PM
  */
-public class ExpenseCategoriesView extends Composite {
+public class ExpenseCategoriesView extends Composite implements BudgetPresenter.ExpenseDisplay  {
 	
 	private VerticalPanel expenseViewPanel;
 	private DataTable<ExpenseCategoryTo> expenseListTable;
-	private Label totalLabel;
+	private MoneyLabel totalLabel = new MoneyLabel();
 
 	public ExpenseCategoriesView()  {
 		expenseViewPanel = new VerticalPanel();
@@ -39,7 +41,11 @@ public class ExpenseCategoriesView extends Composite {
 		expenseViewPanel.add(expenseListTable);
 	}
 	
-	public HasText totalExpenseLabel()  {
+	public HasRowValueChangeHandler getExpenseTable() {
+		return expenseListTable;
+	}
+
+	public HasMoneyValue getTotalExpenseLabel()  {
 		return totalLabel;
 	}
 	

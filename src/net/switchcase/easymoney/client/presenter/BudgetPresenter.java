@@ -7,6 +7,10 @@
 package net.switchcase.easymoney.client.presenter;
 
 import net.switchcase.easymoney.client.EasyMoneyServiceAsync;
+import net.switchcase.easymoney.client.common.HasMoneyValue;
+import net.switchcase.easymoney.client.common.Row;
+import net.switchcase.easymoney.client.event.HasRowValueChangeHandler;
+import net.switchcase.easymoney.client.event.RowValueChangeHandler;
 import net.switchcase.easymoney.shared.BudgetTo;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -24,9 +28,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class BudgetPresenter implements Presenter {
 
     private final EasyMoneyServiceAsync easyMoneyService;
-    private final HandlerManager eventBus;
+//    private final HandlerManager eventBus;
     private final Display display;
 
+    private BudgetTo budget;
+    
     public interface Display {
 
         String getBudgetName(); 
@@ -35,29 +41,59 @@ public class BudgetPresenter implements Presenter {
         Widget getSummaryView();
         Widget getIncomeView();
         Widget getBillsView();
-        Widget getExpenseCategoriesView();
+        ExpenseDisplay getExpenseCategoriesView();
 
         void setData(BudgetTo budget);
 
         Widget asWidget();
+    }
+    
+    public interface ExpenseDisplay  {
+    	HasRowValueChangeHandler getExpenseTable(); 
+    	HasMoneyValue getTotalExpenseLabel();
     }
 
     public BudgetPresenter(EasyMoneyServiceAsync easyMoneyService,
                            HandlerManager eventBus,
                            Display display) {
         this.easyMoneyService = easyMoneyService;
-        this.eventBus = eventBus;
+//        this.eventBus = eventBus;
         this.display = display;
+    }
+    
+    public Display getDisplay()  {
+    	return display;
     }
 
     public void bind()  {
-        
+    	display.getExpenseCategoriesView().getExpenseTable().addRowValueChangeHandler(
+    			new RowValueChangeHandler()  {
+					public void onRowValueChanged(Row row) {
+						row.updateModel();
+						expenseAmountsChanged();
+					}
+    			}
+    	);
+    
     }
 
     public void go(HasWidgets container) {
+    	bind();
         container.clear();
         container.add(display.asWidget());
         retrieveBudget();
+    }
+    
+    public void expenseAmountsChanged()  {
+    	display.getExpenseCategoriesView().getTotalExpenseLabel().setValue(budget.calulateExpenseTotal());
+    }
+    
+    public BudgetTo getBudget()  {
+    	return budget;
+    }
+    
+    public void setBudget(BudgetTo budgetTo)  {
+    	this.budget = budgetTo;
     }
     
     private void retrieveBudget()  {
@@ -68,6 +104,7 @@ public class BudgetPresenter implements Presenter {
 			}
 
 			public void onSuccess(BudgetTo result) {
+				BudgetPresenter.this.setBudget(result);
 				display.setData(result);
 			}
     		

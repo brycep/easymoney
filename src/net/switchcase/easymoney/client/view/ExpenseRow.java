@@ -35,6 +35,10 @@ public class ExpenseRow implements Row {
 		return expenseCategoryTo;
 	}
 	
+	public void updateModel() {
+//		dataObject.setName()
+	}
+
 	public void setData(Object dataObject) {
 		ExpenseCategoryTo category = (ExpenseCategoryTo) dataObject;
 		name.setValue(category.getName());
