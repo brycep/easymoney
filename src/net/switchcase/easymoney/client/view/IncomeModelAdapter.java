@@ -4,9 +4,12 @@ import net.switchcase.easymoney.client.common.ModelObject;
 import net.switchcase.easymoney.client.common.MoneyTextBox;
 import net.switchcase.easymoney.client.common.Row;
 import net.switchcase.easymoney.client.common.ValueListBox;
+import net.switchcase.easymoney.client.event.RowValueChangeHandler;
 import net.switchcase.easymoney.shared.Frequency;
 import net.switchcase.easymoney.shared.IncomeTo;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.TextBox;
@@ -37,15 +40,22 @@ public class IncomeModelAdapter extends BaseModelAdapter {
 		return incomeTo;
 	}
 	
-	public Row createRow(int rowIndex)  {
-		IncomeRow row = new IncomeRow(rowIndex);
+	public Row createRow(int rowIndex, final RowValueChangeHandler dataTable )  {
+		final IncomeRow row = new IncomeRow(rowIndex);
 		
 		row.setName(new TextBox());
-		row.setAmount(new MoneyTextBox());
 		row.setFrequency(new ValueListBox());
 		DateBox nextDate = new DateBox();
 		nextDate.setFormat(new DateBox.DefaultFormat(DateTimeFormat.getShortDateFormat()));
 		row.setNextDate(nextDate);
+
+		MoneyTextBox amount = new MoneyTextBox();
+		amount.addValueChangeHandler(new ValueChangeHandler<String>()  {
+			public void onValueChange(ValueChangeEvent<String> event) {
+				dataTable.onRowValueChanged(row);
+			}
+		});
+		row.setAmount(amount);
 
 		return row;
 	}

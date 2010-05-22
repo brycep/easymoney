@@ -22,8 +22,8 @@ public class IncomeTo implements ModelObject {
 
 	private Long id;
     private String name;
-    private MoneyTo amount;
-    private Frequency frequency;
+    private MoneyTo amount = new MoneyTo();
+    private Frequency frequency = Frequency.BiWeekly;
     private Date nextPayDate;
 
     public IncomeTo() {}

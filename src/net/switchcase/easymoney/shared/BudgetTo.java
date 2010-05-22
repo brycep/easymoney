@@ -84,10 +84,26 @@ public class BudgetTo implements Serializable {
         this.monthlySavings = monthlySavings;
     }
 
-	public MoneyTo calulateExpenseTotal() {
+	public MoneyTo calculateExpenseTotal() {
 		MoneyTo money = new MoneyTo();
 		for(ExpenseCategoryTo category : categories)  {
 			money.add(category.getAmount());
+		}
+		return money;
+	}
+	
+	public MoneyTo calculateIncomeTotal()  {
+		MoneyTo money = new MoneyTo();
+		for(IncomeTo income : incomes)  {
+			money.add(income.getAmount());
+		}
+		return money;
+	}
+
+	public MoneyTo calculateBillTotal()  {
+		MoneyTo money = new MoneyTo();
+		for(BillTo bill : monthlyBills)  {
+			money.add(bill.getAmount());
 		}
 		return money;
 	}

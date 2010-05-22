@@ -18,11 +18,11 @@ public class ExpenseCategoryTo implements ModelObject {
 
 	private Long id;
     private String name;
-    private MoneyTo amount;
-    private Frequency frequencyToRefresh;
+    private MoneyTo amount = new MoneyTo();
+    private Frequency frequencyToRefresh = Frequency.Monthly;
     private boolean accumulating;
 
-    private MoneyTo balance;
+    private MoneyTo balance = new MoneyTo();
 
     public ExpenseCategoryTo()  {}
 

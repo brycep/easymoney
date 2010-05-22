@@ -9,8 +9,11 @@ import net.switchcase.easymoney.client.common.ModelObject;
 import net.switchcase.easymoney.client.common.MoneyTextBox;
 import net.switchcase.easymoney.client.common.Row;
 import net.switchcase.easymoney.client.common.ValueListBox;
+import net.switchcase.easymoney.client.event.RowValueChangeHandler;
 import net.switchcase.easymoney.shared.BillTo;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.TextBox;
@@ -35,13 +38,21 @@ public class BillModelAdapter extends BaseModelAdapter  {
 		return bill;
 	}
 
-	public Row createRow(int rowIndex) {
-		BillRow row = new BillRow(rowIndex);
-		row.setAmount(new MoneyTextBox());
+	public Row createRow(int rowIndex, final RowValueChangeHandler dataTable) {
+		final BillRow row = new BillRow(rowIndex);
 		row.setBillDueDay(createDayList());
 		row.setName(new TextBox());
 		row.setReminder(new CheckBox());
 		row.setReminderDay(createDayList());
+		
+		MoneyTextBox amount = new MoneyTextBox();
+		amount.addValueChangeHandler(new ValueChangeHandler<String>()  {
+			public void onValueChange(ValueChangeEvent<String> event) {
+				dataTable.onRowValueChanged(row);
+			}
+		});
+		row.setAmount(amount);
+
 		return row;
 	}
 

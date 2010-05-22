@@ -9,10 +9,11 @@ import net.switchcase.easymoney.client.event.RowValueChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 
-public class DataTable<ModelType> extends FlexTable implements HasRowValueChangeHandler {
+public class DataTable<ModelType> extends FlexTable implements HasRowValueChangeHandler, RowValueChangeHandler {
 	
 	private List<Row> rows = new ArrayList<Row>();
 	private ModelAdapter modelAdapter;
+	private List<RowValueChangeHandler> changeHandlers = new ArrayList<RowValueChangeHandler>();
 	
 	private Label totalLabel;
 
@@ -42,7 +43,7 @@ public class DataTable<ModelType> extends FlexTable implements HasRowValueChange
 
 		int rowIndex = 1;
 		for(ModelType object : dataList)  {
-			Row row = modelAdapter.createRow(rowIndex);
+			Row row = modelAdapter.createRow(rowIndex, this);
 			row.setData(object);
 			modelAdapter.renderRow(row, this);
 			rowIndex++;
@@ -53,6 +54,14 @@ public class DataTable<ModelType> extends FlexTable implements HasRowValueChange
 		}
 	}
 	
+	public void addRow(ModelType model)  {
+		int lastRow = this.getRowCount() - 1;
+		Row row = modelAdapter.createRow(lastRow, this);
+		row.setData(model);
+		modelAdapter.renderRow(row, this);
+		createFooterRow(lastRow + 1);
+	}
+	
 	private void createFooterRow(int row)  {
 		this.setWidget(row, this.getCellCount(row - 1) - 2, new Label("Total: "));
 		this.getCellFormatter().addStyleName(row, this.getCellCount(row - 1) - 2, "right-align");
@@ -60,10 +69,16 @@ public class DataTable<ModelType> extends FlexTable implements HasRowValueChange
 		this.getCellFormatter().addStyleName(row, this.getCellCount(row - 1) - 1, "right-align");
 		this.getRowFormatter().addStyleName(row, "data-table-footer");
 	}
-
+	
 	public void addRowValueChangeHandler(RowValueChangeHandler handler) {
+		changeHandlers.add(handler);
+		
 	}
-	
-	
+
+	public void onRowValueChanged(Row row) {
+		for(RowValueChangeHandler handler : changeHandlers)  {
+			handler.onRowValueChanged(row);
+		}
+	}
 
 }

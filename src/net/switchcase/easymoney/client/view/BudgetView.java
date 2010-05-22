@@ -7,8 +7,13 @@
 package net.switchcase.easymoney.client.view;
 
 import net.switchcase.easymoney.client.presenter.BudgetPresenter;
+import net.switchcase.easymoney.client.presenter.BudgetPresenter.BillsDisplay;
 import net.switchcase.easymoney.client.presenter.BudgetPresenter.ExpenseDisplay;
+import net.switchcase.easymoney.client.presenter.BudgetPresenter.IncomeDisplay;
+import net.switchcase.easymoney.shared.BillTo;
 import net.switchcase.easymoney.shared.BudgetTo;
+import net.switchcase.easymoney.shared.ExpenseCategoryTo;
+import net.switchcase.easymoney.shared.IncomeTo;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
@@ -78,7 +83,19 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         billsView.setData(budget);
         expenseCategoriesView.setData(budget);
     }
-
+    
+    public void addIncome(IncomeTo income) {
+    	incomeView.addIncome(income);
+    }
+    
+    public void addBill(BillTo bill) {
+    	billsView.addBill(bill);
+    }
+    
+    public void addExpenseCategory(ExpenseCategoryTo expenseCategory) {
+    	expenseCategoriesView.addExpenseCategory(expenseCategory);
+    }
+    
     public String getBudgetName() {
         return budgetNameLabel.getText();
     }
@@ -91,11 +108,11 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         return summaryView;
     }
 
-    public Widget getIncomeView() {
+    public IncomeDisplay getIncomeView() {
         return incomeView;
     }
 
-    public Widget getBillsView() {
+    public BillsDisplay getBillsView() {
         return billsView;
     }
 

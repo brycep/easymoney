@@ -21,7 +21,7 @@ public class BillTo implements ModelObject {
     private boolean reminderActive;
     private int dayOfMonth;
     private int reminderDay;
-    private MoneyTo amount;
+    private MoneyTo amount = new MoneyTo();
 
     public BillTo() {}
 

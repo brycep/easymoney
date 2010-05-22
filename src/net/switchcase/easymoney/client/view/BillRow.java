@@ -35,7 +35,11 @@ public class BillRow implements Row  {
 	}
 	
 	public void updateModel() {
-//		dataObject.setName()
+		bill.setName(name.getValue());
+		bill.setAmount(amount.getMoneyValue());
+		bill.setDayOfMonth(Integer.parseInt(billDueDay.getSelected().getValue()));
+		bill.setReminderActive(reminder.getValue());
+		bill.setReminderDay(Integer.parseInt(reminderDay.getSelected().getValue()));
 	}
 
 	public void setData(Object dataObject) {

@@ -11,8 +11,13 @@ import net.switchcase.easymoney.client.common.HasMoneyValue;
 import net.switchcase.easymoney.client.common.Row;
 import net.switchcase.easymoney.client.event.HasRowValueChangeHandler;
 import net.switchcase.easymoney.client.event.RowValueChangeHandler;
+import net.switchcase.easymoney.shared.BillTo;
 import net.switchcase.easymoney.shared.BudgetTo;
+import net.switchcase.easymoney.shared.ExpenseCategoryTo;
+import net.switchcase.easymoney.shared.IncomeTo;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
@@ -39,20 +44,36 @@ public class BudgetPresenter implements Presenter {
         HasClickHandlers getSaveButton();
 
         Widget getSummaryView();
-        Widget getIncomeView();
-        Widget getBillsView();
+        IncomeDisplay getIncomeView();
+        BillsDisplay getBillsView();
         ExpenseDisplay getExpenseCategoriesView();
 
         void setData(BudgetTo budget);
+        void addExpenseCategory(ExpenseCategoryTo expenseCategory);
+        void addIncome(IncomeTo income);
+        void addBill(BillTo bill);
 
         Widget asWidget();
+    }
+
+    public interface IncomeDisplay  {
+    	HasRowValueChangeHandler getIncomeTable();
+    	HasClickHandlers getAddIncomeButton();
+    	HasMoneyValue getTotalLabel();
+    }
+    
+    public interface BillsDisplay  {
+    	HasRowValueChangeHandler getBillsTable();
+    	HasClickHandlers getAddBillButton();
+    	HasMoneyValue getTotalLabel();
     }
     
     public interface ExpenseDisplay  {
     	HasRowValueChangeHandler getExpenseTable(); 
     	HasMoneyValue getTotalExpenseLabel();
+    	HasClickHandlers getAddExpenseCategoryButton();
     }
-
+    
     public BudgetPresenter(EasyMoneyServiceAsync easyMoneyService,
                            HandlerManager eventBus,
                            Display display) {
@@ -74,6 +95,55 @@ public class BudgetPresenter implements Presenter {
 					}
     			}
     	);
+    	
+    	display.getIncomeView().getIncomeTable().addRowValueChangeHandler(
+    			new RowValueChangeHandler()  {
+    				public void onRowValueChanged(Row row)  {
+    					row.updateModel();
+    					incomeAmountsChanged();
+    				}
+    			}
+    	);
+    	
+    	display.getBillsView().getBillsTable().addRowValueChangeHandler(
+    			new RowValueChangeHandler()  {
+    				public void onRowValueChanged(Row row)  {
+    					row.updateModel();
+    					billAmountsChanged();
+    				}
+    			}
+    	);
+    	
+    	display.getIncomeView().getAddIncomeButton().addClickHandler(
+    			new ClickHandler()  {
+    				public void onClick(ClickEvent event)  {
+    					IncomeTo income = new IncomeTo();
+    					BudgetPresenter.this.budget.getIncomes().add(income);
+    					BudgetPresenter.this.display.addIncome(income);
+    				}
+    			}
+    	);
+    	
+    	display.getBillsView().getAddBillButton().addClickHandler(
+    			new ClickHandler()  {
+    				public void onClick(ClickEvent event)  {
+    					BillTo bill = new BillTo();
+    					BudgetPresenter.this.budget.getMonthlyBills().add(bill);
+    					BudgetPresenter.this.display.addBill(bill);
+    				}
+    			}
+    	);
+    	
+    	display.getExpenseCategoriesView().getAddExpenseCategoryButton().addClickHandler(
+    			new ClickHandler()  {
+    				public void onClick(ClickEvent event) {
+    					ExpenseCategoryTo category = new ExpenseCategoryTo();
+    					BudgetPresenter.this.budget.getCategories().add(category);
+    					BudgetPresenter.this.display.addExpenseCategory(category);
+    				}
+    			}
+    	);
+    	
     
     }
 
@@ -83,9 +153,17 @@ public class BudgetPresenter implements Presenter {
         container.add(display.asWidget());
         retrieveBudget();
     }
+
+    public void incomeAmountsChanged()  {
+    	display.getIncomeView().getTotalLabel().setValue(budget.calculateIncomeTotal());
+    }
+
+    public void billAmountsChanged()  {
+    	display.getBillsView().getTotalLabel().setValue(budget.calculateBillTotal());
+    }
     
     public void expenseAmountsChanged()  {
-    	display.getExpenseCategoriesView().getTotalExpenseLabel().setValue(budget.calulateExpenseTotal());
+    	display.getExpenseCategoriesView().getTotalExpenseLabel().setValue(budget.calculateExpenseTotal());
     }
     
     public BudgetTo getBudget()  {

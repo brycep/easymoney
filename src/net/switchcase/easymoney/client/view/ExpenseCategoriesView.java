@@ -14,7 +14,10 @@ import net.switchcase.easymoney.client.presenter.BudgetPresenter;
 import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.ExpenseCategoryTo;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -25,12 +28,22 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class ExpenseCategoriesView extends Composite implements BudgetPresenter.ExpenseDisplay  {
 	
 	private VerticalPanel expenseViewPanel;
+	private FlowPanel buttonPanel;
 	private DataTable<ExpenseCategoryTo> expenseListTable;
 	private MoneyLabel totalLabel = new MoneyLabel();
+	private Button addExpenseCategoryButton;
 
 	public ExpenseCategoriesView()  {
 		expenseViewPanel = new VerticalPanel();
 		initWidget(expenseViewPanel);
+		
+		addExpenseCategoryButton = new Button();
+		addExpenseCategoryButton.setText("Add");
+		
+		buttonPanel = new FlowPanel();
+		buttonPanel.addStyleName("button-panel");
+		buttonPanel.add(addExpenseCategoryButton);
+		expenseViewPanel.add(buttonPanel);
 		
 		expenseListTable = new DataTable<ExpenseCategoryTo>(new ExpenseModelAdapter());
 		expenseListTable.addStyleName("money-table");
@@ -49,7 +62,16 @@ public class ExpenseCategoriesView extends Composite implements BudgetPresenter.
 		return totalLabel;
 	}
 	
+	public HasClickHandlers getAddExpenseCategoryButton()  {
+		return addExpenseCategoryButton;
+	}
+	
 	public void setData(BudgetTo budget)  {
+		totalLabel.setValue(budget.calculateExpenseTotal());
 		expenseListTable.setData(budget.getCategories());
+	}
+	
+	public void addExpenseCategory(ExpenseCategoryTo expenseCategory)  {
+		expenseListTable.addRow(expenseCategory);
 	}
 }

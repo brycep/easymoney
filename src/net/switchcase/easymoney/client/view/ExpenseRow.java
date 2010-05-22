@@ -36,7 +36,11 @@ public class ExpenseRow implements Row {
 	}
 	
 	public void updateModel() {
-//		dataObject.setName()
+		expenseCategoryTo.setName(name.getValue());
+		expenseCategoryTo.setAccumulating(accumulating.getValue());
+		expenseCategoryTo.setAmount(amount.getMoneyValue());
+		expenseCategoryTo.setBalance(balance.getMoneyValue());
+		expenseCategoryTo.setFrequencyToRefresh(Frequency.valueOf(frequency.getSelected().getValue()));
 	}
 
 	public void setData(Object dataObject) {
@@ -52,7 +56,7 @@ public class ExpenseRow implements Row {
 				new ListItem(Frequency.Weekly.toString(), "Weekly")
 		));
 		frequency.setSelected(category.getFrequencyToRefresh().toString());
-
+		this.expenseCategoryTo = category;
 	}
 
 	public HasValue<String> getName() {
