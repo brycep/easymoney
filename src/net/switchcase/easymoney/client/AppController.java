@@ -9,6 +9,7 @@ package net.switchcase.easymoney.client;
 import net.switchcase.easymoney.client.presenter.BudgetPresenter;
 import net.switchcase.easymoney.client.presenter.Presenter;
 import net.switchcase.easymoney.client.view.BudgetView;
+import net.switchcase.easymoney.shared.LoginInfo;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -26,11 +27,14 @@ public class AppController implements ValueChangeHandler<String> {
     private EasyMoneyServiceAsync easyMoneyService;
     private HandlerManager eventBus;
     private HasWidgets container;
+    private LoginInfo loginInfo;
 
     public AppController(EasyMoneyServiceAsync easyMoneyService,
-                         HandlerManager eventBus) {
+                         HandlerManager eventBus,
+                         LoginInfo loginInfo) {
         this.easyMoneyService = easyMoneyService;
         this.eventBus = eventBus;
+        this.loginInfo = loginInfo;
         bind();
     }
 

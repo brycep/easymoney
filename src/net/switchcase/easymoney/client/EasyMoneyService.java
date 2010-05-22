@@ -1,6 +1,8 @@
 package net.switchcase.easymoney.client;
 
 import net.switchcase.easymoney.shared.BudgetTo;
+import net.switchcase.easymoney.shared.LoginInfo;
+import net.switchcase.easymoney.shared.exception.NotLoggedInException;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -12,7 +14,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("budget")
 public interface EasyMoneyService extends RemoteService {
-
-	BudgetTo getActiveBudget();
+	
+	LoginInfo login(String requestUri);
+	BudgetTo getActiveBudget() throws NotLoggedInException;
 	
 }

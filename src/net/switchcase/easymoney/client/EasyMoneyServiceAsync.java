@@ -1,6 +1,7 @@
 package net.switchcase.easymoney.client;
 
 import net.switchcase.easymoney.shared.BudgetTo;
+import net.switchcase.easymoney.shared.LoginInfo;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface EasyMoneyServiceAsync {
 
+	void login(String requestUri, AsyncCallback<LoginInfo> callback);
 	void getActiveBudget(AsyncCallback<BudgetTo> callback);
 	
 }

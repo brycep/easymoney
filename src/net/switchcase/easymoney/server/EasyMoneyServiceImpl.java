@@ -10,8 +10,13 @@ import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.ExpenseCategoryTo;
 import net.switchcase.easymoney.shared.Frequency;
 import net.switchcase.easymoney.shared.IncomeTo;
+import net.switchcase.easymoney.shared.LoginInfo;
 import net.switchcase.easymoney.shared.MoneyTo;
+import net.switchcase.easymoney.shared.exception.NotLoggedInException;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -22,7 +27,26 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMoneyService {
 
-	public BudgetTo getActiveBudget() {
+	public LoginInfo login(String requestUri)  {
+		LoginInfo login = new LoginInfo();
+		
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		if (null == user)  {
+			login.setLoggedIn(false);
+			login.setLoginUrl(userService.createLoginURL(requestUri));
+		} else  {
+			login.setLoggedIn(true);
+			login.setEmailAddress(user.getEmail());
+			login.setNickname(user.getNickname());
+			login.setLogoutUrl(userService.createLogoutURL(requestUri));
+		}
+		return login;
+	}
+	
+	
+	public BudgetTo getActiveBudget() throws NotLoggedInException {
+		checkLoggedIn();
 		BudgetTo testBudget = new BudgetTo();
 		testBudget.setName("Test Budget");
 		
@@ -69,6 +93,17 @@ public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMo
 		testBudget.setCategories(expenseCategories);
 		
 		return testBudget;
+	}
+	
+	private void checkLoggedIn() throws NotLoggedInException {
+		if (null == getUser())  {
+			throw new NotLoggedInException();
+		}
+	}
+	
+	private User getUser()  {
+		UserService userService = UserServiceFactory.getUserService();
+		return userService.getCurrentUser();
 	}
 
 	
