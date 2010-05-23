@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+  <configuration>
+    <stop-on-errors>true</stop-on-errors>
+    <date-format>MM/dd/yyyy HH:mm</date-format>
+    <wildcard>true</wildcard>
+    <custom-converters>
+    	<converter type="net.switchcase.easymoney.server.domain.MoneyToCustomConverter">
+    		<class-a>net.switchcase.easymoney.shared.MoneyTo</class-a>
+    		<class-b>Integer</class-b>
+    	</converter>
+    </custom-converters>
+  </configuration>
+  
+  <mapping>
+    <class-a>net.switchcase.easymoney.server.domain.Budget</class-a>
+    <class-b>net.switchcase.easymoney.shared.BudgetTo</class-b>
+  </mapping> 
+</mappings>

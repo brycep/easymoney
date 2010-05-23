@@ -60,7 +60,6 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         TabPanel tabPanel = new TabPanel();
 
         budgetNameLabel = new Label();
-        saveButton = new Button();
 
         summaryView = new SummaryView();
         incomeView = new IncomeView();

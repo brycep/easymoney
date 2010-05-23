@@ -104,6 +104,15 @@ public class BudgetPresenter implements Presenter {
     }
 
     public void bind()  {
+    	
+    	display.getSaveButton().addClickHandler(
+				new ClickHandler()  {
+					public void onClick(ClickEvent event) {
+						saveBudget();
+					}	
+				}
+  		);
+    	
     	display.getExpenseCategoriesView().getExpenseTable().addRowValueChangeHandler(
     			new RowValueChangeHandler()  {
 					public void onRowValueChanged(Row row) {

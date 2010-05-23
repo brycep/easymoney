@@ -7,6 +7,7 @@
 package net.switchcase.easymoney.shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**  The Budget class represents a user's monthly budget
@@ -18,10 +19,11 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class BudgetTo implements Serializable {
 	
+	private String id;
 	private String name;
-    private List<IncomeTo> incomes;
-    private List<BillTo> monthlyBills;
-    private List<ExpenseCategoryTo> categories;
+    private List<IncomeTo> incomes = new ArrayList<IncomeTo>();
+    private List<BillTo> monthlyBills = new ArrayList<BillTo>();
+    private List<ExpenseCategoryTo> categories = new ArrayList<ExpenseCategoryTo>();
     private MoneyTo balance;
     private MoneyTo savings;
     private MoneyTo monthlySavings;
@@ -29,6 +31,14 @@ public class BudgetTo implements Serializable {
     private String owner;
 
     public BudgetTo() {}
+    
+    public String getId()  {
+    	return id;
+    }
+    
+    public void setId(String id)  {
+    	this.id = id;
+    }
     
     public String getName()  {
     	return name;

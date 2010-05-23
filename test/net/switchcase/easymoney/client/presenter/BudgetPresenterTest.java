@@ -35,6 +35,7 @@ public class BudgetPresenterTest {
 	public void setUp()  {
 		MockitoAnnotations.initMocks(this);
 		when(display.getSummaryView()).thenReturn(summaryDisplay);
+		when(display.getSummaryView().getSharedWith()).thenReturn(new MockTextBox());
 		when(display.getExpenseCategoriesView()).thenReturn(expenseDisplay);
 		when(display.getIncomeView()).thenReturn(incomeDisplay);
 		when(display.getBillsView()).thenReturn(billsDisplay);
@@ -94,7 +95,7 @@ public class BudgetPresenterTest {
 		budgetPresenter.saveBudget();
 		
 		verify(display).disableSaveButton();
-		verify(easyMoneyService).saveBudget(budget, (AsyncCallback<Void>)Mockito.anyObject());
+		verify(easyMoneyService).saveBudget(Mockito.same(budget), (AsyncCallback<Void>)Mockito.anyObject());
 		
 	}
 

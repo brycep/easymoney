@@ -8,9 +8,14 @@ package net.switchcase.easymoney.server.domain;
 
 import java.util.Date;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 import net.switchcase.easymoney.shared.Frequency;
+
+import com.google.appengine.api.datastore.Key;
 
 /**  This is a source of income.  It specifies when
  * the user gets paid and how much.
@@ -22,46 +27,44 @@ import net.switchcase.easymoney.shared.Frequency;
 @PersistenceCapable
 public class Income {
 
-	private long id;
-    private String name;
-    private int amountDollars;
-    private int amountCents;
-    private Frequency frequency;
-    private Date nextPayDate;
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private Key id;
+	@Persistent private String name;
+	@Persistent private Integer amount;
+	@Persistent private Frequency frequency;
+	@Persistent private Date nextPayDate;
 
     public Income() {}
 
-    public long getId()  {
-    	return id;
-    }
     
-    public void setId(long id)  {
-    	this.id = id;
-    }
-    
-    public String getName() {
+    public Key getId() {
+		return id;
+	}
+
+
+	public void setId(Key id) {
+		this.id = id;
+	}
+
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+
+	public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
-
-    public int getAmountDollars() {
-		return amountDollars;
-	}
-
-	public void setAmountDollars(int amountDollars) {
-		this.amountDollars = amountDollars;
-	}
-
-	public int getAmountCents() {
-		return amountCents;
-	}
-
-	public void setAmountCents(int amountCents) {
-		this.amountCents = amountCents;
-	}
 
 	public Frequency getFrequency() {
         return frequency;

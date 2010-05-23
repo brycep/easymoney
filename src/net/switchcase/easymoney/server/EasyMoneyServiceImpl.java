@@ -1,17 +1,13 @@
 package net.switchcase.easymoney.server;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import net.switchcase.easymoney.client.EasyMoneyService;
-import net.switchcase.easymoney.shared.BillTo;
+import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.JdoBudgetDao;
+import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.shared.BudgetTo;
-import net.switchcase.easymoney.shared.ExpenseCategoryTo;
-import net.switchcase.easymoney.shared.Frequency;
-import net.switchcase.easymoney.shared.IncomeTo;
 import net.switchcase.easymoney.shared.LoginInfo;
-import net.switchcase.easymoney.shared.MoneyTo;
 import net.switchcase.easymoney.shared.exception.NotLoggedInException;
 
 import com.google.appengine.api.users.User;
@@ -27,6 +23,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMoneyService {
 
+	private BudgetDao budgetDao = new JdoBudgetDao();
+	final private Converter converter = new Converter();
+		
 	public LoginInfo login(String requestUri)  {
 		LoginInfo login = new LoginInfo();
 		
@@ -47,6 +46,23 @@ public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMo
 	
 	public BudgetTo getActiveBudget() throws NotLoggedInException {
 		checkLoggedIn();
+		User user = getUser();
+		Budget budget = budgetDao.findActiveBudget(user);
+		
+		if (null == budget)  {
+			budget = new Budget();
+			budget.setOwner(user);
+			budget.setCreateDate(new Date());
+		}
+		
+		budget.setLastAccessed(new Date());
+		
+		BudgetTo budgetTo = converter.toTransferObject(budget);
+		return budgetTo;
+	}
+
+/*
+	private BudgetTo createTestBudget() {
 		BudgetTo testBudget = new BudgetTo();
 		testBudget.setName("Test Budget");
 		
@@ -91,13 +107,24 @@ public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMo
 		expenseCategories.add(expenseCategory2);
 		
 		testBudget.setCategories(expenseCategories);
-		
 		return testBudget;
 	}
 	
-	public void saveBudget(BudgetTo budget) throws NotLoggedInException {
+	*/
+	
+	public void saveBudget(BudgetTo budgetTo) throws NotLoggedInException {
 		checkLoggedIn();
-		
+		Budget budget;
+		if (null == budgetTo.getId())  {
+			budget = new Budget();
+			budget.setCreateDate(new Date());
+			budget.setLastAccessed(new Date());
+			budget.setOwner(getUser());
+		} else  {
+			budget = budgetDao.findBudget(budgetTo.getId());
+		}
+		converter.mergeTransferObjectIntoDomain(budget, budgetTo);
+		budgetDao.saveBudget(budget);
 	}
 	
 	private void checkLoggedIn() throws NotLoggedInException {

@@ -6,9 +6,14 @@
 
 package net.switchcase.easymoney.server.domain;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 import net.switchcase.easymoney.shared.Frequency;
+
+import com.google.appengine.api.datastore.Key;
 
 /**
  * User: bryce
@@ -18,23 +23,23 @@ import net.switchcase.easymoney.shared.Frequency;
 @PersistenceCapable
 public class ExpenseCategory {
 
-	private Long id;
-    private String name;
-    private int amountDollars;
-    private int amountCents;
-    private Frequency frequencyToRefresh;
-    private boolean accumulating;
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private Key id;
+	@Persistent private String name;
+	@Persistent private Integer amount;
+	@Persistent private Frequency frequencyToRefresh;
+	@Persistent private boolean accumulating;
 
-    private int balanceDollars;
-    private int balanceCents;
+	@Persistent private Integer balance;
 
     public ExpenseCategory()  {}
 
-    public Long getId()  {
+    public Key getId()  {
     	return id;
     }
     
-    public void setId(Long id)  {
+    public void setId(Key id)  {
     	this.id = id;
     }
     
@@ -46,22 +51,14 @@ public class ExpenseCategory {
         this.name = name;
     }
 
-    public int getAmountDollars() {
-        return amountDollars;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setAmount(int amountDollars) {
-        this.amountDollars = amountDollars;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
     
-    public int getAmountCents()  {
-    	return amountCents;
-    }
-    
-    public void setAmountCents(int amountCents)  {
-    	this.amountCents = amountCents;
-    }
-
     public Frequency getFrequencyToRefresh() {
         return frequencyToRefresh;
     }
@@ -78,19 +75,13 @@ public class ExpenseCategory {
         this.accumulating = accumulating;
     }
 
-    public int getBalanceDollars() {
-        return balanceDollars;
-    }
-    
-    public void setBalanceDollars(int balanceDollars)  {
-    	this.balanceDollars = balanceDollars;
-    }
-    
-    public int getBalanceCents()  {
-    	return balanceCents;
-    }
+	public Integer getBalance() {
+		return balance;
+	}
 
-    public void setBalanceCents(int balanceCents) {
-        this.balanceCents = balanceCents;
-    }
+	public void setBalance(Integer balance) {
+		this.balance = balance;
+	}
+
+    
 }
