@@ -14,15 +14,23 @@ public class MoneyLabel extends Label implements HasMoneyValue {
 	}
 	
 	public void setValue(MoneyTo moneyTo)  {
+		if (null == moneyTo)  {
+			return;
+		}
+		
 		NumberFormat nformat = NumberFormat.getFormat(DECIMAL_FORMAT);
 		double value = (double) moneyTo.getDollars() + ((double)moneyTo.getCents()/ 100.00);
 		this.setText( nformat.format(value));
 	}
 
     public MoneyTo getMoneyValue()  {
-		return new MoneyTo(
-				NumberFormat.getFormat(DECIMAL_FORMAT).parse(this.getText())
-		);
+    	try  {
+	    	return new MoneyTo(
+					NumberFormat.getFormat(DECIMAL_FORMAT).parse(this.getText())
+			);
+    	} catch(Exception exp)  {
+    		return new MoneyTo();
+    	}
     }
 
 

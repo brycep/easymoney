@@ -95,6 +95,11 @@ public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMo
 		return testBudget;
 	}
 	
+	public void saveBudget(BudgetTo budget) throws NotLoggedInException {
+		checkLoggedIn();
+		
+	}
+	
 	private void checkLoggedIn() throws NotLoggedInException {
 		if (null == getUser())  {
 			throw new NotLoggedInException();

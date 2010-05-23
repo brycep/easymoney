@@ -8,6 +8,11 @@ import com.google.gwt.user.client.ui.HasValue;
 public class MockTextBox implements HasValue<String> {
 	
 	private String value;
+	
+	public MockTextBox() {}
+	public MockTextBox(String value)  {
+		this.value = value;
+	}
 
 	public HandlerRegistration addValueChangeHandler(
 			ValueChangeHandler<String> handler) {

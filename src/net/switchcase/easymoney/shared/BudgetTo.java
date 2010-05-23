@@ -25,6 +25,8 @@ public class BudgetTo implements Serializable {
     private MoneyTo balance;
     private MoneyTo savings;
     private MoneyTo monthlySavings;
+    private String sharedWith;
+    private String owner;
 
     public BudgetTo() {}
     
@@ -83,6 +85,22 @@ public class BudgetTo implements Serializable {
     public void setMonthlySavings(MoneyTo monthlySavings) {
         this.monthlySavings = monthlySavings;
     }
+    
+   	public String getSharedWith() {
+		return sharedWith;
+	}
+
+	public void setSharedWith(String sharedWith) {
+		this.sharedWith = sharedWith;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
 
 	public MoneyTo calculateExpenseTotal() {
 		MoneyTo money = new MoneyTo();

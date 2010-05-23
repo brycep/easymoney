@@ -80,5 +80,11 @@ public class DataTable<ModelType> extends FlexTable implements HasRowValueChange
 			handler.onRowValueChanged(row);
 		}
 	}
+	
+	public void updateModel()  {
+		for(Row row : rows)  {
+			row.updateModel();
+		}
+	}
 
 }

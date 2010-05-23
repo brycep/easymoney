@@ -76,4 +76,8 @@ public class IncomeView extends Composite implements BudgetPresenter.IncomeDispl
     public void addIncome(IncomeTo income) {
     	incomeListTable.addRow(income);
     }
+    
+    public void updateModel() {
+    	incomeListTable.updateModel();
+    }
 }

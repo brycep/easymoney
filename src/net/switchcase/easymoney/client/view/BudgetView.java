@@ -10,6 +10,7 @@ import net.switchcase.easymoney.client.presenter.BudgetPresenter;
 import net.switchcase.easymoney.client.presenter.BudgetPresenter.BillsDisplay;
 import net.switchcase.easymoney.client.presenter.BudgetPresenter.ExpenseDisplay;
 import net.switchcase.easymoney.client.presenter.BudgetPresenter.IncomeDisplay;
+import net.switchcase.easymoney.client.presenter.BudgetPresenter.SummaryDisplay;
 import net.switchcase.easymoney.shared.BillTo;
 import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.ExpenseCategoryTo;
@@ -104,7 +105,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         return saveButton;
     }
 
-    public Widget getSummaryView() {
+    public SummaryDisplay getSummaryView() {
         return summaryView;
     }
 
@@ -123,5 +124,13 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
     public Widget asWidget() {
         return this;
     }    
+    
+    public void disableSaveButton() {
+    	saveButton.setEnabled(false);
+    }
+    
+    public void enableSaveButton() {
+    	saveButton.setEnabled(true);
+    }
     
 }

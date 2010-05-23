@@ -74,4 +74,8 @@ public class ExpenseCategoriesView extends Composite implements BudgetPresenter.
 	public void addExpenseCategory(ExpenseCategoryTo expenseCategory)  {
 		expenseListTable.addRow(expenseCategory);
 	}
+	
+	public void updateModel() {
+		expenseListTable.updateModel();
+	}
 }

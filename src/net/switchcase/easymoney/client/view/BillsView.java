@@ -77,5 +77,9 @@ public class BillsView extends Composite implements BudgetPresenter.BillsDisplay
 	public void addBill(BillTo bill)  {
 		billListTable.addRow(bill);
 	}
+	
+	public void updateModel() {
+		billListTable.updateModel();
+	}
 
 }

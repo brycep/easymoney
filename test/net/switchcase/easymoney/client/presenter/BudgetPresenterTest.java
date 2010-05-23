@@ -1,5 +1,6 @@
 package net.switchcase.easymoney.client.presenter;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -7,6 +8,7 @@ import java.util.Arrays;
 
 import net.switchcase.easymoney.client.EasyMoneyServiceAsync;
 import net.switchcase.easymoney.client.common.HasMoneyValue;
+import net.switchcase.easymoney.client.test.MockTextBox;
 import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.ExpenseCategoryTo;
 import net.switchcase.easymoney.shared.MoneyTo;
@@ -14,18 +16,28 @@ import net.switchcase.easymoney.shared.MoneyTo;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class BudgetPresenterTest {
 	
 	@Mock private EasyMoneyServiceAsync easyMoneyService;
 	@Mock private BudgetPresenter.Display display;
+	@Mock private BudgetPresenter.SummaryDisplay summaryDisplay;
 	@Mock private BudgetPresenter.ExpenseDisplay expenseDisplay;
+	@Mock private BudgetPresenter.IncomeDisplay incomeDisplay;
+	@Mock private BudgetPresenter.BillsDisplay billsDisplay;
 	@Mock private HasMoneyValue expenseTotalLabel;
 	
 	@Before
 	public void setUp()  {
 		MockitoAnnotations.initMocks(this);
+		when(display.getSummaryView()).thenReturn(summaryDisplay);
+		when(display.getExpenseCategoriesView()).thenReturn(expenseDisplay);
+		when(display.getIncomeView()).thenReturn(incomeDisplay);
+		when(display.getBillsView()).thenReturn(billsDisplay);
 	}
 	
 	// Make sure the onExpenseAmountChanged event recalculates
@@ -50,6 +62,40 @@ public class BudgetPresenterTest {
 		budgetPresenter.expenseAmountsChanged();
 		
 		verify(expenseTotalLabel).setValue(new MoneyTo(5, 85));
+	}
+	
+	@Test
+	public void testUpdateModel()  {
+		
+		when(display.getSummaryView().getSharedWith()).thenReturn(new MockTextBox("SharedWith"));
+		
+		BudgetTo budget = new BudgetTo();
+		
+		BudgetPresenter budgetPresenter = new BudgetPresenter(easyMoneyService, null, display);
+		budgetPresenter.setBudget(budget);
+		
+		budgetPresenter.updateModel();
+		
+		assertEquals("SharedWith", budget.getSharedWith());
+		
+		verify(display.getIncomeView()).updateModel();
+		verify(display.getBillsView()).updateModel();
+		verify(display.getExpenseCategoriesView()).updateModel();
+	}
+	
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testSaveBudget()  {
+		BudgetTo budget = new BudgetTo();
+		
+		BudgetPresenter budgetPresenter = new BudgetPresenter(easyMoneyService, null, display);
+		budgetPresenter.setBudget(budget);
+		
+		budgetPresenter.saveBudget();
+		
+		verify(display).disableSaveButton();
+		verify(easyMoneyService).saveBudget(budget, (AsyncCallback<Void>)Mockito.anyObject());
+		
 	}
 
 }

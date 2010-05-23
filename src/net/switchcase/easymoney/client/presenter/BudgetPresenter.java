@@ -22,6 +22,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -43,7 +45,7 @@ public class BudgetPresenter implements Presenter {
         String getBudgetName(); 
         HasClickHandlers getSaveButton();
 
-        Widget getSummaryView();
+        SummaryDisplay getSummaryView();
         IncomeDisplay getIncomeView();
         BillsDisplay getBillsView();
         ExpenseDisplay getExpenseCategoriesView();
@@ -52,26 +54,41 @@ public class BudgetPresenter implements Presenter {
         void addExpenseCategory(ExpenseCategoryTo expenseCategory);
         void addIncome(IncomeTo income);
         void addBill(BillTo bill);
+        
+        void disableSaveButton();
+        void enableSaveButton();
 
         Widget asWidget();
+    }
+    
+    public interface SummaryDisplay {
+    	HasText getOwner();
+    	HasValue<String> getSharedWith();
+    	HasMoneyValue getIncomeTotal();
+    	HasMoneyValue getBillTotal();
+    	HasMoneyValue getExpenseTotal();
+    	HasMoneyValue getLeftOver();
     }
 
     public interface IncomeDisplay  {
     	HasRowValueChangeHandler getIncomeTable();
     	HasClickHandlers getAddIncomeButton();
     	HasMoneyValue getTotalLabel();
+    	void updateModel();
     }
     
     public interface BillsDisplay  {
     	HasRowValueChangeHandler getBillsTable();
     	HasClickHandlers getAddBillButton();
     	HasMoneyValue getTotalLabel();
+    	void updateModel();
     }
     
     public interface ExpenseDisplay  {
     	HasRowValueChangeHandler getExpenseTable(); 
     	HasMoneyValue getTotalExpenseLabel();
     	HasClickHandlers getAddExpenseCategoryButton();
+    	void updateModel();
     }
     
     public BudgetPresenter(EasyMoneyServiceAsync easyMoneyService,
@@ -172,6 +189,29 @@ public class BudgetPresenter implements Presenter {
     
     public void setBudget(BudgetTo budgetTo)  {
     	this.budget = budgetTo;
+    }
+    
+    public void updateModel()  {
+    	budget.setSharedWith(display.getSummaryView().getSharedWith().getValue());
+    	display.getIncomeView().updateModel();
+    	display.getBillsView().updateModel();
+    	display.getExpenseCategoriesView().updateModel();
+    }
+    
+    public void saveBudget()  {
+    	display.disableSaveButton();
+    	this.updateModel();
+    	
+    	easyMoneyService.saveBudget(budget, new AsyncCallback<Void>()  {
+    		public void onSuccess(Void result)  {
+    			display.enableSaveButton();
+    			
+    		}
+    		
+    		public void onFailure(Throwable caught)  {
+    			Window.alert("Could not save your budget");
+    		}
+    	});
     }
     
     private void retrieveBudget()  {
