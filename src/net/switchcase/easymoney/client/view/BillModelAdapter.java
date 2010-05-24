@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.switchcase.easymoney.client.common.HasValueList;
 import net.switchcase.easymoney.client.common.ListItem;
-import net.switchcase.easymoney.client.common.ModelObject;
 import net.switchcase.easymoney.client.common.MoneyTextBox;
 import net.switchcase.easymoney.client.common.Row;
 import net.switchcase.easymoney.client.common.ValueListBox;
@@ -14,36 +13,33 @@ import net.switchcase.easymoney.shared.BillTo;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 
 public class BillModelAdapter extends BaseModelAdapter  {
 	
 	private static final int NAME_COLUMN = 0;
-	private static final int REMINDER_COLUMN = 1;
-	private static final int DAY_OF_MONTH_COLUMN = 2;
-	private static final int REMINDER_DAY_COLUMN = 3;
-	private static final int AMOUNT_COLUMN = 4;
+	private static final int DAY_OF_MONTH_COLUMN = 1;
+	private static final int NEXT_DUE_DATE = 2;
+	private static final int AMOUNT_COLUMN = 3;
 
-	public ModelObject convertRowToDataObject(Row row, FlexTable table) {
+	public Object convertRowToDataObject(Row row, FlexTable table) {
 		BillRow billRow = (BillRow) row;
 		BillTo bill = (BillTo) row.getData();
 		bill.setAmount(billRow.getAmount().getMoneyValue());
 		bill.setDayOfMonth(getSelectedDay(billRow.getBillDueDay()));
-		bill.setReminderDay(getSelectedDay(billRow.getReminderDay()));
+		bill.setNextDueDate(billRow.getNextDueDate().getValue());
 		bill.setName(billRow.getName().getValue());
-		bill.setReminderActive(billRow.getReminder().getValue());
 		return bill;
 	}
 
 	public Row createRow(int rowIndex, final RowValueChangeHandler dataTable) {
 		final BillRow row = new BillRow(rowIndex);
 		row.setBillDueDay(createDayList());
+		row.setNextDueDate(new DateBox());
 		row.setName(new TextBox());
-		row.setReminder(new CheckBox());
-		row.setReminderDay(createDayList());
 		
 		MoneyTextBox amount = new MoneyTextBox();
 		amount.addValueChangeHandler(new ValueChangeHandler<String>()  {
@@ -58,9 +54,8 @@ public class BillModelAdapter extends BaseModelAdapter  {
 
 	public void renderHeaderRow(FlexTable table) {
 		addHeaderLabel(table, "Name", NAME_COLUMN);
-		addHeaderLabel(table, "Remind Me", REMINDER_COLUMN);
-		addHeaderLabel(table, "Bill Due Date", DAY_OF_MONTH_COLUMN);
-		addHeaderLabel(table, "Reminder Day", REMINDER_DAY_COLUMN);
+		addHeaderLabel(table, "Bill Due \n Day of Month", DAY_OF_MONTH_COLUMN);
+		addHeaderLabel(table, "Next Due Date", NEXT_DUE_DATE);
 		addHeaderLabel(table, "Amount", AMOUNT_COLUMN);
 	}
 
@@ -68,10 +63,9 @@ public class BillModelAdapter extends BaseModelAdapter  {
 		BillRow billRow = (BillRow) row;
 		
 		table.setWidget(row.getRowIndex(), NAME_COLUMN, (Widget)billRow.getName());
-		table.setWidget(row.getRowIndex(), REMINDER_COLUMN, (Widget)billRow.getReminder());
 		table.setWidget(row.getRowIndex(), DAY_OF_MONTH_COLUMN, (Widget)billRow.getBillDueDay());
-		table.setWidget(row.getRowIndex(), REMINDER_DAY_COLUMN, (Widget)billRow.getReminderDay());
 		table.setWidget(row.getRowIndex(), AMOUNT_COLUMN, (Widget)billRow.getAmount());
+		table.setWidget(row.getRowIndex(), NEXT_DUE_DATE, (Widget)billRow.getNextDueDate());
 	}
 	
 	private int getSelectedDay(HasValueList valueList)  {

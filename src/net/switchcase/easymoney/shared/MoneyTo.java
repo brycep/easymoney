@@ -30,6 +30,14 @@ public class MoneyTo implements Serializable {
     public MoneyTo(double value)  {
     	setDoubleValue(value);
     }
+    
+    public MoneyTo(Integer value)  {
+    	if (null == value)  {
+    		setValue(0);
+    	} else  {
+    		setValue(value);
+    	}
+    }
 
     public int getDollars() {
         return dollars;
@@ -54,9 +62,11 @@ public class MoneyTo implements Serializable {
 	 * @return A money object representing the result.
 	 */
 	public void subtract(MoneyTo money)  {
-		Integer leftValue = (dollars * 100) + cents;
-		Integer rightValue = (money.getDollars() * 100) + money.getCents();
-		this.setValue(leftValue - rightValue);
+		if (null != money)  {
+			Integer leftValue = (dollars * 100) + cents;
+			Integer rightValue = (money.getDollars() * 100) + money.getCents();
+			this.setValue(leftValue - rightValue);
+		}
 	}
 	
 	public void add(int value)  {
@@ -64,9 +74,11 @@ public class MoneyTo implements Serializable {
 	}
 	
 	public void add(MoneyTo moneyValue)   {
-		Integer currentValue = this.toInt();
-		currentValue = currentValue + moneyValue.toInt();
-		this.setValue(currentValue);
+		if (moneyValue != null)  {
+			Integer currentValue = this.toInt();
+			currentValue = currentValue + moneyValue.toInt();
+			this.setValue(currentValue);
+		}
 	}
 	
 	public Integer toInt()  {
@@ -93,6 +105,10 @@ public class MoneyTo implements Serializable {
 		} else  {
 			return ((Integer)cents).toString();
 		}
+	}
+	
+	public String toString()  {
+		return Integer.toString(this.toInt());
 	}
 
 	@Override

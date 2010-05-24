@@ -14,6 +14,9 @@ public class MoneyTextBox extends TextBox implements HasMoneyValue {
 	}
 	
 	public void setValue(MoneyTo moneyTo)  {
+		if (null == moneyTo)  {
+			moneyTo = new MoneyTo();
+		}
 		NumberFormat nformat = NumberFormat.getFormat(DECIMAL_FORMAT);
 		double value = (double) moneyTo.getDollars() + ((double)moneyTo.getCents()/ 100.00);
 		this.setValue( nformat.format(value));

@@ -8,14 +8,13 @@ package net.switchcase.easymoney.server.domain;
 
 import java.util.Date;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import net.switchcase.easymoney.shared.Frequency;
-
-import com.google.appengine.api.datastore.Key;
 
 /**  This is a source of income.  It specifies when
  * the user gets paid and how much.
@@ -29,7 +28,8 @@ public class Income {
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key id;
+	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
+	private String id;
 	@Persistent private String name;
 	@Persistent private Integer amount;
 	@Persistent private Frequency frequency;
@@ -38,12 +38,12 @@ public class Income {
     public Income() {}
 
     
-    public Key getId() {
+    public String getId() {
 		return id;
 	}
 
 
-	public void setId(Key id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -81,4 +81,33 @@ public class Income {
     public void setNextPayDate(Date nextPayDate) {
         this.nextPayDate = nextPayDate;
     }
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Income other = (Income) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+    
+    
 }

@@ -7,17 +7,87 @@
   <configuration>
     <stop-on-errors>true</stop-on-errors>
     <date-format>MM/dd/yyyy HH:mm</date-format>
-    <wildcard>true</wildcard>
+    <wildcard>true</wildcard><!--
     <custom-converters>
     	<converter type="net.switchcase.easymoney.server.domain.MoneyToCustomConverter">
     		<class-a>net.switchcase.easymoney.shared.MoneyTo</class-a>
     		<class-b>Integer</class-b>
     	</converter>
     </custom-converters>
-  </configuration>
+  --></configuration>
   
   <mapping>
     <class-a>net.switchcase.easymoney.server.domain.Budget</class-a>
     <class-b>net.switchcase.easymoney.shared.BudgetTo</class-b>
-  </mapping> 
+    <field-exclude>
+    	<a>owner</a>
+    	<b>owner</b>
+    </field-exclude>
+    <field-exclude>
+    	<a>balance</a>
+    	<b>balance</b>
+    </field-exclude>
+    <field-exclude>
+    	<a>monthlySavings</a>
+    	<b>monthlySavings</b>
+    </field-exclude>
+    <field-exclude>
+    	<a>savings</a>
+    	<b>savings</b>
+    </field-exclude>
+     
+    <field>
+    	<a>balance</a>
+    	<b>balanceAsInt</b>
+    </field>
+    <field>
+    	<a>savings</a>
+    	<b>savingsAsInt</b>
+    </field>
+    <field>
+    	<a>monthlySavings</a>
+    	<b>monthlySavingsAsInt</b>
+    </field>    
+  </mapping>
+  <mapping>
+  	<class-a>net.switchcase.easymoney.server.domain.Income</class-a>
+  	<class-b>net.switchcase.easymoney.shared.IncomeTo</class-b>
+  	<field-exclude>
+  		<a>amount</a>
+  		<b>amount</b>
+  	</field-exclude>
+  	<field>
+  		<a>amount</a>
+  		<b>amountAsInt</b>
+  	</field>
+  </mapping>
+  <mapping>
+  	<class-a>net.switchcase.easymoney.server.domain.Bill</class-a>
+  	<class-b>net.switchcase.easymoney.shared.BillTo</class-b>
+  	<field-exclude>
+  		<a>amount</a>
+  		<b>amount</b>
+  	</field-exclude>
+  	<field>
+  		<a>amount</a>
+  		<b>amountAsInt</b>
+  	</field>
+  </mapping>
+  <mapping>
+  	<class-a>net.switchcase.easymoney.server.domain.ExpenseCategory</class-a>
+  	<class-b>net.switchcase.easymoney.shared.ExpenseCategoryTo</class-b>
+  	<field-exclude>
+  		<a>amount</a>
+  		<b>amount</b>
+  	</field-exclude>
+  	<field-exclude>
+  		<a>balance</a>
+  		<b>balance</b>
+  	</field-exclude>
+  	<field>
+  		<a>amount</a>
+  		<b>amountAsInt</b>
+  	</field>
+  </mapping>
+   
 </mappings>

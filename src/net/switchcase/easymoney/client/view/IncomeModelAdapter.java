@@ -1,6 +1,5 @@
 package net.switchcase.easymoney.client.view;
 
-import net.switchcase.easymoney.client.common.ModelObject;
 import net.switchcase.easymoney.client.common.MoneyTextBox;
 import net.switchcase.easymoney.client.common.Row;
 import net.switchcase.easymoney.client.common.ValueListBox;
@@ -30,7 +29,7 @@ public class IncomeModelAdapter extends BaseModelAdapter {
 		addHeaderLabel(table, "Amount", AMOUNT_COLUMN);
 	}
 	
-	public ModelObject convertRowToDataObject(Row row, FlexTable table) {
+	public Object convertRowToDataObject(Row row, FlexTable table) {
 		IncomeTo incomeTo = (IncomeTo) row.getData();
 		IncomeRow incomeRow = (IncomeRow) row;
 		incomeTo.setAmount(incomeRow.getAmount().getMoneyValue());

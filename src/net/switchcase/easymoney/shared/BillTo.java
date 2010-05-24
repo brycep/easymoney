@@ -6,7 +6,8 @@
 
 package net.switchcase.easymoney.shared;
 
-import net.switchcase.easymoney.client.common.ModelObject;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * User: bryce
@@ -14,23 +15,22 @@ import net.switchcase.easymoney.client.common.ModelObject;
  * Time: 7:17:32 PM
  */
 @SuppressWarnings("serial")
-public class BillTo implements ModelObject {
+public class BillTo implements Serializable {
 	
-	private Long id;
+	private String id;
 	private String name;
-    private boolean reminderActive;
     private int dayOfMonth;
-    private int reminderDay;
+    private Date nextDueDate;
     private MoneyTo amount = new MoneyTo();
 
     public BillTo() {}
 
     
-    public Long getId() {
+    public String getId() {
 		return id;
 	}
     
-    public void setId(Long id)  {
+    public void setId(String id)  {
     	this.id = id;
     }
     
@@ -43,15 +43,6 @@ public class BillTo implements ModelObject {
 		this.name = name;
 	}
 
-
-	public boolean isReminderActive() {
-        return reminderActive;
-    }
-
-    public void setReminderActive(boolean reminderActive) {
-        this.reminderActive = reminderActive;
-    }
-
     public int getDayOfMonth() {
         return dayOfMonth;
     }
@@ -60,23 +51,33 @@ public class BillTo implements ModelObject {
         this.dayOfMonth = dayOfMonth;
     }
 
-    public int getReminderDay() {
-        return reminderDay;
-    }
+	public Date getNextDueDate() {
+		return nextDueDate;
+	}
 
-    public void setReminderDay(int reminderDay) {
-        this.reminderDay = reminderDay;
-    }
+
+	public void setNextDueDate(Date nextDueDate) {
+		this.nextDueDate = nextDueDate;
+	}
 
 
 	public MoneyTo getAmount() {
 		return amount;
 	}
 
-
 	public void setAmount(MoneyTo amount) {
 		this.amount = amount;
 	}
+	
+	public Integer getAmountAsInt()  {
+		if (null == amount)  {
+			return 0;
+		}
+		
+		return amount.toInt();
+	}
     
-    
+    public void setAmountAsInt(Integer value)  {
+    	amount = new MoneyTo(value);
+    }
 }

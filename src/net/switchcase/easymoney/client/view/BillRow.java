@@ -1,5 +1,7 @@
 package net.switchcase.easymoney.client.view;
 
+import java.util.Date;
+
 import net.switchcase.easymoney.client.common.HasMoneyValue;
 import net.switchcase.easymoney.client.common.HasValueList;
 import net.switchcase.easymoney.client.common.Row;
@@ -13,9 +15,8 @@ public class BillRow implements Row  {
 	private BillTo bill;
 	
 	private HasValue<String> name;
-	private HasValue<Boolean> reminder;
 	private HasValueList billDueDay;
-	private HasValueList reminderDay;
+	private HasValue<Date> nextDueDate;
 	private HasMoneyValue amount;
 	
 	public BillRow(int rowIndex)  {
@@ -37,17 +38,15 @@ public class BillRow implements Row  {
 	public void updateModel() {
 		bill.setName(name.getValue());
 		bill.setAmount(amount.getMoneyValue());
+		bill.setNextDueDate(nextDueDate.getValue());
 		bill.setDayOfMonth(Integer.parseInt(billDueDay.getSelected().getValue()));
-		bill.setReminderActive(reminder.getValue());
-		bill.setReminderDay(Integer.parseInt(reminderDay.getSelected().getValue()));
 	}
 
 	public void setData(Object dataObject) {
 		this.bill = (BillTo) dataObject;
 		name.setValue(bill.getName());
-		reminder.setValue(bill.isReminderActive());
+		nextDueDate.setValue(bill.getNextDueDate());
 		billDueDay.setSelected(Integer.toString(bill.getDayOfMonth()));
-		reminderDay.setSelected(Integer.toString(bill.getReminderDay()));
 		if (null != bill.getAmount())  {
 			amount.setValue(bill.getAmount());
 		}
@@ -62,28 +61,12 @@ public class BillRow implements Row  {
 		this.name = name;
 	}
 
-	public HasValue<Boolean> getReminder() {
-		return reminder;
-	}
-
-	public void setReminder(HasValue<Boolean> reminder) {
-		this.reminder = reminder;
-	}
-
 	public HasValueList getBillDueDay() {
 		return billDueDay;
 	}
 
 	public void setBillDueDay(HasValueList billDueDay) {
 		this.billDueDay = billDueDay;
-	}
-
-	public HasValueList getReminderDay() {
-		return reminderDay;
-	}
-
-	public void setReminderDay(HasValueList reminderDay) {
-		this.reminderDay = reminderDay;
 	}
 
 	public HasMoneyValue getAmount() {
@@ -93,5 +76,14 @@ public class BillRow implements Row  {
 	public void setAmount(HasMoneyValue amount) {
 		this.amount = amount;
 	}
+
+	public HasValue<Date> getNextDueDate() {
+		return nextDueDate;
+	}
+
+	public void setNextDueDate(HasValue<Date> nextDueDate) {
+		this.nextDueDate = nextDueDate;
+	}
+	
 	
 }

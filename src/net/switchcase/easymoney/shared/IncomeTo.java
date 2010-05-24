@@ -6,9 +6,8 @@
 
 package net.switchcase.easymoney.shared;
 
+import java.io.Serializable;
 import java.util.Date;
-
-import net.switchcase.easymoney.client.common.ModelObject;
 
 /**  This is a source of income.  It specifies when
  * the user gets paid and how much.
@@ -18,9 +17,9 @@ import net.switchcase.easymoney.client.common.ModelObject;
  * Time: 7:17:11 PM
  */
 @SuppressWarnings("serial")
-public class IncomeTo implements ModelObject {
+public class IncomeTo implements Serializable {
 
-	private Long id;
+	private String id;
     private String name;
     private MoneyTo amount = new MoneyTo();
     private Frequency frequency = Frequency.BiWeekly;
@@ -28,11 +27,11 @@ public class IncomeTo implements ModelObject {
 
     public IncomeTo() {}
 
-    public Long getId()  {
+    public String getId()  {
     	return id;
     }
     
-    public void setId(Long id)  {
+    public void setId(String id)  {
     	this.id = id;
     }
     
@@ -50,6 +49,17 @@ public class IncomeTo implements ModelObject {
 
     public void setAmount(MoneyTo amount) {
         this.amount = amount;
+    }
+    
+    public Integer getAmountAsInt()  {
+    	if (null == amount)  {
+    		return 0;
+    	}
+    	return amount.toInt();
+    }
+    
+    public void setAmountAsInt(Integer value)  {
+    	amount = new MoneyTo(value);
     }
 
     public Frequency getFrequency() {

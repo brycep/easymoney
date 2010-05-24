@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 
 /**  The Budget class represents a user's monthly budget
@@ -31,28 +31,41 @@ public class Budget implements Serializable {
 	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key id;
+	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
+	private String id;
+	
 	@Persistent private String name;
-	@Persistent private List<Income> incomes = new ArrayList<Income>();
-	@Persistent private List<Bill> monthlyBills = new ArrayList<Bill>();
-	@Persistent private List<ExpenseCategory> categories = new ArrayList<ExpenseCategory>();
+	
+	@Persistent(defaultFetchGroup="true")
+	private List<Income> incomes = new ArrayList<Income>();
+	
+	@Persistent(defaultFetchGroup="true") 
+	private List<Bill> monthlyBills = new ArrayList<Bill>();
+	
+	@Persistent(defaultFetchGroup="true")
+	private List<ExpenseCategory> categories = new ArrayList<ExpenseCategory>();
+	
 	@Persistent private Integer balance;
+	
 	@Persistent private Integer savings;
+	
 	@Persistent private Integer monthlySavings;
 
     @Persistent private User owner;
+    
     @Persistent private String sharedWith;
     
     @Persistent private Date createDate;
+    
     @Persistent private Date lastAccessed;
 
     public Budget() {}
     
-    public Key getId() {
+    public String getId() {
 		return id;
 	}
 
-	public void setId(Key id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -143,6 +156,45 @@ public class Budget implements Serializable {
 	public void setLastAccessed(Date lastAccess) {
 		this.lastAccessed = lastAccess;
 	}
-    
+	
+//	public void copyValues(Budget source)  {
+//		name = source.getName();
+//		monthlySavings = source.getMonthlySavings();
+//		savings = source.getSavings();
+//		sharedWith = source.getSharedWith();
+//		
+//		copyIncomes(source.getIncomes());
+//		copyBills(source.getMonthlyBills());
+//		copyCategories(source.getCategories());
+//	}
+	
+//	private void copyIncomes(List<Income> incomes)  {
+//		for(Income source : incomes)  {
+//			Income target = findIncome(source);
+//			if (null == target)  {
+//				incomes.add(source);
+//			} else  {
+//				target.copyValues(source);
+//			}
+//		}
+//	}
+//	
+//	private void copyBills(List<Bill> bills)  {
+//		
+//	}
+//	
+//	private void copyCategories(List<ExpenseCategory> categories)  {
+//		
+//	}
+//    
+//	private Income findIncome(Income source)  {
+//		for(Income item : incomes)  {
+//			if ((item.getId() != null) && 
+//				(item.getId().equals(source.getId())) )  {
+//				return item;
+//			}
+//		}
+//		return null;
+//	}
     
 }

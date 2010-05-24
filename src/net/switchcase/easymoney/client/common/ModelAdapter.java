@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 public interface ModelAdapter {
 	
 	void renderHeaderRow(FlexTable table);
-	ModelObject convertRowToDataObject(Row row, FlexTable table);
+	Object convertRowToDataObject(Row row, FlexTable table);
 	
 	Row createRow(int row, final RowValueChangeHandler dataTable);
 	void renderRow(Row row, FlexTable table); 

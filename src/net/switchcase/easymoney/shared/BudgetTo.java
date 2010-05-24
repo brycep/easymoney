@@ -79,6 +79,17 @@ public class BudgetTo implements Serializable {
     public void setBalance(MoneyTo balance) {
         this.balance = balance;
     }
+    
+    public Integer getBalanceAsInt()  {
+    	if (null == balance)  {
+    		return 0;
+    	}
+    	return balance.toInt();
+    }
+    
+    public void setBalanceAsInt(Integer value)  {
+    	balance = new MoneyTo(value);
+    }
 
     public MoneyTo getSavings() {
         return savings;
@@ -87,6 +98,17 @@ public class BudgetTo implements Serializable {
     public void setSavings(MoneyTo savings) {
         this.savings = savings;
     }
+    
+    public Integer getSavingsAsInt()  {
+    	if (null == savings)  {
+    		return 0;
+    	}
+    	return savings.toInt();
+    }
+    
+    public void setSavingsAsInt(Integer value)  {
+    	savings = new MoneyTo(value);
+    }
 
     public MoneyTo getMonthlySavings() {
         return monthlySavings;
@@ -94,6 +116,17 @@ public class BudgetTo implements Serializable {
 
     public void setMonthlySavings(MoneyTo monthlySavings) {
         this.monthlySavings = monthlySavings;
+    }
+    
+    public Integer getMonthlySavingsAsInt()  {
+    	if (null == monthlySavings)  {
+    		return 0;
+    	}
+    	return monthlySavings.toInt();
+    }
+    
+    public void setMonthlySavingsAsInt(Integer value)  {
+    	monthlySavings = new MoneyTo(value);
     }
     
    	public String getSharedWith() {

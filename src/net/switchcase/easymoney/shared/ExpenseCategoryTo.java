@@ -6,7 +6,7 @@
 
 package net.switchcase.easymoney.shared;
 
-import net.switchcase.easymoney.client.common.ModelObject;
+import java.io.Serializable;
 
 /**
  * User: bryce
@@ -14,9 +14,9 @@ import net.switchcase.easymoney.client.common.ModelObject;
  * Time: 7:17:23 PM
  */
 @SuppressWarnings("serial")
-public class ExpenseCategoryTo implements ModelObject {
+public class ExpenseCategoryTo implements Serializable {
 
-	private Long id;
+	private String id;
     private String name;
     private MoneyTo amount = new MoneyTo();
     private Frequency frequencyToRefresh = Frequency.Monthly;
@@ -26,11 +26,11 @@ public class ExpenseCategoryTo implements ModelObject {
 
     public ExpenseCategoryTo()  {}
 
-    public Long getId()  {
+    public String getId()  {
     	return id;
     }
     
-    public void setId(Long id)  {
+    public void setId(String id)  {
     	this.id = id;
     }
     
@@ -48,6 +48,17 @@ public class ExpenseCategoryTo implements ModelObject {
 
     public void setAmount(MoneyTo amount) {
         this.amount = amount;
+    }
+    
+    public Integer getAmountAsInt()  {
+    	if (null == amount)  {
+    		return 0;
+    	}
+    	return amount.toInt();
+    }
+    
+    public void setAmountAsInt(Integer value)  {
+    	amount = new MoneyTo(value);
     }
 
     public Frequency getFrequencyToRefresh() {
@@ -72,5 +83,16 @@ public class ExpenseCategoryTo implements ModelObject {
 
     public void setBalance(MoneyTo balance) {
         this.balance = balance;
+    }
+    
+    public Integer getBalanceAsInt()  {
+    	if (balance == null)  {
+    		return 0;
+    	}
+    	return balance.toInt();
+    }
+    
+    public void setBalanceAsInt(Integer value)  {
+    	balance = new MoneyTo(value);
     }
 }
