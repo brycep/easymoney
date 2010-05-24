@@ -1,0 +1,5 @@
+#Mon May 17 23:47:50 CDT 2010
+eclipse.preferences.version=1
+jarsExcludedFromWebInfLib=/Users/bryce/Documents/workspace/easymoney/lib/junit-4.8.2.jar|/Users/bryce/Documents/workspace/easymoney/lib/mockito-all-1.8.4.jar
+warSrcDir=war
+warSrcDirIsOutput=true
