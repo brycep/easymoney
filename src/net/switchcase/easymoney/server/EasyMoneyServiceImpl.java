@@ -4,7 +4,6 @@ import java.util.Date;
 
 import net.switchcase.easymoney.client.EasyMoneyService;
 import net.switchcase.easymoney.server.dao.BudgetDao;
-import net.switchcase.easymoney.server.dao.JdoBudgetDao;
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.ExpenseCategory;
@@ -17,19 +16,23 @@ import net.switchcase.easymoney.shared.exception.NotLoggedInException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.inject.Inject;
 
 /**
  * User: bryce
  * Date: May 2, 2010
  * Time: 8:52:38 PM
  */
-@SuppressWarnings("serial")
-public class EasyMoneyServiceImpl extends RemoteServiceServlet implements EasyMoneyService {
+public class EasyMoneyServiceImpl implements EasyMoneyService {
 
-	private BudgetDao budgetDao = new JdoBudgetDao();
+	private BudgetDao budgetDao; 
 	final private Converter converter = new Converter();
-		
+	
+	@Inject
+	public EasyMoneyServiceImpl(BudgetDao budgetDao)  {
+		this.budgetDao = budgetDao;
+	}
+	
 	public LoginInfo login(String requestUri)  {
 		LoginInfo login = new LoginInfo();
 		

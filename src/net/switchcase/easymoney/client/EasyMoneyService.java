@@ -12,7 +12,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * Date: May 2, 2010
  * Time: 8:52:38 PM
  */
-@RemoteServiceRelativePath("budget")
+@RemoteServiceRelativePath("GWT.rpc")
 public interface EasyMoneyService extends RemoteService {
 	
 	LoginInfo login(String requestUri);

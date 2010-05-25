@@ -3,7 +3,7 @@
     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
-<web-app><!--
+<web-app>
   
   <filter>
     <filter-name>guiceFilter</filter-name>
@@ -19,22 +19,6 @@
     <listener-class>net.switchcase.easymoney.server.EasyMoneyContextListener</listener-class>
   </listener>
   
-  
-  --><!-- Servlets -->
-  <servlet>
-    <servlet-name>budgetServlet</servlet-name>
-    <servlet-class>net.switchcase.easymoney.server.EasyMoneyServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>budgetServlet</servlet-name>
-    <url-pattern>/easymoney/budget</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-  	<servlet-name>budgetServlet</servlet-name>
-  	<url-pattern>/easymoney/EasyMoneyService</url-pattern>
-  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
