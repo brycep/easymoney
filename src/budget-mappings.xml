@@ -7,7 +7,8 @@
   <configuration>
     <stop-on-errors>true</stop-on-errors>
     <date-format>MM/dd/yyyy HH:mm</date-format>
-    <wildcard>true</wildcard><!--
+    <wildcard>true</wildcard>
+    <!--
     <custom-converters>
     	<converter type="net.switchcase.easymoney.server.domain.MoneyToCustomConverter">
     		<class-a>net.switchcase.easymoney.shared.MoneyTo</class-a>
