@@ -27,11 +27,13 @@ public class ExpenseCategory {
 	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 	private String id;
 	@Persistent private String name;
-	@Persistent private Integer amount;
+	@Persistent private Long amount;
 	@Persistent private Frequency frequencyToRefresh;
 	@Persistent private boolean accumulating;
 
-	@Persistent private Integer balance;
+	@Persistent private Long balance;
+	
+	@Persistent private Budget budget;
 
     public ExpenseCategory()  {}
 
@@ -51,11 +53,11 @@ public class ExpenseCategory {
         this.name = name;
     }
 
-    public Integer getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
     
@@ -75,12 +77,20 @@ public class ExpenseCategory {
         this.accumulating = accumulating;
     }
 
-	public Integer getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Integer balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
+	}
+	
+	public Budget getBudget()  {
+		return budget;
+	}
+	
+	public void setBudget(Budget budget)  {
+		this.budget = budget;
 	}
 
 	@Override
@@ -108,5 +118,9 @@ public class ExpenseCategory {
 		return true;
 	}
 
+	public void subtractFromBalance(long amount)  {
+		balance -= amount;
+		budget.setBalance(budget.getBalance() - amount);
+	}
     
 }

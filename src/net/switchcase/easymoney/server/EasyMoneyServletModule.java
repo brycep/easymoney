@@ -11,6 +11,9 @@ public class EasyMoneyServletModule extends ServletModule {
 	@Override
     protected void configureServlets() {
         serve("/easymoney/GWT.rpc").with(GuiceRemoteServiceServlet.class);
+        serve("/deviceLogin").with(DeviceLoginServlet.class);
+        serve("/authenticate").with(DeviceAuthenticatedServlet.class);
+        serve("/addTransaction").with(AddTransactionFromDeviceServlet.class);
 
         // cannot use @ImplementedBy
         bind(EasyMoneyService.class).to(EasyMoneyServiceImpl.class);

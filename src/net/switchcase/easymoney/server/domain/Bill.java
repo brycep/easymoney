@@ -18,7 +18,7 @@ public class Bill {
 	@Persistent private String name;
 	@Persistent private Integer dayOfMonth;
 	@Persistent private Date nextDueDate;
-	@Persistent private Integer amount;
+	@Persistent private Long amount;
 	
 	public Bill(){}
 
@@ -46,11 +46,11 @@ public class Bill {
 		this.dayOfMonth = dayOfMonth;
 	}
 
-	public Integer getAmount() {
+	public Long getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Integer amount) {
+	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
 	

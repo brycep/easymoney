@@ -42,14 +42,14 @@ public class Budget implements Serializable {
 	@Persistent(defaultFetchGroup="true") 
 	private List<Bill> monthlyBills = new ArrayList<Bill>();
 	
-	@Persistent(defaultFetchGroup="true")
+	@Persistent(defaultFetchGroup="true", mappedBy="budget")
 	private List<ExpenseCategory> categories = new ArrayList<ExpenseCategory>();
 	
-	@Persistent private Integer balance;
+	@Persistent private Long balance;
 	
-	@Persistent private Integer savings;
+	@Persistent private Long savings;
 	
-	@Persistent private Integer monthlySavings;
+	@Persistent private Long monthlySavings;
 
     @Persistent private User owner;
     
@@ -101,27 +101,27 @@ public class Budget implements Serializable {
         this.categories = category;
     }
 
-    public Integer getBalance() {
+    public Long getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(Long balance) {
         this.balance = balance;
     }
 
-    public Integer getSavings() {
+    public Long getSavings() {
         return savings;
     }
 
-    public void setSavings(Integer savings) {
+    public void setSavings(Long savings) {
         this.savings = savings;
     }
 
-    public Integer getMonthlySavings() {
+    public Long getMonthlySavings() {
         return monthlySavings;
     }
 
-    public void setMonthlySavings(Integer monthlySavings) {
+    public void setMonthlySavings(Long monthlySavings) {
         this.monthlySavings = monthlySavings;
     }
 

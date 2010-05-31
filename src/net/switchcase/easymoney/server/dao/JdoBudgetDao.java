@@ -7,6 +7,7 @@ import javax.jdo.Query;
 
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
+import net.switchcase.easymoney.server.domain.Device;
 import net.switchcase.easymoney.server.domain.ExpenseCategory;
 import net.switchcase.easymoney.server.domain.Income;
 
@@ -73,6 +74,40 @@ public class JdoBudgetDao implements BudgetDao {
 		} finally {
 			pm.close();
 		}
-	};
+	}
+
+	public Device findDevice(String id)  {
+		PersistenceManager pm = null;
+		Device device = null;
+		try  {
+			pm = PMF.get().getPersistenceManager();
+			device = pm.getObjectById(Device.class, id);
+		} finally {
+			pm.close();
+		}
+		return device;
+	}
+
+	public void saveDevice(Device device) {
+		PersistenceManager pm = null;
+		try {
+			pm = PMF.get().getPersistenceManager();
+			pm.makePersistent(device);
+		} finally {
+			pm.close();
+		}
+	}
+	
+	public ExpenseCategory findExpenseCategory(String id)  {
+		PersistenceManager pm = null;
+		ExpenseCategory expenseCategory = null;
+		try {
+			pm = PMF.get().getPersistenceManager();
+			expenseCategory = pm.getObjectById(ExpenseCategory.class, id);
+		} finally {
+			pm.close();
+		}
+		return expenseCategory;
+	}
 
 }
