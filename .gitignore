@@ -1,0 +1,12 @@
+/tomcat
+test-classes
+war/WEB-INF/appengine-generated
+war/WEB-INF/classes
+.DS_Store
+src/.DS_Store
+src/net/.DS_Store
+src/net/switchcase/.DS_Store
+src/net/switchcase/easymoney/.DS_Store
+war/.DS_Store
+war/WEB-INF/.DS_Store
+war/mytest.html

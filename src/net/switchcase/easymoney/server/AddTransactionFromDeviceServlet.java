@@ -42,7 +42,7 @@ public class AddTransactionFromDeviceServlet extends HttpServlet {
 		this.response = resp;
 	}
 	
-	@Inject @RequestParameters
+	@Inject @RequestParameters 
 	protected void doPost(Map<String, String[]> params)
 			throws ServletException, IOException {
 		
@@ -74,7 +74,7 @@ public class AddTransactionFromDeviceServlet extends HttpServlet {
 			if (null != gpsLong)  {
 				txn.setGpsLong(Double.parseDouble(gpsLong));
 			}
-			txn.setAmount(Integer.parseInt(amount));
+			txn.setAmount(Long.parseLong(amount));
 			txn.setSource(source);
 			txn.setCreateTimestamp(FORMAT.parse(createTimestamp));
 			txn.setTransactionDate(FORMAT.parse(transactionDate));
@@ -86,15 +86,24 @@ public class AddTransactionFromDeviceServlet extends HttpServlet {
 				printExpenseCategoryNotFound();
 				return;
 			}
-			expenseCategory.subtractFromBalance(txn.getAmount());
 			
-			transactionDao.addTransaction(txn);
+			if (expenseCategory.isSufficientFunds(txn.getAmount()))  {
+				expenseCategory.subtractFromBalance(txn.getAmount());
+				transactionDao.addTransaction(txn);
+			} else  {
+				printInsufficientFunds();
+				return;
+			}
 			
 			response.getWriter().print("<results><result>OK</result></results>");
 		} catch(ParseException exp)  {
 			response.getWriter().print("<results><result>ERROR</result><message>" + exp.getMessage() + "</message></results>");
 		}
 		
+	}
+	
+	private void printInsufficientFunds() throws IOException  {
+		response.getWriter().print("<results><result>InsufficientBalanceInCategory</result></results>");
 	}
 	
 	private void printInvalidKeyError() throws IOException  {

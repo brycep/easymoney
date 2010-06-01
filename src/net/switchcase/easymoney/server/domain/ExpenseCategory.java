@@ -122,5 +122,14 @@ public class ExpenseCategory {
 		balance -= amount;
 		budget.setBalance(budget.getBalance() - amount);
 	}
+	
+	public void addToBalance(long amount)  {
+		balance += amount;
+		budget.setBalance(budget.getBalance() + amount);
+	}
+	
+	public boolean isSufficientFunds(Long amount)  {
+		return (0 <= (balance - amount));
+	}
     
 }

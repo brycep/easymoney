@@ -88,7 +88,7 @@ public class AddTransactionFromDeviceServletTest {
 		assertEquals("Test Description", txn.getDescription());
 		assertEquals(11.1111, txn.getGpsLat(), 0.0001);
 		assertEquals(22.2222, txn.getGpsLong(), 0.0001);
-		assertEquals(3333, (int)txn.getAmount());
+		assertEquals(3333, (long)txn.getAmount());
 		assertEquals("Test Source", txn.getSource());
 		
 		Date testTimestamp = format.parse("2010-01-01 09:12:34");
@@ -154,6 +154,16 @@ public class AddTransactionFromDeviceServletTest {
 		servlet.doPost(params);
 		
 		verify(printWriter).print("<results><result>ExpenseCategoryNotFound</result></results>");
+	}
+	
+	@Test
+	public void testSpendingMoreThanWhatYouHaveCausesError()  throws Exception {
+		testExpenseCategory.setBalance(1000L);
+		
+		Map<String, String[]> params = createServletParameters();
+		servlet.doPost(params);
+		
+		verify(printWriter).print("<results><result>InsufficientBalanceInCategory</result></results>");
 	}
 
 	private Map<String, String[]> createServletParameters() {

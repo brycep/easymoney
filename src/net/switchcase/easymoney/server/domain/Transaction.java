@@ -18,7 +18,7 @@ public class Transaction {
 	@Persistent private String description;
 	@Persistent private Double gpsLat;
 	@Persistent private Double gpsLong;
-	@Persistent private Integer amount;
+	@Persistent private Long amount;
 	@Persistent private String source;
 	@Persistent private Date createTimestamp;
 	@Persistent private Date transactionDate;
@@ -61,11 +61,11 @@ public class Transaction {
 		this.gpsLong = gpsLong;
 	}
 
-	public Integer getAmount() {
+	public Long getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Integer amount) {
+	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
 
