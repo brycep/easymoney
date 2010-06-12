@@ -11,9 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.TransactionDao;
+import net.switchcase.easymoney.server.domain.Account;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.Device;
 import net.switchcase.easymoney.server.domain.ExpenseCategory;
+import net.switchcase.easymoney.shared.AccountType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +28,7 @@ import com.google.appengine.api.users.User;
 public class TransferCategoryBalanceServletTest {
 	
 	@Mock private BudgetDao budgetDao;
+	@Mock private TransactionDao txnDao;
 	@Mock private HttpServletRequest request;
 	@Mock private HttpServletResponse response;
 	@Mock private PrintWriter printWriter;
@@ -39,32 +43,32 @@ public class TransferCategoryBalanceServletTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		
-		servlet = new TransferCategoryBalanceServlet(budgetDao);
+		servlet = new TransferCategoryBalanceServlet(budgetDao, txnDao);
 		
 		when(response.getWriter()).thenReturn(printWriter);
 
 		sourceCategory = new ExpenseCategory();
 		destinationCategory = new ExpenseCategory();
 		
-		sourceCategory.setBalance(10000L);
-		destinationCategory.setBalance(10000L);
 		
 		budget = new Budget();
-		budget.setBalance(20000L);
+		budget.setSavingsAccount(new Account("SavingsAccountId", "Savings", AccountType.Savings, 20000L, budget));
 		budget.setCategories(Arrays.asList(sourceCategory, destinationCategory));
 		sourceCategory.setBudget(budget);
 		destinationCategory.setBudget(budget);
 
-		when(budgetDao.findExpenseCategory("SourceCategoryKey")).thenReturn(sourceCategory);
-		when(budgetDao.findExpenseCategory("DestinationCategoryKey")).thenReturn(destinationCategory);
+		sourceCategory.setAccount(new Account("SourceAccountId", "SourceAccount", AccountType.Expense, 10000L, budget));
+		destinationCategory.setAccount(new Account("DestAccountId", "DestinationAccount", AccountType.Expense, 10000L, budget));
+
+		when(budgetDao.findActiveBudget(device.getUser())).thenReturn(budget);
 		when(budgetDao.findDevice("TestDeviceKey")).thenReturn(device);
 
 	}
 
 	private void createValidRequest() {
 		when(request.getParameter("deviceKey")).thenReturn("TestDeviceKey");
-		when(request.getParameter("sourceCategory")).thenReturn("SourceCategoryKey");
-		when(request.getParameter("destinationCategory")).thenReturn("DestinationCategoryKey");
+		when(request.getParameter("sourceAccount")).thenReturn("SourceAccountId");
+		when(request.getParameter("destinationAccount")).thenReturn("DestAccountId");
 		when(request.getParameter("amount")).thenReturn("4000");
 	}
 
@@ -75,8 +79,8 @@ public class TransferCategoryBalanceServletTest {
 		
 		servlet.doPost(request, response);
 
-		assertEquals(14000, (long)destinationCategory.getBalance());
-		assertEquals(6000, (long)sourceCategory.getBalance());
+		assertEquals(14000, (long)destinationCategory.getAccount().getBalance());
+		assertEquals(6000, (long)sourceCategory.getAccount().getBalance());
 	}
 
 	@Test
@@ -112,25 +116,25 @@ public class TransferCategoryBalanceServletTest {
 	@Test
 	public void testErrorXmlIsOutputWhenInvalidSourceKeyIsUsed() throws Exception  {
 		when(request.getParameter("deviceKey")).thenReturn("TestDeviceKey");
-		when(request.getParameter("sourceCategory")).thenReturn("InvalidSourceCategoryKey");
-		when(request.getParameter("destinationCategory")).thenReturn("DestinationCategoryKey");
+		when(request.getParameter("sourceAccount")).thenReturn("InvalidSourceCategoryKey");
+		when(request.getParameter("destinationAccount")).thenReturn("DestinationCategoryKey");
 		when(request.getParameter("amount")).thenReturn("4000");
 		
 		servlet.doPost(request, response);
 		
-		verify(printWriter).print("<results><result>InvalidSourceCategory</result></results>");
+		verify(printWriter).print("<results><result>InvalidSourceAccount</result></results>");
 	}
 	
 	@Test
 	public void testErrorXmlIsOutputWhenInvalidDestinationKeyIsUsed() throws Exception {
 		when(request.getParameter("deviceKey")).thenReturn("TestDeviceKey");
-		when(request.getParameter("sourceCategory")).thenReturn("SourceCategoryKey");
-		when(request.getParameter("destinationCategory")).thenReturn("InvalidDestinationCategoryKey");
+		when(request.getParameter("sourceAccount")).thenReturn("SourceAccountId");
+		when(request.getParameter("destinationAccount")).thenReturn("InvalidDestinationCategoryKey");
 		when(request.getParameter("amount")).thenReturn("4000");
 
 		servlet.doPost(request, response);
 		
-		verify(printWriter).print("<results><result>InvalidDestinationCategory</result></results>");
+		verify(printWriter).print("<results><result>InvalidDestinationAccount</result></results>");
 	}
 	
 	@Test
@@ -138,11 +142,11 @@ public class TransferCategoryBalanceServletTest {
 		
 		createValidRequest();
 		
-		budget.setBalance(12000L);
-		sourceCategory.setBalance(2000L);
+		budget.getSavingsAccount().setBalance(12000L);
+		sourceCategory.getAccount().setBalance(2000L);
 		
 		servlet.doPost(request, response);
 		
-		verify(printWriter).print("<results><result>NotEnoughMoneyInSourceCategory</result></results>");
+		verify(printWriter).print("<results><result>InsufficientFunds</result></results>");
 	}
 }

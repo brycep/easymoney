@@ -31,7 +31,7 @@ public class ExpenseCategory {
 	@Persistent private Frequency frequencyToRefresh;
 	@Persistent private boolean accumulating;
 
-	@Persistent private Long balance;
+	@Persistent private Account account;
 	
 	@Persistent private Budget budget;
 
@@ -76,15 +76,15 @@ public class ExpenseCategory {
     public void setAccumulating(boolean accumulating) {
         this.accumulating = accumulating;
     }
-
-	public Long getBalance() {
-		return balance;
-	}
-
-	public void setBalance(Long balance) {
-		this.balance = balance;
-	}
 	
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
 	public Budget getBudget()  {
 		return budget;
 	}
@@ -117,19 +117,5 @@ public class ExpenseCategory {
 			return false;
 		return true;
 	}
-
-	public void subtractFromBalance(long amount)  {
-		balance -= amount;
-		budget.setBalance(budget.getBalance() - amount);
-	}
-	
-	public void addToBalance(long amount)  {
-		balance += amount;
-		budget.setBalance(budget.getBalance() + amount);
-	}
-	
-	public boolean isSufficientFunds(Long amount)  {
-		return (0 <= (balance - amount));
-	}
-    
+	    
 }

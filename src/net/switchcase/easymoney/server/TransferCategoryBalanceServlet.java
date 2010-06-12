@@ -3,26 +3,31 @@ package net.switchcase.easymoney.server;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.TransactionDao;
+import net.switchcase.easymoney.server.domain.Account;
+import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.Device;
-import net.switchcase.easymoney.server.domain.ExpenseCategory;
+import net.switchcase.easymoney.server.domain.InsufficientFundsException;
+import net.switchcase.easymoney.server.domain.Transaction;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 
 @SuppressWarnings("serial")
 @RequestScoped
-public class TransferCategoryBalanceServlet extends HttpServlet {
+public class TransferCategoryBalanceServlet extends EasyMoneyServlet {
 
 	private BudgetDao budgetDao;
+	private TransactionDao transactionDao;
 	
 	@Inject
-	public TransferCategoryBalanceServlet(BudgetDao budgetDao)  {
+	public TransferCategoryBalanceServlet(BudgetDao budgetDao, TransactionDao transactionDao)  {
 		this.budgetDao = budgetDao;
+		this.transactionDao = transactionDao;
 	}
 	
 	@Override
@@ -37,42 +42,34 @@ public class TransferCategoryBalanceServlet extends HttpServlet {
 			return;
 		}
 
-		String sourceCategoryKey = req.getParameter("sourceCategory");
-		String destinationCategoryKey = req.getParameter("destinationCategory");
+		String sourceAccountKey = req.getParameter("sourceAccount");
+		String destinationAccountKey = req.getParameter("destinationAccount");
 		String amount = req.getParameter("amount");
 		
-		ExpenseCategory sourceCategory = budgetDao.findExpenseCategory(sourceCategoryKey);
-		if (null == sourceCategory)  {
-			printErrorXml(resp, "InvalidSourceCategory");
+		Budget budget = budgetDao.findActiveBudget(device.getUser());
+		Account sourceAccount = budget.findAccount(sourceAccountKey);
+		if (null == sourceAccount)  {
+			printErrorXml(resp, "InvalidSourceAccount");
 			return;
 		}
 		
-		ExpenseCategory destCategory = budgetDao.findExpenseCategory(destinationCategoryKey);
-		if (null == destCategory)  {
-			printErrorXml(resp, "InvalidDestinationCategory");
+		Account destAccount = budget.findAccount(destinationAccountKey);
+		if (null == destAccount)  {
+			printErrorXml(resp, "InvalidDestinationAccount");
 			return;
 		}
 		
 		Long amountValue = Long.parseLong(amount);
-		if (sourceCategory.getBalance() < amountValue)  {
-			printErrorXml(resp, "NotEnoughMoneyInSourceCategory");
+		try  {
+			Transaction txn = budget.transfer(sourceAccount, destAccount, amountValue);
+			transactionDao.addTransaction(txn);
+			
+		} catch(InsufficientFundsException exp)  {
+			printErrorXml(resp, "InsufficientFunds");
 		}
-		
-		sourceCategory.subtractFromBalance(amountValue);
-		destCategory.addToBalance(amountValue);
 		
 		resp.getWriter().print("<results><result>OK</result></results>");
 
 	}
 		
-	private void printErrorXml(HttpServletResponse response, String errorKey) throws IOException  {
-		response.getWriter().print(buildErrorMessage(errorKey));
-	}
-	
-	private String buildErrorMessage(String errorKey)  {
-		StringBuffer errorMessage = new StringBuffer();
-		errorMessage.append("<results><result>").append(errorKey).append("</result></results>");
-		return errorMessage.toString();
-	}
-
 }

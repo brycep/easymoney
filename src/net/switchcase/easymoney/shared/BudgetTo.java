@@ -24,8 +24,10 @@ public class BudgetTo implements Serializable {
     private List<IncomeTo> incomes = new ArrayList<IncomeTo>();
     private List<BillTo> monthlyBills = new ArrayList<BillTo>();
     private List<ExpenseCategoryTo> categories = new ArrayList<ExpenseCategoryTo>();
-    private MoneyTo balance;
-    private MoneyTo savings;
+
+	private AccountTo savingsAccount;
+	private AccountTo billsAccount;
+    
     private MoneyTo monthlySavings;
     private String sharedWith;
     private String owner;
@@ -71,46 +73,24 @@ public class BudgetTo implements Serializable {
     public void setCategories(List<ExpenseCategoryTo> category) {
         this.categories = category;
     }
-
-    public MoneyTo getBalance() {
-        return balance;
-    }
-
-    public void setBalance(MoneyTo balance) {
-        this.balance = balance;
-    }
     
-    public Integer getBalanceAsInt()  {
-    	if (null == balance)  {
-    		return 0;
-    	}
-    	return balance.toInt();
-    }
-    
-    public void setBalanceAsInt(Integer value)  {
-    	balance = new MoneyTo(value);
-    }
+    public AccountTo getSavingsAccount() {
+		return savingsAccount;
+	}
 
-    public MoneyTo getSavings() {
-        return savings;
-    }
+	public void setSavingsAccount(AccountTo savingsAccount) {
+		this.savingsAccount = savingsAccount;
+	}
 
-    public void setSavings(MoneyTo savings) {
-        this.savings = savings;
-    }
-    
-    public Integer getSavingsAsInt()  {
-    	if (null == savings)  {
-    		return 0;
-    	}
-    	return savings.toInt();
-    }
-    
-    public void setSavingsAsInt(Integer value)  {
-    	savings = new MoneyTo(value);
-    }
+	public AccountTo getBillsAccount() {
+		return billsAccount;
+	}
 
-    public MoneyTo getMonthlySavings() {
+	public void setBillsAccount(AccountTo billsAccount) {
+		this.billsAccount = billsAccount;
+	}
+
+	public MoneyTo getMonthlySavings() {
         return monthlySavings;
     }
 
@@ -167,5 +147,9 @@ public class BudgetTo implements Serializable {
 			money.add(bill.getAmount());
 		}
 		return money;
+	}
+	
+	public MoneyTo getLeftOverValue()  {
+		return new MoneyTo();
 	}
 }

@@ -22,9 +22,8 @@ public class BillTo implements Serializable {
     private int dayOfMonth;
     private Date nextDueDate;
     private MoneyTo amount = new MoneyTo();
-
+    
     public BillTo() {}
-
     
     public String getId() {
 		return id;

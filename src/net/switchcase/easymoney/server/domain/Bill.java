@@ -20,6 +20,8 @@ public class Bill {
 	@Persistent private Date nextDueDate;
 	@Persistent private Long amount;
 	
+	@Persistent private String billAccountKey;
+	
 	public Bill(){}
 
 	public String getId() {
@@ -60,6 +62,14 @@ public class Bill {
 
 	public void setNextDueDate(Date nextDueDate) {
 		this.nextDueDate = nextDueDate;
+	}
+
+	public String getBillAccountKey() {
+		return billAccountKey;
+	}
+
+	public void setBillAccountKey(String billAccountKey) {
+		this.billAccountKey = billAccountKey;
 	}
 
 	@Override

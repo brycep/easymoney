@@ -31,9 +31,12 @@ public class Income {
 	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 	private String id;
 	@Persistent private String name;
-	@Persistent private Integer amount;
+	@Persistent private Long amount;
 	@Persistent private Frequency frequency;
 	@Persistent private Date nextPayDate;
+	
+	@Persistent private Account debitAccount; // This is the checking account
+	@Persistent private Account creditAccount; // This will be the savings account
 
     public Income() {}
 
@@ -48,12 +51,12 @@ public class Income {
 	}
 
 
-	public Integer getAmount() {
+	public Long getAmount() {
 		return amount;
 	}
 
 
-	public void setAmount(Integer amount) {
+	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
 
@@ -81,6 +84,26 @@ public class Income {
     public void setNextPayDate(Date nextPayDate) {
         this.nextPayDate = nextPayDate;
     }
+
+
+	public Account getDebitAccount() {
+		return debitAccount;
+	}
+
+
+	public void setDebitAccount(Account debitAccount) {
+		this.debitAccount = debitAccount;
+	}
+
+
+	public Account getCreditAccount() {
+		return creditAccount;
+	}
+
+
+	public void setCreditAccount(Account creditAccount) {
+		this.creditAccount = creditAccount;
+	}
 
 
 	@Override

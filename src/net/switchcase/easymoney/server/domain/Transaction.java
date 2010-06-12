@@ -20,12 +20,14 @@ public class Transaction {
 	@Persistent private Double gpsLong;
 	@Persistent private Long amount;
 	@Persistent private String source;
-	@Persistent private Date createTimestamp;
+	@Persistent private Date createTimestamp = new Date();
 	@Persistent private Date transactionDate;
 	@Persistent private boolean reconsiled = false;
-	@Persistent private String expenseCategoryKey;
-	@Persistent private String budgetKey;
+	@Persistent private String debitAccountKey;
+	@Persistent private String creditAccountKey;
 	
+	@Persistent private String expenseCategoryKey;
+		
 	public Transaction() {
 	}
 
@@ -101,6 +103,22 @@ public class Transaction {
 		this.reconsiled = reconsiled;
 	}
 
+	public String getDebitAccountKey() {
+		return debitAccountKey;
+	}
+
+	public void setDebitAccountKey(String debitAccountKey) {
+		this.debitAccountKey = debitAccountKey;
+	}
+
+	public String getCreditAccountKey() {
+		return creditAccountKey;
+	}
+
+	public void setCreditAccountKey(String creditAccountKey) {
+		this.creditAccountKey = creditAccountKey;
+	}
+
 	public String getExpenseCategoryKey() {
 		return expenseCategoryKey;
 	}
@@ -109,11 +127,4 @@ public class Transaction {
 		this.expenseCategoryKey = expenseCategoryKey;
 	}
 	
-	public String getBudgetKey()  {
-		return budgetKey;
-	}
-	
-	public void setBudgetKey(String key)  {
-		this.budgetKey = key;
-	}
 }

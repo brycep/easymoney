@@ -17,6 +17,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import net.switchcase.easymoney.shared.DebitCreditType;
+
 import com.google.appengine.api.users.User;
 
 /**  The Budget class represents a user's monthly budget
@@ -44,19 +46,15 @@ public class Budget implements Serializable {
 	
 	@Persistent(defaultFetchGroup="true", mappedBy="budget")
 	private List<ExpenseCategory> categories = new ArrayList<ExpenseCategory>();
-	
-	@Persistent private Long balance;
-	
-	@Persistent private Long savings;
+
+	@Persistent private Account checkingAccount;
+	@Persistent private Account savingsAccount;
+	@Persistent private Account billsAccount;
 	
 	@Persistent private Long monthlySavings;
-
     @Persistent private User owner;
-    
     @Persistent private String sharedWith;
-    
     @Persistent private Date createDate;
-    
     @Persistent private Date lastAccessed;
 
     public Budget() {}
@@ -101,22 +99,6 @@ public class Budget implements Serializable {
         this.categories = category;
     }
 
-    public Long getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Long balance) {
-        this.balance = balance;
-    }
-
-    public Long getSavings() {
-        return savings;
-    }
-
-    public void setSavings(Long savings) {
-        this.savings = savings;
-    }
-
     public Long getMonthlySavings() {
         return monthlySavings;
     }
@@ -156,45 +138,112 @@ public class Budget implements Serializable {
 	public void setLastAccessed(Date lastAccess) {
 		this.lastAccessed = lastAccess;
 	}
+
+	public Account getSavingsAccount() {
+		return savingsAccount;
+	}
+
+	public void setSavingsAccount(Account savingsAccount) {
+		this.savingsAccount = savingsAccount;
+	}
+
+	public Account getBillsAccount() {
+		return billsAccount;
+	}
+
+	public void setBillsAccount(Account billsAccount) {
+		this.billsAccount = billsAccount;
+	}
+
+	public Account getCheckingAccount() {
+		return checkingAccount;
+	}
+
+	public void setCheckingAccount(Account checkingAccount) {
+		this.checkingAccount = checkingAccount;
+	}
 	
-//	public void copyValues(Budget source)  {
-//		name = source.getName();
-//		monthlySavings = source.getMonthlySavings();
-//		savings = source.getSavings();
-//		sharedWith = source.getSharedWith();
-//		
-//		copyIncomes(source.getIncomes());
-//		copyBills(source.getMonthlyBills());
-//		copyCategories(source.getCategories());
-//	}
+	public ExpenseCategory getExpenseCategory(String key)  {
+		for(ExpenseCategory expenseCategory : categories)  {
+			if (key.equals(expenseCategory.getId()) )  {
+				return expenseCategory;
+			}
+		}
+		return null;
+	}
+
+	public List<Account> getAccountList()  {
+		List<Account> accountList = new ArrayList<Account>();
+		
+		for(ExpenseCategory expenseCategory : categories)  {
+			if (null != expenseCategory.getAccount())  {
+				accountList.add(expenseCategory.getAccount());
+			}
+		}
+		
+		if (savingsAccount != null)  {
+			accountList.add(savingsAccount);
+		}
+		
+		if (checkingAccount != null)  {
+			accountList.add(checkingAccount);
+		}
+		
+		if (billsAccount != null)  {
+			accountList.add(billsAccount);
+		}
+		
+		return accountList;
+	}
 	
-//	private void copyIncomes(List<Income> incomes)  {
-//		for(Income source : incomes)  {
-//			Income target = findIncome(source);
-//			if (null == target)  {
-//				incomes.add(source);
-//			} else  {
-//				target.copyValues(source);
-//			}
-//		}
-//	}
-//	
-//	private void copyBills(List<Bill> bills)  {
-//		
-//	}
-//	
-//	private void copyCategories(List<ExpenseCategory> categories)  {
-//		
-//	}
-//    
-//	private Income findIncome(Income source)  {
-//		for(Income item : incomes)  {
-//			if ((item.getId() != null) && 
-//				(item.getId().equals(source.getId())) )  {
-//				return item;
-//			}
-//		}
-//		return null;
-//	}
-    
+	public Account findAccount(String key)  {
+		Account account = null;
+		for(Account item : getAccountList())  {
+			if (item.getId().equals(key))  {
+				account = item;
+			}
+		}
+		return account;
+	}
+	
+	public void processExpenseTransaction(Transaction transaction,
+										  ExpenseCategory expenseCategory) throws InsufficientFundsException {
+
+		transaction.setDebitAccountKey(expenseCategory.getAccount().getId());
+		transaction.setCreditAccountKey(checkingAccount.getId());
+		transaction.setExpenseCategoryKey(expenseCategory.getId());
+
+		processTransaction(expenseCategory.getAccount(), checkingAccount, transaction.getAmount());
+
+	}
+	
+	private void processTransaction(Account debitAccount, Account creditAccount, long amount) throws InsufficientFundsException {
+		debitAccount.addDebit(amount);
+		creditAccount.addCredit(amount);
+		
+	}
+	
+	public Transaction transfer(Account sourceAccount, Account destAccount, long amount) 
+			throws InsufficientFundsException {
+		Transaction txn = new Transaction();
+		txn.setDescription("* Tranfer from " + sourceAccount.getName() + " to " + destAccount.getName() +
+				" (System Generated Transaction)");
+		txn.setReconsiled(true);
+		txn.setCreateTimestamp(new Date());
+		txn.setTransactionDate(new Date());
+		txn.setAmount(amount);
+		txn.setSource("SYSTEM");
+		
+		if (sourceAccount.getAccountType().equals(DebitCreditType.Debit))  {
+			txn.setCreditAccountKey(sourceAccount.getId());
+			txn.setDebitAccountKey(destAccount.getId());
+			processTransaction(destAccount, sourceAccount, amount);
+		} else  {
+			txn.setDebitAccountKey(sourceAccount.getId());
+			txn.setCreditAccountKey(destAccount.getId());
+			processTransaction(sourceAccount, destAccount, amount);
+		}
+		return txn;
+	}
+	    
 }

@@ -88,7 +88,7 @@ public class SummaryView extends Composite implements
 		incomeTotal.setValue(budget.calculateIncomeTotal());
 		billTotal.setValue(budget.calculateBillTotal());
 		expenseTotal.setValue(budget.calculateExpenseTotal());
-		leftOver.setValue(budget.getSavings());
+		leftOver.setValue(budget.getLeftOverValue());
 	}
 
 	public HasMoneyValue getBillTotal() {

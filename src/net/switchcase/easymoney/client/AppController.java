@@ -27,14 +27,14 @@ public class AppController implements ValueChangeHandler<String> {
     private EasyMoneyServiceAsync easyMoneyService;
     private HandlerManager eventBus;
     private HasWidgets container;
-    private LoginInfo loginInfo;
+//    private LoginInfo loginInfo;
 
     public AppController(EasyMoneyServiceAsync easyMoneyService,
                          HandlerManager eventBus,
                          LoginInfo loginInfo) {
         this.easyMoneyService = easyMoneyService;
         this.eventBus = eventBus;
-        this.loginInfo = loginInfo;
+//        this.loginInfo = loginInfo;
         bind();
     }
 
