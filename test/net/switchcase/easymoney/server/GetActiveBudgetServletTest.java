@@ -3,6 +3,8 @@ package net.switchcase.easymoney.server;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -31,6 +33,7 @@ public class GetActiveBudgetServletTest {
 	@Mock private BudgetDao budgetDao;
 	@Mock private HttpServletRequest request;
 	@Mock private HttpServletResponse response;
+	@Mock private PrintWriter writer;
 	
 	private GetActiveBudgetServlet servlet;
 	private Budget budget = new Budget();
@@ -38,7 +41,7 @@ public class GetActiveBudgetServletTest {
 	private User testUser;
 	
 	@Before
-	public void setUp()  {
+	public void setUp() throws IOException {
 		MockitoAnnotations.initMocks(this);
 		
 		budget.setCreateDate(new Date(2000));
@@ -48,6 +51,7 @@ public class GetActiveBudgetServletTest {
 		budget.setName("Test Name");
 		budget.setSavingsAccount(new Account("Savings", AccountType.Savings, 4000L, budget));
 		budget.setCheckingAccount(new Account("Checking", AccountType.CheckingAccount, 2000L, budget));
+		budget.setBillsAccount(new Account("BillsAccount", AccountType.Expense, 10000L, budget));
 		
 		ExpenseCategory expenseCategory = buildExpenseCategory();
 		Bill bill = buildBill();
@@ -65,13 +69,14 @@ public class GetActiveBudgetServletTest {
 		
 		when(budgetDao.findDevice("TestDeviceKey")).thenReturn(device);
 		when(budgetDao.findActiveBudget(testUser)).thenReturn(budget);
+		when(response.getWriter()).thenReturn(writer);
 	}
 
 	private ExpenseCategory buildExpenseCategory()  {
 		ExpenseCategory expenseCategory = new ExpenseCategory();
 		expenseCategory.setAccumulating(true);
 		expenseCategory.setAmount(5000L);
-		expenseCategory.setAccount( new Account("Test Expense Account", AccountType.Expense, 6000L, budget));
+		expenseCategory.setAccount( new Account("TestExpenseAcctId1", "Test Expense Account", AccountType.Expense, 6000L, budget));
 		expenseCategory.setBudget(budget);
 		expenseCategory.setFrequencyToRefresh(Frequency.BiWeekly);
 		expenseCategory.setId("200");

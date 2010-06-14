@@ -49,6 +49,7 @@ public class AddTransactionFromDeviceServletTest {
 	private ExpenseCategory testExpenseCategory;
 	private Account testExpenseAccount;
 	private Account checkingAccount;
+	private Account expensesAccount;
 
 	@Before
 	public void setUp() throws IOException  {
@@ -73,15 +74,16 @@ public class AddTransactionFromDeviceServletTest {
 		testExpenseCategory.setName("Test Expense Category");
 		testExpenseCategory.setBudget(budget);
 		
-		testExpenseAccount = new Account("Expense", AccountType.Expense, 25000L, budget);
-		testExpenseAccount.setId("ExpenseAccountId1");
+		testExpenseAccount = new Account("ExpenseAccountId1", "Expense", AccountType.Expense, 25000L, budget);
 		testExpenseCategory.setAccount(testExpenseAccount); 
 		
 		budget.setCategories(Arrays.asList(testExpenseCategory));
 		
-		checkingAccount = new Account("Checking", AccountType.CheckingAccount, 100000L, budget);
-		checkingAccount.setId("CheckingAccountId");
+		checkingAccount = new Account("CheckingAccountId", "Checking", AccountType.CheckingAccount, 100000L, budget);
 		budget.setCheckingAccount(checkingAccount);
+		
+		expensesAccount = new Account("ExpensesAccountId", "Expenses", AccountType.Expense, 0L, budget);
+		budget.setExpenseSpendingAccount(expensesAccount);
 		
 		when(budgetDao.findActiveBudget(testUser)).thenReturn(budget);
 	}
@@ -155,7 +157,7 @@ public class AddTransactionFromDeviceServletTest {
 		servlet.doPost(request, response);
 		
 		// The system should have reduced the total budget balance by $33.33
-		assertEquals(96667, (long) budget.getCheckingAccount().getBalance());
+		assertEquals(3, (long) budget.getExpenseSpendingAccount().getBalance());
 	}
 
 	@Test

@@ -38,9 +38,10 @@ public class ExpenseModelAdapter extends BaseModelAdapter {
 		ExpenseRow expenseRow = (ExpenseRow) row;
 		ExpenseCategoryTo expenseCategory = (ExpenseCategoryTo) row.getData();
 		expenseCategory.setName(expenseRow.getName().getValue());
+		expenseCategory.getAccount().setName(expenseRow.getName().getValue());
 		expenseCategory.setAccumulating(expenseRow.getAccumulating().getValue());
 		expenseCategory.setAmount(expenseRow.getAmount().getMoneyValue());
-		expenseCategory.setBalance(expenseRow.getBalance().getMoneyValue());
+		expenseCategory.getAccount().setBalance(expenseRow.getBalance().getMoneyValue());
 		expenseCategory.setFrequencyToRefresh(getSelectedFrequency(expenseRow));
 		return expenseCategory;
 	}

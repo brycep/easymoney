@@ -5,6 +5,7 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import net.switchcase.easymoney.server.domain.Account;
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.Device;
@@ -62,6 +63,9 @@ public class JdoBudgetDao implements BudgetDao {
 		try {
 			pm = PMF.get().getPersistenceManager();
 			pm.makePersistent(budget);
+			for(Account account : budget.getAccountList())  {
+				pm.makePersistent(account);
+			}
 			for(Income income : budget.getIncomes())  {
 				pm.makePersistent(income);
 			}

@@ -16,32 +16,7 @@
     <field-exclude>
     	<a>owner</a>
     	<b>owner</b>
-    </field-exclude>
-    <field-exclude>
-    	<a>balance</a>
-    	<b>balance</b>
-    </field-exclude>
-    <field-exclude>
-    	<a>monthlySavings</a>
-    	<b>monthlySavings</b>
-    </field-exclude>
-    <field-exclude>
-    	<a>savings</a>
-    	<b>savings</b>
-    </field-exclude>
-     
-    <field>
-    	<a>balance</a>
-    	<b>balanceAsInt</b>
-    </field>
-    <field>
-    	<a>savings</a>
-    	<b>savingsAsInt</b>
-    </field>
-    <field>
-    	<a>monthlySavings</a>
-    	<b>monthlySavingsAsInt</b>
-    </field>    
+    </field-exclude>     
   </mapping>
   <mapping>
   	<class-a>net.switchcase.easymoney.server.domain.Income</class-a>
@@ -74,14 +49,21 @@
   		<a>amount</a>
   		<b>amount</b>
   	</field-exclude>
-  	<field-exclude>
-  		<a>balance</a>
-  		<b>balance</b>
-  	</field-exclude>
   	<field>
   		<a>amount</a>
   		<b>amountAsInt</b>
   	</field>
   </mapping>
-   
+  <mapping>
+  	<class-a>net.switchcase.easymoney.server.domain.Account</class-a>
+  	<class-b>net.switchcase.easymoney.shared.AccountTo</class-b>
+  	<field-exclude>
+  		<a>balance</a>
+  		<b>balance</b>
+  	</field-exclude>
+  	<field>
+  		<a>balance</a>
+  		<b>balanceAsInt</b>
+  	</field>
+  </mapping>   
 </mappings>

@@ -37,9 +37,10 @@ public class ExpenseRow implements Row {
 	
 	public void updateModel() {
 		expenseCategoryTo.setName(name.getValue());
+		expenseCategoryTo.getAccount().setName(name.getValue());
 		expenseCategoryTo.setAccumulating(accumulating.getValue());
 		expenseCategoryTo.setAmount(amount.getMoneyValue());
-		expenseCategoryTo.setBalance(balance.getMoneyValue());
+		expenseCategoryTo.getAccount().setBalance(balance.getMoneyValue());
 		expenseCategoryTo.setFrequencyToRefresh(Frequency.valueOf(frequency.getSelected().getValue()));
 	}
 
@@ -48,7 +49,7 @@ public class ExpenseRow implements Row {
 		name.setValue(category.getName());
 		accumulating.setValue(category.isAccumulating());
 		amount.setValue(category.getAmount());
-		balance.setValue(category.getBalance());
+		balance.setValue(category.getAccount().getBalance());
 		frequency.setList(Arrays.asList(
 				new ListItem(Frequency.BiWeekly.toString(), "Bi-Weekly"),
 				new ListItem(Frequency.Monthly.toString(), "Monthly"),

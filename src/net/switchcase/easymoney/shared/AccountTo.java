@@ -1,7 +1,10 @@
 package net.switchcase.easymoney.shared;
 
+import java.io.Serializable;
 
-public class AccountTo {
+
+@SuppressWarnings("serial")
+public class AccountTo implements Serializable  {
 
 	private String id;
 	private String name;
@@ -41,6 +44,18 @@ public class AccountTo {
 
 	public void setBalance(MoneyTo balance) {
 		this.balance = balance;
+	}
+	
+	public int getBalanceAsInt()  {
+		if (balance == null)  {
+			return 0;
+		}
+		
+		return balance.toInt();
+	}
+	
+	public void setBalanceAsInt(int newBalance)  {
+		this.balance = new MoneyTo(newBalance);
 	}
 	
 	

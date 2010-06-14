@@ -2,12 +2,14 @@ package net.switchcase.easymoney.server.domain;
 
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import net.switchcase.easymoney.shared.AccountType;
 import net.switchcase.easymoney.shared.DebitCreditType;
 
+@PersistenceCapable
 public class Account {
 		
 	@PrimaryKey

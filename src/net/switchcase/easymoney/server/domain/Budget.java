@@ -17,6 +17,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import net.switchcase.easymoney.shared.AccountType;
 import net.switchcase.easymoney.shared.DebitCreditType;
 
 import com.google.appengine.api.users.User;
@@ -47,9 +48,7 @@ public class Budget implements Serializable {
 	@Persistent(defaultFetchGroup="true", mappedBy="budget")
 	private List<ExpenseCategory> categories = new ArrayList<ExpenseCategory>();
 
-	@Persistent private Account checkingAccount;
-	@Persistent private Account savingsAccount;
-	@Persistent private Account billsAccount;
+	@Persistent private List<Account> accountList = new ArrayList<Account>();
 	
 	@Persistent private Long monthlySavings;
     @Persistent private User owner;
@@ -140,29 +139,73 @@ public class Budget implements Serializable {
 	}
 
 	public Account getSavingsAccount() {
-		return savingsAccount;
+		return findAccount(AccountType.Savings);
 	}
 
 	public void setSavingsAccount(Account savingsAccount) {
-		this.savingsAccount = savingsAccount;
+		setAccount(savingsAccount, AccountType.Savings);
 	}
 
 	public Account getBillsAccount() {
-		return billsAccount;
+		return findAccount(AccountType.Bills);
 	}
 
 	public void setBillsAccount(Account billsAccount) {
-		this.billsAccount = billsAccount;
+		setAccount(billsAccount, AccountType.Bills);
 	}
 
 	public Account getCheckingAccount() {
-		return checkingAccount;
+		return findAccount(AccountType.CheckingAccount);
 	}
 
 	public void setCheckingAccount(Account checkingAccount) {
-		this.checkingAccount = checkingAccount;
+		setAccount(checkingAccount, AccountType.CheckingAccount);
 	}
 	
+	public Account getExpenseSpendingAccount() {
+		return findAccount(AccountType.ExpenseSpending);
+	}
+
+	public void setExpenseSpendingAccount(Account expenseSpendingAccount) {
+		setAccount(expenseSpendingAccount, AccountType.ExpenseSpending);
+	}
+	
+	private void setAccount(Account account, AccountType type)  {
+		removeAccount(type);
+		accountList.add(account);
+	}
+	
+	private void removeAccount(AccountType type)  {
+		List<Account> newAccountList = new ArrayList<Account>();
+		for(Account account : accountList)  {
+			if (!account.getAccountType().equals(type))  {
+				newAccountList.add(account);
+			}
+		}
+		
+		accountList = newAccountList;
+	}
+	
+	private Account findAccount(AccountType type)  {
+		for(Account account : accountList)  {
+			if (type.equals(account.getAccountType()) )  {
+				return account;
+			}
+		}
+		return createAccount(type);
+	}
+	
+	private Account createAccount(AccountType type)  {
+		if (AccountType.Bills.equals(type))  {
+			return new Account("Bills", AccountType.Bills, 0L, this);
+		} else if (AccountType.CheckingAccount.equals(type))  {
+			return new Account("Checking", AccountType.CheckingAccount, 0L, this);
+		} else if (AccountType.Savings.equals(type))  {
+			return new Account("Savings", AccountType.Savings, 0L, this);
+		} 
+		return null;
+	}
+
 	public ExpenseCategory getExpenseCategory(String key)  {
 		for(ExpenseCategory expenseCategory : categories)  {
 			if (key.equals(expenseCategory.getId()) )  {
@@ -173,27 +216,17 @@ public class Budget implements Serializable {
 	}
 
 	public List<Account> getAccountList()  {
-		List<Account> accountList = new ArrayList<Account>();
+		List<Account> completeAccountList = new ArrayList<Account>();
 		
 		for(ExpenseCategory expenseCategory : categories)  {
 			if (null != expenseCategory.getAccount())  {
-				accountList.add(expenseCategory.getAccount());
+				completeAccountList.add(expenseCategory.getAccount());
 			}
 		}
 		
-		if (savingsAccount != null)  {
-			accountList.add(savingsAccount);
-		}
+		completeAccountList.addAll(accountList);
 		
-		if (checkingAccount != null)  {
-			accountList.add(checkingAccount);
-		}
-		
-		if (billsAccount != null)  {
-			accountList.add(billsAccount);
-		}
-		
-		return accountList;
+		return completeAccountList;
 	}
 	
 	public Account findAccount(String key)  {
@@ -210,10 +243,10 @@ public class Budget implements Serializable {
 										  ExpenseCategory expenseCategory) throws InsufficientFundsException {
 
 		transaction.setDebitAccountKey(expenseCategory.getAccount().getId());
-		transaction.setCreditAccountKey(checkingAccount.getId());
+		transaction.setCreditAccountKey(getExpenseSpendingAccount().getId());
 		transaction.setExpenseCategoryKey(expenseCategory.getId());
 
-		processTransaction(expenseCategory.getAccount(), checkingAccount, transaction.getAmount());
+		processTransaction(expenseCategory.getAccount(), getExpenseSpendingAccount(), transaction.getAmount());
 
 	}
 	

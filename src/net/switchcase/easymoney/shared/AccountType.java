@@ -3,7 +3,9 @@ package net.switchcase.easymoney.shared;
 public enum AccountType {
 	Savings(DebitCreditType.Credit),
 	Expense(DebitCreditType.Credit),
-	CheckingAccount(DebitCreditType.Debit);
+	CheckingAccount(DebitCreditType.Debit),
+	ExpenseSpending(DebitCreditType.Debit),
+	Bills(DebitCreditType.Debit);
 		
 	private DebitCreditType debitCredit;
 	

@@ -17,10 +17,10 @@ import net.switchcase.easymoney.server.domain.InsufficientFundsException;
 import net.switchcase.easymoney.server.domain.Transaction;
 
 import com.google.inject.Inject;
-import com.google.inject.servlet.RequestScoped;
+import com.google.inject.Singleton;
 
-@SuppressWarnings({ "serial" })
-@RequestScoped
+@SuppressWarnings("serial")
+@Singleton
 public class AddTransactionFromDeviceServlet extends EasyMoneyServlet {
 
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -35,7 +35,7 @@ public class AddTransactionFromDeviceServlet extends EasyMoneyServlet {
 		this.budgetDao = budgetDao;
 	}
 	
-	@Inject
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		

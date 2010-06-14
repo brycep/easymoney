@@ -22,9 +22,11 @@ public class ExpenseCategoryTo implements Serializable {
     private Frequency frequencyToRefresh = Frequency.Monthly;
     private boolean accumulating;
 
-    private MoneyTo balance = new MoneyTo();
+    private AccountTo account = new AccountTo();
 
-    public ExpenseCategoryTo()  {}
+    public ExpenseCategoryTo()  {
+    	account.setAccountType(AccountType.Expense);
+    }
 
     public String getId()  {
     	return id;
@@ -77,22 +79,12 @@ public class ExpenseCategoryTo implements Serializable {
         this.accumulating = accumulating;
     }
 
-    public MoneyTo getBalance() {
-        return balance;
-    }
+	public AccountTo getAccount() {
+		return account;
+	}
 
-    public void setBalance(MoneyTo balance) {
-        this.balance = balance;
-    }
+	public void setAccount(AccountTo account) {
+		this.account = account;
+	}
     
-    public Integer getBalanceAsInt()  {
-    	if (balance == null)  {
-    		return 0;
-    	}
-    	return balance.toInt();
-    }
-    
-    public void setBalanceAsInt(Integer value)  {
-    	balance = new MoneyTo(value);
-    }
 }

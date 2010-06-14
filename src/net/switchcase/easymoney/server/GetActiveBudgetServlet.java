@@ -1,20 +1,27 @@
 package net.switchcase.easymoney.server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.Device;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 
+import flexjson.JSONSerializer;
+
 @SuppressWarnings("serial")
 @RequestScoped
 public class GetActiveBudgetServlet extends EasyMoneyServlet {
+	
+	private final Logger log = Logger.getLogger(GetActiveBudgetServlet.class.getName());
 	
 	private BudgetDao budgetDao;
 	
@@ -30,7 +37,14 @@ public class GetActiveBudgetServlet extends EasyMoneyServlet {
 		String deviceKey = req.getParameter("deviceKey");
 		Device device = budgetDao.findDevice(deviceKey);
 	
-		budgetDao.findActiveBudget(device.getUser());
+		Budget budget = budgetDao.findActiveBudget(device.getUser());
+		JSONSerializer serializer = new JSONSerializer().include("categories")
+			.include("monthlyBills").include("incomes");
+		
+		PrintWriter writer = resp.getWriter();
+		String jsonResult = serializer.serialize(budget);
+		log.fine(jsonResult);
+		writer.print(jsonResult);
 		
 	}
 
