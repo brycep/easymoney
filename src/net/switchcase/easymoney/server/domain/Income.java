@@ -35,11 +35,7 @@ public class Income {
 	@Persistent private Frequency frequency;
 	@Persistent private Date nextPayDate;
 	
-	@Persistent private Account debitAccount; // This is the checking account
-	@Persistent private Account creditAccount; // This will be the savings account
-
     public Income() {}
-
     
     public String getId() {
 		return id;
@@ -84,27 +80,6 @@ public class Income {
     public void setNextPayDate(Date nextPayDate) {
         this.nextPayDate = nextPayDate;
     }
-
-
-	public Account getDebitAccount() {
-		return debitAccount;
-	}
-
-
-	public void setDebitAccount(Account debitAccount) {
-		this.debitAccount = debitAccount;
-	}
-
-
-	public Account getCreditAccount() {
-		return creditAccount;
-	}
-
-
-	public void setCreditAccount(Account creditAccount) {
-		this.creditAccount = creditAccount;
-	}
-
 
 	@Override
 	public int hashCode() {

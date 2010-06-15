@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
 import net.switchcase.easymoney.server.dao.TransactionDao;
-import net.switchcase.easymoney.server.domain.Account;
 import net.switchcase.easymoney.server.domain.Budget;
+import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.Device;
 import net.switchcase.easymoney.server.domain.InsufficientFundsException;
-import net.switchcase.easymoney.server.domain.Transaction;
+import net.switchcase.easymoney.server.domain.Transfer;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
@@ -42,27 +42,32 @@ public class TransferCategoryBalanceServlet extends EasyMoneyServlet {
 			return;
 		}
 
-		String sourceAccountKey = req.getParameter("sourceAccount");
-		String destinationAccountKey = req.getParameter("destinationAccount");
+		String sourceEnvelopeKey = req.getParameter("sourceEnvelope");
+		String destinationEnvelopeKey = req.getParameter("destinationEnvelope");
+		String source = req.getParameter("source");
 		String amount = req.getParameter("amount");
 		
 		Budget budget = budgetDao.findActiveBudget(device.getUser());
-		Account sourceAccount = budget.findAccount(sourceAccountKey);
-		if (null == sourceAccount)  {
-			printErrorXml(resp, "InvalidSourceAccount");
+		CashEnvelope sourceEnvelope = budget.getCashEnvelope(sourceEnvelopeKey);
+		if (null == sourceEnvelope)  {
+			printErrorXml(resp, "InvalidSourceEnvelope");
 			return;
 		}
 		
-		Account destAccount = budget.findAccount(destinationAccountKey);
-		if (null == destAccount)  {
-			printErrorXml(resp, "InvalidDestinationAccount");
+		CashEnvelope destEnvelope = budget.getCashEnvelope(destinationEnvelopeKey);
+		if (null == destEnvelope)  {
+			printErrorXml(resp, "InvalidDestinationEnvelope");
 			return;
 		}
 		
 		Long amountValue = Long.parseLong(amount);
 		try  {
-			Transaction txn = budget.transfer(sourceAccount, destAccount, amountValue);
-			transactionDao.addTransaction(txn);
+			Transfer transfer = budget.transfer(sourceEnvelope,  
+												destEnvelope, 
+												amountValue,
+												source,
+												device.getUser());
+			transactionDao.addTransfer(transfer);
 			
 		} catch(InsufficientFundsException exp)  {
 			printErrorXml(resp, "InsufficientFunds");

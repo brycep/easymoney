@@ -14,18 +14,15 @@ import java.io.Serializable;
  * Time: 7:17:23 PM
  */
 @SuppressWarnings("serial")
-public class ExpenseCategoryTo implements Serializable {
+public class CashEnvelopeTo implements Serializable {
 
 	private String id;
     private String name;
     private MoneyTo amount = new MoneyTo();
-    private Frequency frequencyToRefresh = Frequency.Monthly;
-    private boolean accumulating;
+    private EnvelopeType type;
+    private MoneyTo balance = new MoneyTo();
 
-    private AccountTo account = new AccountTo();
-
-    public ExpenseCategoryTo()  {
-    	account.setAccountType(AccountType.Expense);
+    public CashEnvelopeTo()  {
     }
 
     public String getId()  {
@@ -63,28 +60,20 @@ public class ExpenseCategoryTo implements Serializable {
     	amount = new MoneyTo(value);
     }
 
-    public Frequency getFrequencyToRefresh() {
-        return frequencyToRefresh;
-    }
-
-    public void setFrequencyToRefresh(Frequency frequencyToRefresh) {
-        this.frequencyToRefresh = frequencyToRefresh;
-    }
-
-    public boolean isAccumulating() {
-        return accumulating;
-    }
-
-    public void setAccumulating(boolean accumulating) {
-        this.accumulating = accumulating;
-    }
-
-	public AccountTo getAccount() {
-		return account;
+	public EnvelopeType getType() {
+		return type;
 	}
 
-	public void setAccount(AccountTo account) {
-		this.account = account;
+	public void setType(EnvelopeType type) {
+		this.type = type;
+	}
+
+	public MoneyTo getBalance() {
+		return balance;
+	}
+
+	public void setBalance(MoneyTo balance) {
+		this.balance = balance;
 	}
     
 }

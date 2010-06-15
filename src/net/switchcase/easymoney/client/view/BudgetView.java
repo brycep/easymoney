@@ -13,7 +13,7 @@ import net.switchcase.easymoney.client.presenter.BudgetPresenter.IncomeDisplay;
 import net.switchcase.easymoney.client.presenter.BudgetPresenter.SummaryDisplay;
 import net.switchcase.easymoney.shared.BillTo;
 import net.switchcase.easymoney.shared.BudgetTo;
-import net.switchcase.easymoney.shared.ExpenseCategoryTo;
+import net.switchcase.easymoney.shared.CashEnvelopeTo;
 import net.switchcase.easymoney.shared.IncomeTo;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -92,7 +92,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
     	billsView.addBill(bill);
     }
     
-    public void addExpenseCategory(ExpenseCategoryTo expenseCategory) {
+    public void addExpenseCategory(CashEnvelopeTo expenseCategory) {
     	expenseCategoriesView.addExpenseCategory(expenseCategory);
     }
     

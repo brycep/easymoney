@@ -12,7 +12,7 @@ import net.switchcase.easymoney.server.dao.BudgetDao;
 import net.switchcase.easymoney.server.dao.TransactionDao;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.Device;
-import net.switchcase.easymoney.server.domain.ExpenseCategory;
+import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.InsufficientFundsException;
 import net.switchcase.easymoney.server.domain.Transaction;
 
@@ -55,14 +55,14 @@ public class AddTransactionFromDeviceServlet extends EasyMoneyServlet {
 		String createTimestamp = request.getParameter("createTimestamp");
 		String transactionDate = request.getParameter("transactionDate");
 		String reconsiled = request.getParameter("reconsiled");
-		String expenseCategoryKey = request.getParameter("expenseCategoryKey"); 
+		String cashEnvelopeKey = request.getParameter("cashEnvelopeKey"); 
 		
 		try  {
 			Budget budget = budgetDao.findActiveBudget(device.getUser());
 			
-			ExpenseCategory expenseCategory = budget.getExpenseCategory(expenseCategoryKey);
-			if (null == expenseCategory)  {
-				printErrorXml(response, "ExpenseCategoryNotFound");
+			CashEnvelope expenseEnvelope = budget.getCashEnvelope(cashEnvelopeKey);
+			if (null == expenseEnvelope)  {
+				printErrorXml(response, "CashEnvelopeNotFound");
 				return;
 			}
 
@@ -80,18 +80,17 @@ public class AddTransactionFromDeviceServlet extends EasyMoneyServlet {
 			txn.setCreateTimestamp(FORMAT.parse(createTimestamp));
 			txn.setTransactionDate(FORMAT.parse(transactionDate));
 			txn.setReconsiled("true".equals(reconsiled));
-			txn.setDebitAccountKey(expenseCategory.getAccount().getId());
-			txn.setExpenseCategoryKey(expenseCategoryKey);
-			
-			txn.setCreditAccountKey(budget.getCheckingAccount().getId());
+			txn.setCashEnvelopeKey(cashEnvelopeKey);
+			txn.setBudgetKey(budget.getId());
+			txn.setCreatedByUser(device.getUser());
 			
 			try  {
-				budget.processExpenseTransaction(txn, expenseCategory);
+				expenseEnvelope.subtractBalance(txn.getAmount());
 				transactionDao.addTransaction(txn);
 				response.getWriter().print("<results><result>OK</result></results>");
 				
 			} catch(InsufficientFundsException exp)  {
-				printErrorXml(response, "InsufficientBalanceInCategory");
+				printErrorXml(response, "InsufficientBalance");
 			}
 
 		} catch(ParseException exp)  {

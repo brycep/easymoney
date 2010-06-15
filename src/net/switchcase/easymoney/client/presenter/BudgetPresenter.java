@@ -13,7 +13,7 @@ import net.switchcase.easymoney.client.event.HasRowValueChangeHandler;
 import net.switchcase.easymoney.client.event.RowValueChangeHandler;
 import net.switchcase.easymoney.shared.BillTo;
 import net.switchcase.easymoney.shared.BudgetTo;
-import net.switchcase.easymoney.shared.ExpenseCategoryTo;
+import net.switchcase.easymoney.shared.CashEnvelopeTo;
 import net.switchcase.easymoney.shared.IncomeTo;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -51,7 +51,7 @@ public class BudgetPresenter implements Presenter {
         ExpenseDisplay getExpenseCategoriesView();
 
         void setData(BudgetTo budget);
-        void addExpenseCategory(ExpenseCategoryTo expenseCategory);
+        void addExpenseCategory(CashEnvelopeTo expenseCategory);
         void addIncome(IncomeTo income);
         void addBill(BillTo bill);
         
@@ -163,8 +163,8 @@ public class BudgetPresenter implements Presenter {
     	display.getExpenseCategoriesView().getAddExpenseCategoryButton().addClickHandler(
     			new ClickHandler()  {
     				public void onClick(ClickEvent event) {
-    					ExpenseCategoryTo category = new ExpenseCategoryTo();
-    					BudgetPresenter.this.budget.getCategories().add(category);
+    					CashEnvelopeTo category = new CashEnvelopeTo();
+    					BudgetPresenter.this.budget.getExpenses().add(category);
     					BudgetPresenter.this.display.addExpenseCategory(category);
     				}
     			}

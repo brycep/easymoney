@@ -8,6 +8,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.users.User;
+
 @PersistenceCapable
 public class Transaction {
 	
@@ -21,12 +23,12 @@ public class Transaction {
 	@Persistent private Long amount;
 	@Persistent private String source;
 	@Persistent private Date createTimestamp = new Date();
+	@Persistent private User createdByUser;
 	@Persistent private Date transactionDate;
 	@Persistent private boolean reconsiled = false;
-	@Persistent private String debitAccountKey;
-	@Persistent private String creditAccountKey;
 	
-	@Persistent private String expenseCategoryKey;
+	@Persistent private String cashEnvelopeKey;
+	@Persistent private String budgetKey;
 		
 	public Transaction() {
 	}
@@ -103,28 +105,28 @@ public class Transaction {
 		this.reconsiled = reconsiled;
 	}
 
-	public String getDebitAccountKey() {
-		return debitAccountKey;
+	public String getCashEnvelopeKey() {
+		return cashEnvelopeKey;
 	}
 
-	public void setDebitAccountKey(String debitAccountKey) {
-		this.debitAccountKey = debitAccountKey;
+	public void setCashEnvelopeKey(String cashEnvelopeKey) {
+		this.cashEnvelopeKey = cashEnvelopeKey;
 	}
 
-	public String getCreditAccountKey() {
-		return creditAccountKey;
+	public User getCreatedByUser() {
+		return createdByUser;
 	}
 
-	public void setCreditAccountKey(String creditAccountKey) {
-		this.creditAccountKey = creditAccountKey;
+	public void setCreatedByUser(User createdByUser) {
+		this.createdByUser = createdByUser;
 	}
 
-	public String getExpenseCategoryKey() {
-		return expenseCategoryKey;
+	public String getBudgetKey() {
+		return budgetKey;
 	}
 
-	public void setExpenseCategoryKey(String expenseCategoryKey) {
-		this.expenseCategoryKey = expenseCategoryKey;
+	public void setBudgetKey(String budgetKey) {
+		this.budgetKey = budgetKey;
 	}
 	
 }

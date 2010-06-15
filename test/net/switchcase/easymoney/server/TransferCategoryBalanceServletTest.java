@@ -5,18 +5,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.PrintWriter;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
 import net.switchcase.easymoney.server.dao.TransactionDao;
-import net.switchcase.easymoney.server.domain.Account;
 import net.switchcase.easymoney.server.domain.Budget;
+import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.Device;
-import net.switchcase.easymoney.server.domain.ExpenseCategory;
-import net.switchcase.easymoney.shared.AccountType;
+import net.switchcase.easymoney.shared.EnvelopeType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,8 +33,8 @@ public class TransferCategoryBalanceServletTest {
 	
 	private TransferCategoryBalanceServlet servlet;
 	private Budget budget;
-	private ExpenseCategory sourceCategory;
-	private ExpenseCategory destinationCategory;
+	private CashEnvelope sourceEnvelope;
+	private CashEnvelope destinationEnvelope;
 	private Device device = new Device(new User("testuser@switchcase.net", "switchcase.net"));
 	
 	@Before
@@ -45,20 +43,15 @@ public class TransferCategoryBalanceServletTest {
 		
 		servlet = new TransferCategoryBalanceServlet(budgetDao, txnDao);
 		
-		when(response.getWriter()).thenReturn(printWriter);
-
-		sourceCategory = new ExpenseCategory();
-		destinationCategory = new ExpenseCategory();
-		
+		when(response.getWriter()).thenReturn(printWriter);		
 		
 		budget = new Budget();
-		budget.setSavingsAccount(new Account("SavingsAccountId", "Savings", AccountType.Savings, 20000L, budget));
-		budget.setCategories(Arrays.asList(sourceCategory, destinationCategory));
-		sourceCategory.setBudget(budget);
-		destinationCategory.setBudget(budget);
-
-		sourceCategory.setAccount(new Account("SourceAccountId", "SourceAccount", AccountType.Expense, 10000L, budget));
-		destinationCategory.setAccount(new Account("DestAccountId", "DestinationAccount", AccountType.Expense, 10000L, budget));
+		sourceEnvelope = new CashEnvelope("Source", EnvelopeType.Expense, 0, 20000L, budget);
+		sourceEnvelope.setId("SourceId");
+		destinationEnvelope = new CashEnvelope("Dest", EnvelopeType.Expense, 0, 20000L, budget);
+		destinationEnvelope.setId("DestId");
+		budget.addExpense(sourceEnvelope);
+		budget.addExpense(destinationEnvelope);
 
 		when(budgetDao.findActiveBudget(device.getUser())).thenReturn(budget);
 		when(budgetDao.findDevice("TestDeviceKey")).thenReturn(device);
@@ -67,8 +60,8 @@ public class TransferCategoryBalanceServletTest {
 
 	private void createValidRequest() {
 		when(request.getParameter("deviceKey")).thenReturn("TestDeviceKey");
-		when(request.getParameter("sourceAccount")).thenReturn("SourceAccountId");
-		when(request.getParameter("destinationAccount")).thenReturn("DestAccountId");
+		when(request.getParameter("sourceEnvelope")).thenReturn("SourceId");
+		when(request.getParameter("destinationEnvelope")).thenReturn("DestId");
 		when(request.getParameter("amount")).thenReturn("4000");
 	}
 
@@ -79,8 +72,8 @@ public class TransferCategoryBalanceServletTest {
 		
 		servlet.doPost(request, response);
 
-		assertEquals(14000, (long)destinationCategory.getAccount().getBalance());
-		assertEquals(6000, (long)sourceCategory.getAccount().getBalance());
+		assertEquals(24000, (long)destinationEnvelope.getBalance());
+		assertEquals(16000, (long)sourceEnvelope.getBalance());
 	}
 
 	@Test
@@ -116,25 +109,25 @@ public class TransferCategoryBalanceServletTest {
 	@Test
 	public void testErrorXmlIsOutputWhenInvalidSourceKeyIsUsed() throws Exception  {
 		when(request.getParameter("deviceKey")).thenReturn("TestDeviceKey");
-		when(request.getParameter("sourceAccount")).thenReturn("InvalidSourceCategoryKey");
-		when(request.getParameter("destinationAccount")).thenReturn("DestinationCategoryKey");
+		when(request.getParameter("sourceEnvelope")).thenReturn("InvalidSourceCategoryKey");
+		when(request.getParameter("destinationEnvelope")).thenReturn("DestinationCategoryKey");
 		when(request.getParameter("amount")).thenReturn("4000");
 		
 		servlet.doPost(request, response);
 		
-		verify(printWriter).print("<results><result>InvalidSourceAccount</result></results>");
+		verify(printWriter).print("<results><result>InvalidSourceEnvelope</result></results>");
 	}
 	
 	@Test
 	public void testErrorXmlIsOutputWhenInvalidDestinationKeyIsUsed() throws Exception {
 		when(request.getParameter("deviceKey")).thenReturn("TestDeviceKey");
-		when(request.getParameter("sourceAccount")).thenReturn("SourceAccountId");
-		when(request.getParameter("destinationAccount")).thenReturn("InvalidDestinationCategoryKey");
+		when(request.getParameter("sourceEnvelope")).thenReturn("SourceId");
+		when(request.getParameter("destinationEnvelope")).thenReturn("InvalidDestinationEnvelopeKey");
 		when(request.getParameter("amount")).thenReturn("4000");
 
 		servlet.doPost(request, response);
 		
-		verify(printWriter).print("<results><result>InvalidDestinationAccount</result></results>");
+		verify(printWriter).print("<results><result>InvalidDestinationEnvelope</result></results>");
 	}
 	
 	@Test
@@ -142,8 +135,7 @@ public class TransferCategoryBalanceServletTest {
 		
 		createValidRequest();
 		
-		budget.getSavingsAccount().setBalance(12000L);
-		sourceCategory.getAccount().setBalance(2000L);
+		sourceEnvelope.setBalance(2000L);
 		
 		servlet.doPost(request, response);
 		

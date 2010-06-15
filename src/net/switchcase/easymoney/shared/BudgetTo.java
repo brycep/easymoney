@@ -23,12 +23,10 @@ public class BudgetTo implements Serializable {
 	private String name;
     private List<IncomeTo> incomes = new ArrayList<IncomeTo>();
     private List<BillTo> monthlyBills = new ArrayList<BillTo>();
-    private List<ExpenseCategoryTo> categories = new ArrayList<ExpenseCategoryTo>();
+    private List<CashEnvelopeTo> expenses = new ArrayList<CashEnvelopeTo>();
+    private CashEnvelopeTo savingsEnvelope;
+    private CashEnvelopeTo billsEnvelope;
 
-	private AccountTo savingsAccount;
-	private AccountTo billsAccount;
-    
-    private MoneyTo monthlySavings;
     private String sharedWith;
     private String owner;
 
@@ -66,47 +64,12 @@ public class BudgetTo implements Serializable {
         this.monthlyBills = monthlyBills;
     }
 
-    public List<ExpenseCategoryTo> getCategories() {
-        return categories;
+    public List<CashEnvelopeTo> getExpenses() {
+        return expenses;
     }
 
-    public void setCategories(List<ExpenseCategoryTo> category) {
-        this.categories = category;
-    }
-    
-    public AccountTo getSavingsAccount() {
-		return savingsAccount;
-	}
-
-	public void setSavingsAccount(AccountTo savingsAccount) {
-		this.savingsAccount = savingsAccount;
-	}
-
-	public AccountTo getBillsAccount() {
-		return billsAccount;
-	}
-
-	public void setBillsAccount(AccountTo billsAccount) {
-		this.billsAccount = billsAccount;
-	}
-
-	public MoneyTo getMonthlySavings() {
-        return monthlySavings;
-    }
-
-    public void setMonthlySavings(MoneyTo monthlySavings) {
-        this.monthlySavings = monthlySavings;
-    }
-    
-    public Integer getMonthlySavingsAsInt()  {
-    	if (null == monthlySavings)  {
-    		return 0;
-    	}
-    	return monthlySavings.toInt();
-    }
-    
-    public void setMonthlySavingsAsInt(Integer value)  {
-    	monthlySavings = new MoneyTo(value);
+    public void setExpenses(List<CashEnvelopeTo> expenses) {
+        this.expenses = expenses;
     }
     
    	public String getSharedWith() {
@@ -127,8 +90,8 @@ public class BudgetTo implements Serializable {
 
 	public MoneyTo calculateExpenseTotal() {
 		MoneyTo money = new MoneyTo();
-		for(ExpenseCategoryTo category : categories)  {
-			money.add(category.getAmount());
+		for(CashEnvelopeTo envelope : expenses)  {
+			money.add(envelope.getAmount());
 		}
 		return money;
 	}
@@ -152,4 +115,22 @@ public class BudgetTo implements Serializable {
 	public MoneyTo getLeftOverValue()  {
 		return new MoneyTo();
 	}
+
+	public CashEnvelopeTo getSavingsEnvelope() {
+		return savingsEnvelope;
+	}
+
+	public void setSavingsEnvelope(CashEnvelopeTo savingsEnvelope) {
+		this.savingsEnvelope = savingsEnvelope;
+	}
+
+	public CashEnvelopeTo getBillsEnvelope() {
+		return billsEnvelope;
+	}
+
+	public void setBillsEnvelope(CashEnvelopeTo billsEnvelope) {
+		this.billsEnvelope = billsEnvelope;
+	}
+	
+	
 }

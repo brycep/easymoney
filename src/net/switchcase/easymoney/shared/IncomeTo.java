@@ -25,9 +25,6 @@ public class IncomeTo implements Serializable {
     private Frequency frequency = Frequency.BiWeekly;
     private Date nextPayDate;
     
-	private AccountTo debitAccount; 
-	private AccountTo creditAccount; 
-
     public IncomeTo() {}
 
     public String getId()  {
@@ -81,20 +78,4 @@ public class IncomeTo implements Serializable {
         this.nextPayDate = nextPayDate;
     }
 
-	public AccountTo getDebitAccount() {
-		return debitAccount;
-	}
-
-	public void setDebitAccount(AccountTo debitAccount) {
-		this.debitAccount = debitAccount;
-	}
-
-	public AccountTo getCreditAccount() {
-		return creditAccount;
-	}
-
-	public void setCreditAccount(AccountTo creditAccount) {
-		this.creditAccount = creditAccount;
-	}
-    
 }

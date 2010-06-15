@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,12 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
 import net.switchcase.easymoney.server.dao.TransactionDao;
-import net.switchcase.easymoney.server.domain.Account;
 import net.switchcase.easymoney.server.domain.Budget;
+import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.Device;
-import net.switchcase.easymoney.server.domain.ExpenseCategory;
 import net.switchcase.easymoney.server.domain.Transaction;
-import net.switchcase.easymoney.shared.AccountType;
+import net.switchcase.easymoney.shared.EnvelopeType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,10 +44,7 @@ public class AddTransactionFromDeviceServletTest {
 	private AddTransactionFromDeviceServlet servlet;
 	
 	private Budget budget = new Budget();
-	private ExpenseCategory testExpenseCategory;
-	private Account testExpenseAccount;
-	private Account checkingAccount;
-	private Account expensesAccount;
+	private CashEnvelope testExpenseEnvelope;
 
 	@Before
 	public void setUp() throws IOException  {
@@ -65,26 +60,19 @@ public class AddTransactionFromDeviceServletTest {
 
 		when(budgetDao.findDevice("TestDeviceKey")).thenReturn(device);
 		
-		Account savings = new Account("Savings", AccountType.Savings, 100000L, budget);
-		budget.setSavingsAccount(savings);   // $1000.00
+		CashEnvelope savings = new CashEnvelope("Savings", EnvelopeType.DefaultSavings, 0, 100000L, budget);
+		savings.setId("SavingsId");
+		budget.setDefaultSavings(savings);   // $1000.00
 		
-		testExpenseCategory = new ExpenseCategory();
-		testExpenseCategory.setId("ExpenseCategoryId1");
-		testExpenseCategory.setAmount(35000L);  // $350.00
-		testExpenseCategory.setName("Test Expense Category");
-		testExpenseCategory.setBudget(budget);
+		testExpenseEnvelope = new CashEnvelope("Test Category 1", 
+											   EnvelopeType.Expense,
+											   0,
+											   25000L,
+											   budget);
+		testExpenseEnvelope.setId("ExpenseEnvelopeId1");
 		
-		testExpenseAccount = new Account("ExpenseAccountId1", "Expense", AccountType.Expense, 25000L, budget);
-		testExpenseCategory.setAccount(testExpenseAccount); 
-		
-		budget.setCategories(Arrays.asList(testExpenseCategory));
-		
-		checkingAccount = new Account("CheckingAccountId", "Checking", AccountType.CheckingAccount, 100000L, budget);
-		budget.setCheckingAccount(checkingAccount);
-		
-		expensesAccount = new Account("ExpensesAccountId", "Expenses", AccountType.Expense, 0L, budget);
-		budget.setExpenseSpendingAccount(expensesAccount);
-		
+		budget.addExpense(testExpenseEnvelope);
+				
 		when(budgetDao.findActiveBudget(testUser)).thenReturn(budget);
 	}
 	
@@ -110,7 +98,7 @@ public class AddTransactionFromDeviceServletTest {
 		assertEquals(testDate, txn.getTransactionDate());
 		
 		assertFalse(txn.isReconsiled());
-		assertEquals("ExpenseAccountId1", txn.getDebitAccountKey());
+		assertEquals("ExpenseEnvelopeId1", txn.getCashEnvelopeKey());
 	}
 
 	@Test
@@ -148,35 +136,26 @@ public class AddTransactionFromDeviceServletTest {
 		servlet.doPost(request, response);
 		
 		// The system should have reduced the Test Expense Category balance by $33.33
-		assertEquals(21667, (long) testExpenseAccount.getBalance());
+		assertEquals(21667, (long) testExpenseEnvelope.getBalance());
 	}
 	
 	@Test
-	public void testAddTransactionAppliesAmountToBudgetBalance() throws Exception  {
-		createServletParameters();
-		servlet.doPost(request, response);
-		
-		// The system should have reduced the total budget balance by $33.33
-		assertEquals(3, (long) budget.getExpenseSpendingAccount().getBalance());
-	}
-
-	@Test
 	public void testAddTransactionReportsErrorIfExpenseCategoryNotFound() throws Exception  {
 		createServletParameters();
-		when(request.getParameter("expenseCategoryKey")).thenReturn("Invalid Expense Key");
+		when(request.getParameter("cashEnvelopeKey")).thenReturn("Invalid Expense Key");
 		servlet.doPost(request, response);
 		
-		verify(printWriter).print("<results><result>ExpenseCategoryNotFound</result></results>");
+		verify(printWriter).print("<results><result>CashEnvelopeNotFound</result></results>");
 	}
 	
 	@Test
 	public void testSpendingMoreThanWhatYouHaveCausesError()  throws Exception {
-		testExpenseCategory.getAccount().setBalance(1000L);
+		testExpenseEnvelope.setBalance(1000L);
 		
 		createServletParameters();
 		servlet.doPost(request, response);
 		
-		verify(printWriter).print("<results><result>InsufficientBalanceInCategory</result></results>");
+		verify(printWriter).print("<results><result>InsufficientBalance</result></results>");
 	}
 
 	private void createServletParameters() {
@@ -189,7 +168,7 @@ public class AddTransactionFromDeviceServletTest {
 		when(request.getParameter("createTimestamp")).thenReturn("2010-01-01 09:12:34");
 		when(request.getParameter("transactionDate")).thenReturn("2010-02-02 10:00:00");
 		when(request.getParameter("reconsiled")).thenReturn("false");
-		when(request.getParameter("expenseCategoryKey")).thenReturn("ExpenseCategoryId1");
+		when(request.getParameter("cashEnvelopeKey")).thenReturn("ExpenseEnvelopeId1");
 	}
 	
 }

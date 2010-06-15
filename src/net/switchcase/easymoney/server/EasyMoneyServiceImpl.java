@@ -6,7 +6,7 @@ import net.switchcase.easymoney.client.EasyMoneyService;
 import net.switchcase.easymoney.server.dao.BudgetDao;
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
-import net.switchcase.easymoney.server.domain.ExpenseCategory;
+import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.Income;
 import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.Frequency;
@@ -93,20 +93,14 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 		phoneBill.setName("Phone Bill");
 		phoneBill.setDayOfMonth(15);
 		
-		ExpenseCategory groceries = new ExpenseCategory();
+		CashEnvelope groceries = new CashEnvelope();
 		groceries.setName("Groceries");
-		groceries.setFrequencyToRefresh(Frequency.BiWeekly);
-		groceries.setAccumulating(false);
 		
-		ExpenseCategory fun = new ExpenseCategory();
+		CashEnvelope fun = new CashEnvelope();
 		fun.setName("Fun Money");
-		fun.setFrequencyToRefresh(Frequency.BiWeekly);
-		fun.setAccumulating(true);
 		
 		budget.getIncomes().add(salary);
 		budget.getMonthlyBills().add(phoneBill);
-		budget.getCategories().add(groceries);
-		budget.getCategories().add(fun);
 		
 	}
 	

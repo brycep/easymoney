@@ -5,11 +5,10 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import net.switchcase.easymoney.server.domain.Account;
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
+import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.Device;
-import net.switchcase.easymoney.server.domain.ExpenseCategory;
 import net.switchcase.easymoney.server.domain.Income;
 
 import com.google.appengine.api.users.User;
@@ -63,17 +62,14 @@ public class JdoBudgetDao implements BudgetDao {
 		try {
 			pm = PMF.get().getPersistenceManager();
 			pm.makePersistent(budget);
-			for(Account account : budget.getAccountList())  {
-				pm.makePersistent(account);
-			}
 			for(Income income : budget.getIncomes())  {
 				pm.makePersistent(income);
 			}
 			for(Bill bill : budget.getMonthlyBills())  {
 				pm.makePersistent(bill);
 			}
-			for(ExpenseCategory expense : budget.getCategories())  {
-				pm.makePersistent(expense);
+			for(CashEnvelope envelope : budget.getEnvelopes())  {
+				pm.makePersistent(envelope);
 			}
 		} finally {
 			pm.close();
@@ -102,12 +98,12 @@ public class JdoBudgetDao implements BudgetDao {
 		}
 	}
 	
-	public ExpenseCategory findExpenseCategory(String id)  {
+	public CashEnvelope findExpenseCategory(String id)  {
 		PersistenceManager pm = null;
-		ExpenseCategory expenseCategory = null;
+		CashEnvelope expenseCategory = null;
 		try {
 			pm = PMF.get().getPersistenceManager();
-			expenseCategory = pm.getObjectById(ExpenseCategory.class, id);
+			expenseCategory = pm.getObjectById(CashEnvelope.class, id);
 		} finally {
 			pm.close();
 		}

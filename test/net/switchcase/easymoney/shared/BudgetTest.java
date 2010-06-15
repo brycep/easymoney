@@ -10,9 +10,9 @@ public class BudgetTest {
 	@Test
 	public void testCalculateExpenseTotal()  {
 		BudgetTo budget = new BudgetTo();
-		ExpenseCategoryTo expense1 = new ExpenseCategoryTo();
-		ExpenseCategoryTo expense2 = new ExpenseCategoryTo();
-		budget.setCategories(Arrays.asList(expense1, expense2));
+		CashEnvelopeTo expense1 = new CashEnvelopeTo();
+		CashEnvelopeTo expense2 = new CashEnvelopeTo();
+		budget.setExpenses(Arrays.asList(expense1, expense2));
 		
 		expense1.setAmount(new MoneyTo(1, 50));
 		expense2.setAmount(new MoneyTo(4, 35));

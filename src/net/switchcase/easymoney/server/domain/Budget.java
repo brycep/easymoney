@@ -8,6 +8,7 @@ package net.switchcase.easymoney.server.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -17,10 +18,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import net.switchcase.easymoney.shared.AccountType;
-import net.switchcase.easymoney.shared.DebitCreditType;
+import net.switchcase.easymoney.shared.EnvelopeType;
 
 import com.google.appengine.api.users.User;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 
 /**  The Budget class represents a user's monthly budget
  * 
@@ -44,13 +46,10 @@ public class Budget implements Serializable {
 	
 	@Persistent(defaultFetchGroup="true") 
 	private List<Bill> monthlyBills = new ArrayList<Bill>();
-	
-	@Persistent(defaultFetchGroup="true", mappedBy="budget")
-	private List<ExpenseCategory> categories = new ArrayList<ExpenseCategory>();
 
-	@Persistent private List<Account> accountList = new ArrayList<Account>();
-	
-	@Persistent private Long monthlySavings;
+	@Persistent(defaultFetchGroup="true")
+	private List<CashEnvelope> envelopes = new ArrayList<CashEnvelope>();
+
     @Persistent private User owner;
     @Persistent private String sharedWith;
     @Persistent private Date createDate;
@@ -90,21 +89,14 @@ public class Budget implements Serializable {
         this.monthlyBills = monthlyBills;
     }
 
-    public List<ExpenseCategory> getCategories() {
-        return categories;
-    }
+    
+	public List<CashEnvelope> getEnvelopes() {
+		return envelopes;
+	}
 
-    public void setCategories(List<ExpenseCategory> category) {
-        this.categories = category;
-    }
-
-    public Long getMonthlySavings() {
-        return monthlySavings;
-    }
-
-    public void setMonthlySavings(Long monthlySavings) {
-        this.monthlySavings = monthlySavings;
-    }
+	public void setEnvelopes(List<CashEnvelope> envelopes) {
+		this.envelopes = envelopes;
+	}
 
 	public User getOwner() {
 		return owner;
@@ -138,145 +130,104 @@ public class Budget implements Serializable {
 		this.lastAccessed = lastAccess;
 	}
 
-	public Account getSavingsAccount() {
-		return findAccount(AccountType.Savings);
+	public CashEnvelope getDefaultSavings() {
+		return getUniqueEnvelope(EnvelopeType.DefaultSavings);
 	}
 
-	public void setSavingsAccount(Account savingsAccount) {
-		setAccount(savingsAccount, AccountType.Savings);
+	public void setDefaultSavings(CashEnvelope savingsBox) {
+		setUniqueEnvelope(savingsBox, EnvelopeType.DefaultSavings);
 	}
 
-	public Account getBillsAccount() {
-		return findAccount(AccountType.Bills);
+	public CashEnvelope getBillsEnvelope() {
+		return getUniqueEnvelope(EnvelopeType.DefaultBills);
 	}
 
-	public void setBillsAccount(Account billsAccount) {
-		setAccount(billsAccount, AccountType.Bills);
-	}
-
-	public Account getCheckingAccount() {
-		return findAccount(AccountType.CheckingAccount);
-	}
-
-	public void setCheckingAccount(Account checkingAccount) {
-		setAccount(checkingAccount, AccountType.CheckingAccount);
+	public void setBillsEnvelope(CashEnvelope billsBox) {
+		setUniqueEnvelope(billsBox, EnvelopeType.DefaultBills);
 	}
 	
-	public Account getExpenseSpendingAccount() {
-		return findAccount(AccountType.ExpenseSpending);
+	public Collection<CashEnvelope> getExpenses()  {
+		return getEnvelopes(EnvelopeType.Expense);
+	}
+	
+	public void addExpense(CashEnvelope envelope)  {
+		envelopes.add(envelope);
 	}
 
-	public void setExpenseSpendingAccount(Account expenseSpendingAccount) {
-		setAccount(expenseSpendingAccount, AccountType.ExpenseSpending);
+	private void setUniqueEnvelope(CashEnvelope cashBox, EnvelopeType type)  {
+		removeEnvelope(type);
+		envelopes.add(cashBox);
 	}
 	
-	private void setAccount(Account account, AccountType type)  {
-		removeAccount(type);
-		accountList.add(account);
-	}
-	
-	private void removeAccount(AccountType type)  {
-		List<Account> newAccountList = new ArrayList<Account>();
-		for(Account account : accountList)  {
-			if (!account.getAccountType().equals(type))  {
-				newAccountList.add(account);
+	private void removeEnvelope(EnvelopeType type)  {
+		List<CashEnvelope> newBoxList = new ArrayList<CashEnvelope>();
+		for(CashEnvelope box : envelopes)  {
+			if (!box.getType().equals(type))  {
+				newBoxList.add(box);
 			}
 		}
 		
-		accountList = newAccountList;
+		envelopes = newBoxList;
 	}
 	
-	private Account findAccount(AccountType type)  {
-		for(Account account : accountList)  {
-			if (type.equals(account.getAccountType()) )  {
-				return account;
+	private CashEnvelope getUniqueEnvelope(EnvelopeType type)  {
+		for(CashEnvelope envelope : envelopes)  {
+			if (envelope.getType().equals(type))  {
+				return envelope;
 			}
 		}
-		return createAccount(type);
+		return createEnvelope(type);
 	}
 	
-	private Account createAccount(AccountType type)  {
-		if (AccountType.Bills.equals(type))  {
-			return new Account("Bills", AccountType.Bills, 0L, this);
-		} else if (AccountType.CheckingAccount.equals(type))  {
-			return new Account("Checking", AccountType.CheckingAccount, 0L, this);
-		} else if (AccountType.Savings.equals(type))  {
-			return new Account("Savings", AccountType.Savings, 0L, this);
-		} 
+	private Collection<CashEnvelope> getEnvelopes(final EnvelopeType type)  {
+		return Collections2.filter(envelopes, new Predicate<CashEnvelope>()  {
+
+			public boolean apply(CashEnvelope envelope) {
+				return envelope.getType().equals(type);
+			}
+			
+		});
+	}
+	
+	private CashEnvelope createEnvelope(EnvelopeType type)  {
+		if (EnvelopeType.DefaultBills.equals(type))  {
+			return new CashEnvelope("Bills", EnvelopeType.DefaultBills, 0L, 0L, this);
+		} else if (EnvelopeType.DefaultSavings.equals(type))  {
+			return new CashEnvelope("Savings", EnvelopeType.DefaultSavings, 0L, 0L, this);
+		}
+		
 		return null;
 	}
 
-	public ExpenseCategory getExpenseCategory(String key)  {
-		for(ExpenseCategory expenseCategory : categories)  {
-			if (key.equals(expenseCategory.getId()) )  {
-				return expenseCategory;
+	public CashEnvelope getCashEnvelope(String key)  {
+		for(CashEnvelope envelope : envelopes)  {
+			if (key.equals(envelope.getId()) )  {
+				return envelope;
 			}
 		}
 		return null;
 	}
-
-	public List<Account> getAccountList()  {
-		List<Account> completeAccountList = new ArrayList<Account>();
-		
-		for(ExpenseCategory expenseCategory : categories)  {
-			if (null != expenseCategory.getAccount())  {
-				completeAccountList.add(expenseCategory.getAccount());
-			}
-		}
-		
-		completeAccountList.addAll(accountList);
-		
-		return completeAccountList;
-	}
 	
-	public Account findAccount(String key)  {
-		Account account = null;
-		for(Account item : getAccountList())  {
-			if (item.getId().equals(key))  {
-				account = item;
-			}
-		}
-		return account;
-	}
-	
-	public void processExpenseTransaction(Transaction transaction,
-										  ExpenseCategory expenseCategory) throws InsufficientFundsException {
-
-		transaction.setDebitAccountKey(expenseCategory.getAccount().getId());
-		transaction.setCreditAccountKey(getExpenseSpendingAccount().getId());
-		transaction.setExpenseCategoryKey(expenseCategory.getId());
-
-		processTransaction(expenseCategory.getAccount(), getExpenseSpendingAccount(), transaction.getAmount());
-
-	}
-	
-	private void processTransaction(Account debitAccount, Account creditAccount, long amount) throws InsufficientFundsException {
-		debitAccount.addDebit(amount);
-		creditAccount.addCredit(amount);
-		
-	}
-	
-	public Transaction transfer(Account sourceAccount, Account destAccount, long amount) 
+	public Transfer transfer(CashEnvelope sourceEnvelope, 
+							 CashEnvelope destEnvelope, 
+							 long amount,
+							 String source,
+							 User user) 
 			throws InsufficientFundsException {
-		Transaction txn = new Transaction();
-		txn.setDescription("* Tranfer from " + sourceAccount.getName() + " to " + destAccount.getName() +
-				" (System Generated Transaction)");
-		txn.setReconsiled(true);
-		txn.setCreateTimestamp(new Date());
-		txn.setTransactionDate(new Date());
-		txn.setAmount(amount);
-		txn.setSource("SYSTEM");
 		
-		if (sourceAccount.getAccountType().equals(DebitCreditType.Debit))  {
-			txn.setCreditAccountKey(sourceAccount.getId());
-			txn.setDebitAccountKey(destAccount.getId());
-			processTransaction(destAccount, sourceAccount, amount);
-		} else  {
-			txn.setDebitAccountKey(sourceAccount.getId());
-			txn.setCreditAccountKey(destAccount.getId());
-			processTransaction(sourceAccount, destAccount, amount);
-		}
-		return txn;
+		Transfer transfer = new Transfer();
+		transfer.setAmount(amount);
+		transfer.setCreateTimestamp(new Date());
+		transfer.setDescription("Transfer from " + sourceEnvelope.getName() + " to " + 
+				destEnvelope.getName());
+		transfer.setDestEnvelopeKey(destEnvelope.getId());
+		transfer.setSourceEnvelopeKey(sourceEnvelope.getId());
+		transfer.setTransferDate(new Date());
+		transfer.setSource(source);
+
+		sourceEnvelope.subtractBalance(amount);
+		destEnvelope.addBalance(amount);
+		return null;
 	}
 	    
 }

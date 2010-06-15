@@ -12,7 +12,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import net.switchcase.easymoney.shared.Frequency;
+import net.switchcase.easymoney.shared.EnvelopeType;
 
 /**
  * User: bryce
@@ -20,24 +20,34 @@ import net.switchcase.easymoney.shared.Frequency;
  * Time: 7:17:23 PM
  */
 @PersistenceCapable
-public class ExpenseCategory {
-
+public class CashEnvelope {
+	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 	private String id;
 	@Persistent private String name;
-	@Persistent private Long amount;
-	@Persistent private Frequency frequencyToRefresh;
-	@Persistent private boolean accumulating;
+	@Persistent private Long amount = 0L;
+	@Persistent private EnvelopeType type;
 
-	@Persistent private Account account;
+	@Persistent private long balance = 0L;
 	
 	@Persistent private Budget budget;
 
-    public ExpenseCategory()  {}
+    public CashEnvelope()  {}
+    
 
-    public String getId()  {
+    public CashEnvelope(String name, EnvelopeType type,	long amount, long balance, Budget budget) {
+		super();
+		this.name = name;
+		this.type = type;
+		this.budget = budget;
+		this.amount = amount;
+		this.balance = balance;
+	}
+
+
+	public String getId()  {
     	return id;
     }
     
@@ -61,28 +71,20 @@ public class ExpenseCategory {
         this.amount = amount;
     }
     
-    public Frequency getFrequencyToRefresh() {
-        return frequencyToRefresh;
-    }
-
-    public void setFrequencyToRefresh(Frequency frequencyToRefresh) {
-        this.frequencyToRefresh = frequencyToRefresh;
-    }
-
-    public boolean isAccumulating() {
-        return accumulating;
-    }
-
-    public void setAccumulating(boolean accumulating) {
-        this.accumulating = accumulating;
-    }
-	
-	public Account getAccount() {
-		return account;
+	public EnvelopeType getType() {
+		return type;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setType(EnvelopeType type) {
+		this.type = type;
+	}
+
+	public long getBalance() {
+		return balance;
+	}
+
+	public void setBalance(long balance) {
+		this.balance = balance;
 	}
 
 	public Budget getBudget()  {
@@ -109,13 +111,24 @@ public class ExpenseCategory {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ExpenseCategory other = (ExpenseCategory) obj;
+		CashEnvelope other = (CashEnvelope) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public void addBalance(long amount)  {
+		balance += amount;
+	}
+	
+	public void subtractBalance(long amount) throws InsufficientFundsException {
+		if (0 > (balance - amount))  {
+			throw new InsufficientFundsException();
+		}
+		balance -= amount;
 	}
 	    
 }

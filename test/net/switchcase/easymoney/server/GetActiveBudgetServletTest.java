@@ -12,13 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
-import net.switchcase.easymoney.server.domain.Account;
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
+import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.Device;
-import net.switchcase.easymoney.server.domain.ExpenseCategory;
 import net.switchcase.easymoney.server.domain.Income;
-import net.switchcase.easymoney.shared.AccountType;
+import net.switchcase.easymoney.shared.EnvelopeType;
 import net.switchcase.easymoney.shared.Frequency;
 
 import org.junit.Before;
@@ -47,20 +46,20 @@ public class GetActiveBudgetServletTest {
 		budget.setCreateDate(new Date(2000));
 		budget.setId("100");
 		budget.setLastAccessed(new Date(3000));
-		budget.setMonthlySavings(3000L);
 		budget.setName("Test Name");
-		budget.setSavingsAccount(new Account("Savings", AccountType.Savings, 4000L, budget));
-		budget.setCheckingAccount(new Account("Checking", AccountType.CheckingAccount, 2000L, budget));
-		budget.setBillsAccount(new Account("BillsAccount", AccountType.Expense, 10000L, budget));
 		
-		ExpenseCategory expenseCategory = buildExpenseCategory();
+		CashEnvelope expenseEnvelope = buildExpenseEnvelope();
 		Bill bill = buildBill();
 		Income income = buildIncome();
 		
-		expenseCategory.setBudget(budget);
-		budget.setCategories(Arrays.asList(expenseCategory));
+		expenseEnvelope.setBudget(budget);
+		budget.addExpense(expenseEnvelope);
 		budget.setIncomes(Arrays.asList(income));
 		budget.setMonthlyBills(Arrays.asList(bill));
+		budget.setDefaultSavings(new CashEnvelope("Savings", EnvelopeType.DefaultSavings, 100L, 200L, budget));
+		budget.getDefaultSavings().setId("DefaultSavingsId");
+		budget.setBillsEnvelope(new CashEnvelope("Bills", EnvelopeType.DefaultBills, 200L, 300L, budget));
+		budget.getBillsEnvelope().setId("BillsEnvelopeId");
 		
 		testUser = new User("test@switchcase.net", "switchcase.net");
 		device = new Device(testUser);
@@ -72,15 +71,13 @@ public class GetActiveBudgetServletTest {
 		when(response.getWriter()).thenReturn(writer);
 	}
 
-	private ExpenseCategory buildExpenseCategory()  {
-		ExpenseCategory expenseCategory = new ExpenseCategory();
-		expenseCategory.setAccumulating(true);
+	private CashEnvelope buildExpenseEnvelope()  {
+		CashEnvelope expenseCategory = new CashEnvelope();
 		expenseCategory.setAmount(5000L);
-		expenseCategory.setAccount( new Account("TestExpenseAcctId1", "Test Expense Account", AccountType.Expense, 6000L, budget));
 		expenseCategory.setBudget(budget);
-		expenseCategory.setFrequencyToRefresh(Frequency.BiWeekly);
 		expenseCategory.setId("200");
 		expenseCategory.setName("Test Expense Category");
+		expenseCategory.setType(EnvelopeType.Expense);
 		return expenseCategory;
 	}
 	

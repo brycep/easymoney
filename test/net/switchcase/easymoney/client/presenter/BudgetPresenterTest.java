@@ -10,7 +10,7 @@ import net.switchcase.easymoney.client.EasyMoneyServiceAsync;
 import net.switchcase.easymoney.client.common.HasMoneyValue;
 import net.switchcase.easymoney.client.test.MockTextBox;
 import net.switchcase.easymoney.shared.BudgetTo;
-import net.switchcase.easymoney.shared.ExpenseCategoryTo;
+import net.switchcase.easymoney.shared.CashEnvelopeTo;
 import net.switchcase.easymoney.shared.MoneyTo;
 
 import org.junit.Before;
@@ -50,9 +50,9 @@ public class BudgetPresenterTest {
 		when(expenseDisplay.getTotalExpenseLabel()).thenReturn(expenseTotalLabel);
 		
 		BudgetTo budget = new BudgetTo();
-		ExpenseCategoryTo expense1 = new ExpenseCategoryTo();
-		ExpenseCategoryTo expense2 = new ExpenseCategoryTo();
-		budget.setCategories(Arrays.asList(expense1, expense2));
+		CashEnvelopeTo expense1 = new CashEnvelopeTo();
+		CashEnvelopeTo expense2 = new CashEnvelopeTo();
+		budget.setExpenses(Arrays.asList(expense1, expense2));
 		
 		expense1.setAmount(new MoneyTo(1, 50));
 		expense2.setAmount(new MoneyTo(4, 35));
