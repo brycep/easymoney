@@ -5,7 +5,7 @@
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
   <configuration>
-    <stop-on-errors>true</stop-on-errors>
+    <!--   <stop-on-errors>true</stop-on-errors> -->
     <date-format>MM/dd/yyyy HH:mm</date-format>
     <wildcard>true</wildcard>
   </configuration>
@@ -16,7 +16,19 @@
     <field-exclude>
     	<a>owner</a>
     	<b>owner</b>
-    </field-exclude>     
+    </field-exclude>
+    <field-exclude>
+    	<a>expenses</a>
+    	<b>expenses</b>
+    </field-exclude>
+    <field-exclude>
+    	<a>defaultSavings</a>
+    	<b>defaultSavings</b>
+    </field-exclude>
+    <field-exclude>
+    	<a>billsEnvelope</a>
+    	<b>billsEnvelope</b>
+    </field-exclude>
   </mapping>
   <mapping>
   	<class-a>net.switchcase.easymoney.server.domain.Income</class-a>
@@ -43,8 +55,8 @@
   	</field>
   </mapping>
   <mapping>
-  	<class-a>net.switchcase.easymoney.server.domain.ExpenseCategory</class-a>
-  	<class-b>net.switchcase.easymoney.shared.ExpenseCategoryTo</class-b>
+  	<class-a>net.switchcase.easymoney.server.domain.CashEnvelope</class-a>
+  	<class-b>net.switchcase.easymoney.shared.CashEnvelopeTo</class-b>
   	<field-exclude>
   		<a>amount</a>
   		<b>amount</b>
@@ -53,10 +65,6 @@
   		<a>amount</a>
   		<b>amountAsInt</b>
   	</field>
-  </mapping>
-  <mapping>
-  	<class-a>net.switchcase.easymoney.server.domain.Account</class-a>
-  	<class-b>net.switchcase.easymoney.shared.AccountTo</class-b>
   	<field-exclude>
   		<a>balance</a>
   		<b>balance</b>
@@ -64,6 +72,10 @@
   	<field>
   		<a>balance</a>
   		<b>balanceAsInt</b>
+  	</field>
+  	<field>
+  		<a>type</a>
+  		<b>type</b>
   	</field>
   </mapping>   
 </mappings>

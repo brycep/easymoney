@@ -75,5 +75,16 @@ public class CashEnvelopeTo implements Serializable {
 	public void setBalance(MoneyTo balance) {
 		this.balance = balance;
 	}
+	
+	public Integer getBalanceAsInt()  {
+		if (null == balance)  {
+			return 0;
+		}
+		return balance.toInt();
+	}
+	
+	public void setBalanceAsInt(Integer value)  {
+		balance = new MoneyTo(value);
+	}
     
 }

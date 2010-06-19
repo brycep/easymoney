@@ -16,7 +16,8 @@
     <entry-point class='net.switchcase.easymoney.client.EasyMoney'/><!--
     <servlet path="/EasyMoneyService" class="net.switchcase.easymoney.server.EasyMoneyServiceImpl"/>
 
-    --><source path="client"/>
+    -->
+    <source path="client"/>
     <source path="shared"/>
     <source path="test" />
 

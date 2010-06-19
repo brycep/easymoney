@@ -9,6 +9,7 @@ import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.CashEnvelope;
 import net.switchcase.easymoney.server.domain.Income;
 import net.switchcase.easymoney.shared.BudgetTo;
+import net.switchcase.easymoney.shared.EnvelopeType;
 import net.switchcase.easymoney.shared.Frequency;
 import net.switchcase.easymoney.shared.LoginInfo;
 import net.switchcase.easymoney.shared.exception.NotLoggedInException;
@@ -85,6 +86,10 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 	}
 	
 	private void buildTemplateBudget(Budget budget)  {
+		
+		budget.setBillsEnvelope(new CashEnvelope("Bills", EnvelopeType.DefaultBills, 0, 0, budget));
+		budget.setDefaultSavings(new CashEnvelope("Savings", EnvelopeType.DefaultSavings, 0, 0, budget));
+	
 		Income salary = new Income();
 		salary.setName("Salary");
 		salary.setFrequency(Frequency.BiWeekly);
@@ -93,14 +98,15 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 		phoneBill.setName("Phone Bill");
 		phoneBill.setDayOfMonth(15);
 		
-		CashEnvelope groceries = new CashEnvelope();
-		groceries.setName("Groceries");
-		
-		CashEnvelope fun = new CashEnvelope();
-		fun.setName("Fun Money");
+		CashEnvelope groceries = new CashEnvelope("Groceries", EnvelopeType.Expense, 0L, 0L, budget);
+		CashEnvelope gas = new CashEnvelope("Gas", EnvelopeType.Expense, 0L, 0L, budget);
+		CashEnvelope diningOut = new CashEnvelope("Dining Out", EnvelopeType.Expense, 0L, 0L, budget);
 		
 		budget.getIncomes().add(salary);
 		budget.getMonthlyBills().add(phoneBill);
+		budget.addExpense(diningOut);
+		budget.addExpense(gas);
+		budget.addExpense(groceries);
 		
 	}
 	

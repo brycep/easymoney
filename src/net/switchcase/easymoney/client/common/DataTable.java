@@ -1,6 +1,7 @@
 package net.switchcase.easymoney.client.common;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.switchcase.easymoney.client.event.HasRowValueChangeHandler;
@@ -38,15 +39,17 @@ public class DataTable<ModelType> extends FlexTable implements HasRowValueChange
 		this.totalLabel = totalLabel;
 	}
 
-	public void setData(List<ModelType> dataList)  {
+	public void setData(Collection<ModelType> dataList)  {
 		modelAdapter.renderHeaderRow(this);
 
 		int rowIndex = 1;
-		for(ModelType object : dataList)  {
-			Row row = modelAdapter.createRow(rowIndex, this);
-			row.setData(object);
-			modelAdapter.renderRow(row, this);
-			rowIndex++;
+		if (null != dataList)  {
+			for(ModelType object : dataList)  {
+				Row row = modelAdapter.createRow(rowIndex, this);
+				row.setData(object);
+				modelAdapter.renderRow(row, this);
+				rowIndex++;
+			}
 		}
 		
 		if (null != totalLabel)  {

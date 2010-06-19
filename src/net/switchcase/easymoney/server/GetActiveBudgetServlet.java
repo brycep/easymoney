@@ -38,7 +38,7 @@ public class GetActiveBudgetServlet extends EasyMoneyServlet {
 		Device device = budgetDao.findDevice(deviceKey);
 	
 		Budget budget = budgetDao.findActiveBudget(device.getUser());
-		JSONSerializer serializer = new JSONSerializer().include("categories")
+		JSONSerializer serializer = new JSONSerializer().include("envelopes")
 			.include("monthlyBills").include("incomes");
 		
 		PrintWriter writer = resp.getWriter();

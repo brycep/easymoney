@@ -1,9 +1,10 @@
 package net.switchcase.easymoney.shared;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class BudgetTest {
 	
@@ -11,13 +12,16 @@ public class BudgetTest {
 	public void testCalculateExpenseTotal()  {
 		BudgetTo budget = new BudgetTo();
 		CashEnvelopeTo expense1 = new CashEnvelopeTo();
+		expense1.setType(EnvelopeType.Expense);
 		CashEnvelopeTo expense2 = new CashEnvelopeTo();
-		budget.setExpenses(Arrays.asList(expense1, expense2));
+		expense2.setType(EnvelopeType.Expense);
+
+		budget.setEnvelopes(Arrays.asList(expense1, expense2));
 		
 		expense1.setAmount(new MoneyTo(1, 50));
 		expense2.setAmount(new MoneyTo(4, 35));
 
-		assertTrue(new MoneyTo(5, 85).equals(budget.calculateExpenseTotal()));
+		assertEquals(new MoneyTo(5, 85), budget.calculateExpenseTotal());
 	}
 	
 	@Test
@@ -44,6 +48,14 @@ public class BudgetTest {
 		bill2.setAmount(new MoneyTo(50, 20));
 		
 		assertEquals(new MoneyTo(280, 95), budget.calculateBillTotal());
+	}
+	
+	@Test
+	public void testCalculateExpenseTotalReturnsZeroIfNullExpenseList()  {
+		BudgetTo budget = new BudgetTo();
+		budget.setEnvelopes(null);
+		
+		assertEquals(new MoneyTo(0, 0), budget.calculateExpenseTotal());
 	}
 
 }

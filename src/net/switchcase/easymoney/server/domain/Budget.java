@@ -8,7 +8,6 @@ package net.switchcase.easymoney.server.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import net.switchcase.easymoney.shared.EnvelopeType;
 import com.google.appengine.api.users.User;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 
 /**  The Budget class represents a user's monthly budget
  * 
@@ -146,7 +146,7 @@ public class Budget implements Serializable {
 		setUniqueEnvelope(billsBox, EnvelopeType.DefaultBills);
 	}
 	
-	public Collection<CashEnvelope> getExpenses()  {
+	public List<CashEnvelope> findExpenses()  {
 		return getEnvelopes(EnvelopeType.Expense);
 	}
 	
@@ -179,14 +179,14 @@ public class Budget implements Serializable {
 		return createEnvelope(type);
 	}
 	
-	private Collection<CashEnvelope> getEnvelopes(final EnvelopeType type)  {
-		return Collections2.filter(envelopes, new Predicate<CashEnvelope>()  {
+	private List<CashEnvelope> getEnvelopes(final EnvelopeType type)  {
+		return Lists.newArrayList(Collections2.filter(envelopes, new Predicate<CashEnvelope>()  {
 
 			public boolean apply(CashEnvelope envelope) {
 				return envelope.getType().equals(type);
 			}
 			
-		});
+		}) );
 	}
 	
 	private CashEnvelope createEnvelope(EnvelopeType type)  {

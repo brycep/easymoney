@@ -5,7 +5,6 @@ import net.switchcase.easymoney.client.common.MoneyTextBox;
 import net.switchcase.easymoney.client.common.Row;
 import net.switchcase.easymoney.client.event.RowValueChangeHandler;
 import net.switchcase.easymoney.shared.CashEnvelopeTo;
-import net.switchcase.easymoney.shared.Frequency;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

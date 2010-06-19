@@ -23,9 +23,7 @@ public class BudgetTo implements Serializable {
 	private String name;
     private List<IncomeTo> incomes = new ArrayList<IncomeTo>();
     private List<BillTo> monthlyBills = new ArrayList<BillTo>();
-    private List<CashEnvelopeTo> expenses = new ArrayList<CashEnvelopeTo>();
-    private CashEnvelopeTo savingsEnvelope;
-    private CashEnvelopeTo billsEnvelope;
+    private List<CashEnvelopeTo> envelopes = new ArrayList<CashEnvelopeTo>();
 
     private String sharedWith;
     private String owner;
@@ -65,14 +63,18 @@ public class BudgetTo implements Serializable {
     }
 
     public List<CashEnvelopeTo> getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(List<CashEnvelopeTo> expenses) {
-        this.expenses = expenses;
+        return getEnvelopes(EnvelopeType.Expense);
     }
     
-   	public String getSharedWith() {
+   	public List<CashEnvelopeTo> getEnvelopes() {
+		return envelopes;
+	}
+
+	public void setEnvelopes(List<CashEnvelopeTo> envelopes) {
+		this.envelopes = envelopes;
+	}
+
+	public String getSharedWith() {
 		return sharedWith;
 	}
 
@@ -87,11 +89,17 @@ public class BudgetTo implements Serializable {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
+	
+	public CashEnvelopeTo getDefaultSavings() {
+		return getUniqueEnvelope(EnvelopeType.Expense);
+	}
 
 	public MoneyTo calculateExpenseTotal() {
 		MoneyTo money = new MoneyTo();
-		for(CashEnvelopeTo envelope : expenses)  {
-			money.add(envelope.getAmount());
+		if (null != getExpenses())  {
+			for(CashEnvelopeTo envelope : getExpenses())  {
+				money.add(envelope.getAmount());
+			}
 		}
 		return money;
 	}
@@ -116,21 +124,30 @@ public class BudgetTo implements Serializable {
 		return new MoneyTo();
 	}
 
-	public CashEnvelopeTo getSavingsEnvelope() {
-		return savingsEnvelope;
-	}
-
-	public void setSavingsEnvelope(CashEnvelopeTo savingsEnvelope) {
-		this.savingsEnvelope = savingsEnvelope;
-	}
-
 	public CashEnvelopeTo getBillsEnvelope() {
-		return billsEnvelope;
+		return getUniqueEnvelope(EnvelopeType.DefaultBills);
 	}
 
-	public void setBillsEnvelope(CashEnvelopeTo billsEnvelope) {
-		this.billsEnvelope = billsEnvelope;
+	private List<CashEnvelopeTo> getEnvelopes(EnvelopeType type)  {
+		List<CashEnvelopeTo> results = new ArrayList<CashEnvelopeTo>();
+		if (null != envelopes)  {
+			for(CashEnvelopeTo envelope : envelopes)  {
+				if (null != envelope.getType() )  {
+					if (envelope.getType().equals(type))  {
+						results.add(envelope);
+					}
+				}
+			}
+		}
+		return results;
 	}
 	
+	private CashEnvelopeTo getUniqueEnvelope(EnvelopeType type)  {
+		List<CashEnvelopeTo> results = getEnvelopes(type);
+		if (results.size() == 0) {
+			return null;
+		}
+		return results.iterator().next();
+	}
 	
 }

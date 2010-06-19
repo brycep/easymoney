@@ -3,14 +3,12 @@ package net.switchcase.easymoney.client.presenter;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-
 import net.switchcase.easymoney.client.EasyMoneyServiceAsync;
 import net.switchcase.easymoney.client.common.HasMoneyValue;
 import net.switchcase.easymoney.client.test.MockTextBox;
 import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.CashEnvelopeTo;
+import net.switchcase.easymoney.shared.EnvelopeType;
 import net.switchcase.easymoney.shared.MoneyTo;
 
 import org.junit.Before;
@@ -51,8 +49,11 @@ public class BudgetPresenterTest {
 		
 		BudgetTo budget = new BudgetTo();
 		CashEnvelopeTo expense1 = new CashEnvelopeTo();
+		expense1.setType(EnvelopeType.Expense);
 		CashEnvelopeTo expense2 = new CashEnvelopeTo();
-		budget.setExpenses(Arrays.asList(expense1, expense2));
+		expense2.setType(EnvelopeType.Expense);
+		budget.getEnvelopes().add(expense1);
+		budget.getEnvelopes().add(expense2);
 		
 		expense1.setAmount(new MoneyTo(1, 50));
 		expense2.setAmount(new MoneyTo(4, 35));
