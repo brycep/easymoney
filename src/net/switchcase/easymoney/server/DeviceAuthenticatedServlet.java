@@ -53,11 +53,11 @@ public class DeviceAuthenticatedServlet extends HttpServlet {
 		out.print("<html>");
 		out.print("<head>");
 		
-		out.print("<script type=\"text/javascript\">");
+		out.print("<script type=\"text/javascript\"> \n");
 
-		out.print("var userEmail=\"" + user.getEmail() + "\"");
-		out.print("var nickname=\"" + user.getNickname() + "\"");
-		out.print("var deviceKey=\"" + deviceKey + "\"");
+		out.print("var userEmail=\"" + user.getEmail() + "\" \n");
+		out.print("var nickname=\"" + user.getNickname() + "\" \n");
+		out.print("var deviceKey=\"" + deviceKey + "\" \n");
 
 		out.print("</script>");
 
