@@ -15,10 +15,10 @@ import net.switchcase.easymoney.server.domain.InsufficientFundsException;
 import net.switchcase.easymoney.server.domain.Transfer;
 
 import com.google.inject.Inject;
-import com.google.inject.servlet.RequestScoped;
+import com.google.inject.Singleton;
 
 @SuppressWarnings("serial")
-@RequestScoped
+@Singleton
 public class TransferCategoryBalanceServlet extends EasyMoneyServlet {
 
 	private BudgetDao budgetDao;

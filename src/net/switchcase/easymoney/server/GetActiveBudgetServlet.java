@@ -13,12 +13,12 @@ import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.Device;
 
 import com.google.inject.Inject;
-import com.google.inject.servlet.RequestScoped;
+import com.google.inject.Singleton;
 
 import flexjson.JSONSerializer;
 
 @SuppressWarnings("serial")
-@RequestScoped
+@Singleton
 public class GetActiveBudgetServlet extends EasyMoneyServlet {
 	
 	private final Logger log = Logger.getLogger(GetActiveBudgetServlet.class.getName());

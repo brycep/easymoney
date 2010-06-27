@@ -19,12 +19,12 @@ import com.google.inject.Singleton;
 
 @SuppressWarnings("serial" )
 @Singleton
-public class DeviceAuthenticatedServlet extends HttpServlet {
+public class UpdateDeviceServlet extends HttpServlet {
 	
 	private BudgetDao budgetDao; 
 	
 	@Inject
-	public DeviceAuthenticatedServlet(BudgetDao budgetDao)  {
+	public UpdateDeviceServlet(BudgetDao budgetDao)  {
 		this.budgetDao = budgetDao;
 	}
 	
@@ -53,7 +53,7 @@ public class DeviceAuthenticatedServlet extends HttpServlet {
 		out.print("<html>");
 		out.print("<head>");
 		
-		out.print("<script type=\"text/javascript\">");
+		out.print("<script type=\"text/javascript\"> \n");
 
 		out.print("var userEmail=\"" + user.getEmail() + "\" \n");
 		out.print("var nickname=\"" + user.getNickname() + "\" \n");

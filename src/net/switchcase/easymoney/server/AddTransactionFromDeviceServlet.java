@@ -3,6 +3,7 @@ package net.switchcase.easymoney.server;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import net.switchcase.easymoney.server.dao.BudgetDao;
 import net.switchcase.easymoney.server.dao.TransactionDao;
 import net.switchcase.easymoney.server.domain.Budget;
-import net.switchcase.easymoney.server.domain.Device;
 import net.switchcase.easymoney.server.domain.CashEnvelope;
+import net.switchcase.easymoney.server.domain.Device;
 import net.switchcase.easymoney.server.domain.InsufficientFundsException;
 import net.switchcase.easymoney.server.domain.Transaction;
 
@@ -23,7 +24,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class AddTransactionFromDeviceServlet extends EasyMoneyServlet {
 
-	private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private TransactionDao transactionDao;
 	private BudgetDao budgetDao;
@@ -77,7 +78,11 @@ public class AddTransactionFromDeviceServlet extends EasyMoneyServlet {
 			}
 			txn.setAmount(Long.parseLong(amount));
 			txn.setSource(source);
-			txn.setCreateTimestamp(FORMAT.parse(createTimestamp));
+			if (null != createTimestamp)  {
+				txn.setCreateTimestamp(FORMAT.parse(createTimestamp));
+			} else  {
+				txn.setCreateTimestamp(new Date());
+			}
 			txn.setTransactionDate(FORMAT.parse(transactionDate));
 			txn.setReconsiled("true".equals(reconsiled));
 			txn.setCashEnvelopeKey(cashEnvelopeKey);

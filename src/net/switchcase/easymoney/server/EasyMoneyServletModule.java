@@ -21,7 +21,8 @@ public class EasyMoneyServletModule extends ServletModule {
         serve("/deviceLogin").with(DeviceLoginServlet.class);
         serve("/authenticate").with(DeviceAuthenticatedServlet.class);
         serve("/addTransaction").with(AddTransactionFromDeviceServlet.class);
-        
+        serve("/getActiveBudget").with(GetActiveBudgetServlet.class);
+        serve("/transferCategoryBalance").with(TransferCategoryBalanceServlet.class);
     }
 
 }
