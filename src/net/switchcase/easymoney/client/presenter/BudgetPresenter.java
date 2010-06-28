@@ -14,6 +14,7 @@ import net.switchcase.easymoney.client.event.RowValueChangeHandler;
 import net.switchcase.easymoney.shared.BillTo;
 import net.switchcase.easymoney.shared.BudgetTo;
 import net.switchcase.easymoney.shared.CashEnvelopeTo;
+import net.switchcase.easymoney.shared.EnvelopeType;
 import net.switchcase.easymoney.shared.IncomeTo;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -164,7 +165,8 @@ public class BudgetPresenter implements Presenter {
     			new ClickHandler()  {
     				public void onClick(ClickEvent event) {
     					CashEnvelopeTo category = new CashEnvelopeTo();
-    					BudgetPresenter.this.budget.getExpenses().add(category);
+    					category.setType(EnvelopeType.Expense);
+    					BudgetPresenter.this.budget.getEnvelopes().add(category);
     					BudgetPresenter.this.display.addExpenseCategory(category);
     				}
     			}
@@ -211,10 +213,12 @@ public class BudgetPresenter implements Presenter {
     	display.disableSaveButton();
     	this.updateModel();
     	
-    	easyMoneyService.saveBudget(budget, new AsyncCallback<Void>()  {
-    		public void onSuccess(Void result)  {
+    	easyMoneyService.saveBudget(budget, new AsyncCallback<BudgetTo>()  {
+    		public void onSuccess(BudgetTo result)  {
+    			budget.setId(result.getId());
+				BudgetPresenter.this.setBudget(result);
+				display.setData(result);
     			display.enableSaveButton();
-    			
     		}
     		
     		public void onFailure(Throwable caught)  {

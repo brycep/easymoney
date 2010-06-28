@@ -40,7 +40,7 @@ public class AddTransactionFromDeviceServletTest {
 	@Mock private HttpServletResponse response;
 	@Mock private PrintWriter printWriter;
 
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	private AddTransactionFromDeviceServlet servlet;
 	
 	private Budget budget = new Budget();
@@ -92,8 +92,8 @@ public class AddTransactionFromDeviceServletTest {
 		assertEquals(3333, (long)txn.getAmount());
 		assertEquals("Test Source", txn.getSource());
 		
-		Date testTimestamp = format.parse("2010-01-01 09:12:34");
-		Date testDate = format.parse("2010-02-02 10:00:00");
+		Date testTimestamp = format.parse("2010-01-01");
+		Date testDate = format.parse("2010-02-02");
 		assertEquals(testTimestamp, txn.getCreateTimestamp());
 		assertEquals(testDate, txn.getTransactionDate());
 		

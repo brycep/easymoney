@@ -17,6 +17,6 @@ public interface EasyMoneyService extends RemoteService {
 	
 	LoginInfo login(String requestUri);
 	BudgetTo getActiveBudget() throws NotLoggedInException;
-	void saveBudget(BudgetTo budget) throws NotLoggedInException;
+	BudgetTo saveBudget(BudgetTo budget) throws NotLoggedInException;
 	
 }

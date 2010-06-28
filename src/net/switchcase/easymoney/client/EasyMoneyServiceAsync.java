@@ -18,6 +18,6 @@ public interface EasyMoneyServiceAsync {
 
 	void login(String requestUri, AsyncCallback<LoginInfo> callback);
 	void getActiveBudget(AsyncCallback<BudgetTo> callback);
-	void saveBudget(BudgetTo budget, AsyncCallback<Void> callback);
+	void saveBudget(BudgetTo budget, AsyncCallback<BudgetTo> callback);
 	
 }

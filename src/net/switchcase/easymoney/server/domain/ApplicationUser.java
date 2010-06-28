@@ -10,12 +10,16 @@ import com.google.appengine.api.datastore.Key;
 @PersistenceCapable
 public class ApplicationUser {
 	
+	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
+
 	@Persistent private String userId;
 	@Persistent private String authDomain;
 	@Persistent private String email;
+	@Persistent private String code;
+	@Persistent private String accessToken;
 
 	public ApplicationUser() {
 	}
@@ -59,6 +63,24 @@ public class ApplicationUser {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+	
+	
 	
 	
 }

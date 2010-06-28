@@ -91,6 +91,7 @@ public class AddTransactionFromDeviceServlet extends EasyMoneyServlet {
 			
 			try  {
 				expenseEnvelope.subtractBalance(txn.getAmount());
+				budgetDao.saveBudget(budget);
 				transactionDao.addTransaction(txn);
 				response.getWriter().print("<results><result>OK</result></results>");
 				

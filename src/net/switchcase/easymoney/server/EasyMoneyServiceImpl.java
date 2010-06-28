@@ -48,7 +48,8 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 			login.setNickname(user.getNickname());
 			login.setLogoutUrl(userService.createLogoutURL(requestUri));
 		}
-		return login;
+		        
+        return login;
 	}
 	
 	
@@ -70,7 +71,7 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 		return budgetTo;
 	}
 	
-	public void saveBudget(BudgetTo budgetTo) throws NotLoggedInException {
+	public BudgetTo saveBudget(BudgetTo budgetTo) throws NotLoggedInException {
 		checkLoggedIn();
 		Budget budget;
 		if (null == budgetTo.getId())  {
@@ -81,8 +82,10 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 		} else  {
 			budget = budgetDao.findBudget(budgetTo.getId());
 		}
+		
 		converter.mergeTransferObjectIntoDomain(budget, budgetTo);
 		budgetDao.saveBudget(budget);
+		return getActiveBudget();
 	}
 	
 	private void buildTemplateBudget(Budget budget)  {
@@ -98,9 +101,9 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 		phoneBill.setName("Phone Bill");
 		phoneBill.setDayOfMonth(15);
 		
-		CashEnvelope groceries = new CashEnvelope("Groceries", EnvelopeType.Expense, 0L, 0L, budget);
-		CashEnvelope gas = new CashEnvelope("Gas", EnvelopeType.Expense, 0L, 0L, budget);
-		CashEnvelope diningOut = new CashEnvelope("Dining Out", EnvelopeType.Expense, 0L, 0L, budget);
+		CashEnvelope groceries = new CashEnvelope("Groceries", EnvelopeType.Expense, 10000L, 10000L, budget);
+		CashEnvelope gas = new CashEnvelope("Gas", EnvelopeType.Expense, 12000L, 12000L, budget);
+		CashEnvelope diningOut = new CashEnvelope("Dining Out", EnvelopeType.Expense, 22000L, 22000L, budget);
 		
 		budget.getIncomes().add(salary);
 		budget.getMonthlyBills().add(phoneBill);

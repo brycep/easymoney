@@ -229,5 +229,32 @@ public class Budget implements Serializable {
 		destEnvelope.addBalance(amount);
 		return null;
 	}
+
+	public Income findIncome(String incomeId) {
+		for(Income income : incomes)  {
+			if (income.getId().equals(incomeId))  {
+				return income;
+			}
+		}
+		return null;
+	}
+	
+	public CashEnvelope findEnvelope(String envelopeId)  {
+		for(CashEnvelope envelope : envelopes)  {
+			if (envelope.getId().equals(envelopeId))  {
+				return envelope;
+			}
+		}
+		return null;
+	}
+	
+	public Bill findBill(String billId)  {
+		for(Bill bill : monthlyBills)  {
+			if (bill.getId().equals(billId))  {
+				return bill;
+			}
+		}
+		return null;
+	}
 	    
 }

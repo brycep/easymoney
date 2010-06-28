@@ -96,7 +96,7 @@ public class BudgetPresenterTest {
 		budgetPresenter.saveBudget();
 		
 		verify(display).disableSaveButton();
-		verify(easyMoneyService).saveBudget(Mockito.same(budget), (AsyncCallback<Void>)Mockito.anyObject());
+		verify(easyMoneyService).saveBudget(Mockito.same(budget), (AsyncCallback<BudgetTo>)Mockito.anyObject());
 		
 	}
 
