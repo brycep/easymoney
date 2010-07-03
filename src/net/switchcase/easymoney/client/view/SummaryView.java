@@ -34,7 +34,7 @@ public class SummaryView extends Composite implements
 	private MoneyLabel incomeTotal;
 	private MoneyLabel billTotal;
 	private MoneyLabel expenseTotal;
-	private MoneyLabel leftOver;
+	private MoneyLabel balance;
 
 	public SummaryView() {
 
@@ -74,10 +74,10 @@ public class SummaryView extends Composite implements
 		layoutGrid.setWidget(3, 0, expenseTotalLabel);
 		layoutGrid.setWidget(3, 1, expenseTotal);
 
-		Label leftOverLabel = new Label("Left Over");
-		leftOver = new MoneyLabel();
+		Label leftOverLabel = new Label("Balance");
+		balance = new MoneyLabel();
 		layoutGrid.setWidget(4, 0, leftOverLabel);
-		layoutGrid.setWidget(4, 1, leftOver);
+		layoutGrid.setWidget(4, 1, balance);
 
 		summaryPanel.add(layoutGrid);
 	}
@@ -87,8 +87,8 @@ public class SummaryView extends Composite implements
 		sharedWith.setValue(budget.getSharedWith());
 		incomeTotal.setValue(budget.calculateIncomeTotal());
 		billTotal.setValue(budget.calculateBillTotal());
-		expenseTotal.setValue(budget.calculateExpenseTotal());
-		leftOver.setValue(budget.getLeftOverValue());
+		expenseTotal.setValue(budget.calculateExpenseAmountTotal());
+		balance.setValue(budget.calculateBalance());
 	}
 
 	public HasMoneyValue getBillTotal() {
@@ -103,8 +103,8 @@ public class SummaryView extends Composite implements
 		return incomeTotal;
 	}
 
-	public HasMoneyValue getLeftOver() {
-		return leftOver;
+	public HasMoneyValue getBalance() {
+		return balance;
 	}
 
 	public HasText getOwner() {

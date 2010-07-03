@@ -94,11 +94,21 @@ public class BudgetTo implements Serializable {
 		return getUniqueEnvelope(EnvelopeType.Expense);
 	}
 
-	public MoneyTo calculateExpenseTotal() {
+	public MoneyTo calculateExpenseAmountTotal() {
 		MoneyTo money = new MoneyTo();
 		if (null != getExpenses())  {
 			for(CashEnvelopeTo envelope : getExpenses())  {
 				money.add(envelope.getAmount());
+			}
+		}
+		return money;
+	}
+	
+	public MoneyTo calculateExpenseBalanceTotal()  {
+		MoneyTo money = new MoneyTo();
+		if (null != getExpenses())  {
+			for(CashEnvelopeTo envelope : getExpenses())  {
+				money.add(envelope.getBalance());
 			}
 		}
 		return money;
@@ -120,8 +130,12 @@ public class BudgetTo implements Serializable {
 		return money;
 	}
 	
-	public MoneyTo getLeftOverValue()  {
-		return new MoneyTo();
+	public MoneyTo calculateBalance()  {
+		MoneyTo money = new MoneyTo();
+		for(CashEnvelopeTo envelope : envelopes)  {
+			money.add(envelope.getBalance());
+		}
+		return money;
 	}
 
 	public CashEnvelopeTo getBillsEnvelope() {

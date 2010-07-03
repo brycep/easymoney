@@ -28,6 +28,7 @@ public class BudgetPresenterTest {
 	@Mock private BudgetPresenter.IncomeDisplay incomeDisplay;
 	@Mock private BudgetPresenter.BillsDisplay billsDisplay;
 	@Mock private HasMoneyValue expenseTotalLabel;
+	@Mock private HasMoneyValue expenseAmountLabel;
 	
 	@Before
 	public void setUp()  {
@@ -46,6 +47,7 @@ public class BudgetPresenterTest {
 		
 		when(display.getExpenseCategoriesView()).thenReturn(expenseDisplay);
 		when(expenseDisplay.getTotalExpenseLabel()).thenReturn(expenseTotalLabel);
+		when(expenseDisplay.getTotalAmountLabel()).thenReturn(expenseAmountLabel);
 		
 		BudgetTo budget = new BudgetTo();
 		CashEnvelopeTo expense1 = new CashEnvelopeTo();
@@ -63,7 +65,7 @@ public class BudgetPresenterTest {
 		
 		budgetPresenter.expenseAmountsChanged();
 		
-		verify(expenseTotalLabel).setValue(new MoneyTo(5, 85));
+		verify(expenseAmountLabel).setValue(new MoneyTo(5, 85));
 	}
 	
 	@Test

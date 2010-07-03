@@ -68,7 +68,7 @@ public class BudgetPresenter implements Presenter {
     	HasMoneyValue getIncomeTotal();
     	HasMoneyValue getBillTotal();
     	HasMoneyValue getExpenseTotal();
-    	HasMoneyValue getLeftOver();
+    	HasMoneyValue getBalance();
     }
 
     public interface IncomeDisplay  {
@@ -88,6 +88,7 @@ public class BudgetPresenter implements Presenter {
     public interface ExpenseDisplay  {
     	HasRowValueChangeHandler getExpenseTable(); 
     	HasMoneyValue getTotalExpenseLabel();
+    	HasMoneyValue getTotalAmountLabel();
     	HasClickHandlers getAddExpenseCategoryButton();
     	void updateModel();
     }
@@ -191,7 +192,8 @@ public class BudgetPresenter implements Presenter {
     }
     
     public void expenseAmountsChanged()  {
-    	display.getExpenseCategoriesView().getTotalExpenseLabel().setValue(budget.calculateExpenseTotal());
+    	display.getExpenseCategoriesView().getTotalExpenseLabel().setValue(budget.calculateExpenseBalanceTotal());
+    	display.getExpenseCategoriesView().getTotalAmountLabel().setValue(budget.calculateExpenseAmountTotal());
     }
     
     public BudgetTo getBudget()  {

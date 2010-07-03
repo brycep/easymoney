@@ -21,7 +21,7 @@ public class BudgetTest {
 		expense1.setAmount(new MoneyTo(1, 50));
 		expense2.setAmount(new MoneyTo(4, 35));
 
-		assertEquals(new MoneyTo(5, 85), budget.calculateExpenseTotal());
+		assertEquals(new MoneyTo(5, 85), budget.calculateExpenseAmountTotal());
 	}
 	
 	@Test
@@ -55,7 +55,7 @@ public class BudgetTest {
 		BudgetTo budget = new BudgetTo();
 		budget.setEnvelopes(null);
 		
-		assertEquals(new MoneyTo(0, 0), budget.calculateExpenseTotal());
+		assertEquals(new MoneyTo(0, 0), budget.calculateExpenseAmountTotal());
 	}
 
 }

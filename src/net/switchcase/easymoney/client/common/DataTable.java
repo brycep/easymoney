@@ -65,7 +65,7 @@ public class DataTable<ModelType> extends FlexTable implements HasRowValueChange
 		createFooterRow(lastRow + 1);
 	}
 	
-	private void createFooterRow(int row)  {
+	protected void createFooterRow(int row)  {
 		this.setWidget(row, this.getCellCount(row - 1) - 2, new Label("Total: "));
 		this.getCellFormatter().addStyleName(row, this.getCellCount(row - 1) - 2, "right-align");
 		this.setWidget(row, this.getCellCount(row - 1) - 1, totalLabel);

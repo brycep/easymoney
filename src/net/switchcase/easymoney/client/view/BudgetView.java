@@ -40,7 +40,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
     private SummaryView summaryView;
     private IncomeView incomeView;
     private BillsView billsView;
-    private ExpenseCategoriesView expenseCategoriesView;
+    private ExpensesView expenseCategoriesView;
 
     public BudgetView()  {
 
@@ -64,7 +64,7 @@ public class BudgetView extends Composite implements BudgetPresenter.Display {
         summaryView = new SummaryView();
         incomeView = new IncomeView();
         billsView = new BillsView();
-        expenseCategoriesView = new ExpenseCategoriesView();
+        expenseCategoriesView = new ExpensesView();
 
         tabPanel.setWidth("100%");
         tabPanel.addStyleName("budget-tab-panel");
