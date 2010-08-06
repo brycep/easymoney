@@ -10,10 +10,12 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.PersistenceManagerProvider;
 import net.switchcase.easymoney.server.dao.TransactionDao;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.CashEnvelope;
@@ -25,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.google.appengine.api.users.User;
@@ -36,9 +39,11 @@ public class AddTransactionFromDeviceServletTest {
 	
 	@Mock private TransactionDao transactionDao;
 	@Mock private BudgetDao budgetDao;
+	@Mock private PersistenceManagerProvider pmProvider;
 	@Mock private HttpServletRequest request;
 	@Mock private HttpServletResponse response;
 	@Mock private PrintWriter printWriter;
+	@Mock private PersistenceManager pm;
 
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	private AddTransactionFromDeviceServlet servlet;
@@ -51,14 +56,16 @@ public class AddTransactionFromDeviceServletTest {
 		
 		MockitoAnnotations.initMocks(this);
 		
+		when(pmProvider.getPersistenceManager()).thenReturn(pm);
+		
 		when(response.getWriter()).thenReturn(printWriter);
 		servlet = new AddTransactionFromDeviceServlet(transactionDao,
-					budgetDao);
+					budgetDao, pmProvider);
 		
 		User testUser = new User("testemail@switchcase.net", "switchcase.net");
 		Device device = new Device(testUser);
 
-		when(budgetDao.findDevice("TestDeviceKey")).thenReturn(device);
+		when(budgetDao.findDevice("TestDeviceKey", pm)).thenReturn(device);
 		
 		CashEnvelope savings = new CashEnvelope("Savings", EnvelopeType.DefaultSavings, 0, 100000L, budget);
 		savings.setId("SavingsId");
@@ -73,7 +80,7 @@ public class AddTransactionFromDeviceServletTest {
 		
 		budget.addExpense(testExpenseEnvelope);
 				
-		when(budgetDao.findActiveBudget(testUser)).thenReturn(budget);
+		when(budgetDao.findActiveBudget(testUser, pm)).thenReturn(budget);
 	}
 	
 	@Test
@@ -83,7 +90,7 @@ public class AddTransactionFromDeviceServletTest {
 		servlet.doPost(request, response);
 		
 		ArgumentCaptor<Transaction> txnParam = ArgumentCaptor.forClass(Transaction.class); 
-		verify(transactionDao).addTransaction(txnParam.capture());
+		verify(transactionDao).addTransaction(txnParam.capture(), Mockito.any(PersistenceManager.class));
 		
 		Transaction txn = txnParam.getValue();
 		assertEquals("Test Description", txn.getDescription());
@@ -116,7 +123,7 @@ public class AddTransactionFromDeviceServletTest {
 		
 		servlet.doPost(request, response);
 		
-		verify(budgetDao).findDevice("TestDeviceKey");
+		verify(budgetDao).findDevice("TestDeviceKey", pm);
 	}
 	
 	@Test

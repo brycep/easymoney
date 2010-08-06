@@ -16,45 +16,31 @@ import net.switchcase.easymoney.server.domain.Income;
 import net.switchcase.easymoney.server.domain.Transaction;
 
 import com.google.appengine.api.users.User;
-import com.google.appengine.repackaged.com.google.common.collect.Lists;
 
+@SuppressWarnings("unchecked")
 public class JdoBudgetDao implements BudgetDao {
 	
-	public Budget findBudget(String id)  {
-		PersistenceManager pm = null;
-		Budget budget = null;
-		try  {
-			pm = PMF.get().getPersistenceManager();
-			budget = pm.getObjectById(Budget.class, id);
-		} finally {
-			pm.close();
-		}
-		return budget;
+	public Budget findBudget(String id, PersistenceManager pm)  {
+		return pm.getObjectById(Budget.class, id);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Transaction> findTransactions(Budget budget, int days, String timeZone)  {
-		List<Transaction> transactionList = Lists.newArrayList();
-		
-		Date limitDate = calculateLimitDate(days, timeZone);
-		
-		PersistenceManager pm = null;
-		try {
-			pm = PMF.get().getPersistenceManager();
-			
-			Query query = pm.newQuery(
-					"select from net.switchcase.easymoney.server.domain.Transaction " +
-					"where budgetKey == budgetKeyParam and transactionDate > transactionDateParam " +
-					"parameters String budgetKeyParam, java.util.Date transactionDateParam");
-			transactionList = (List<Transaction>) query.execute(budget.getId(), limitDate);
-		} finally {
-			pm.close();
-		}
-		
-		return transactionList;
+	public List<Budget> findAllBudgets(PersistenceManager pm)  {
+		Query query = pm.newQuery(
+				"select from net.switchcase.easymoney.server.domain.Budget ");
+		return (List<Budget>) query.execute();
 	}
 	
-	private Date calculateLimitDate(int days, String timeZone)  {
+	public List<Transaction> findTransactions(Budget budget, int days, String timeZone, PersistenceManager pm)  {
+		Date limitDate = calculateLimitDate(days, timeZone, pm);
+		
+		Query query = pm.newQuery(
+				"select from net.switchcase.easymoney.server.domain.Transaction " +
+				"where budgetKey == budgetKeyParam and transactionDate > transactionDateParam " +
+				"parameters String budgetKeyParam, java.util.Date transactionDateParam");
+		return (List<Transaction>) query.execute(budget.getId(), limitDate);
+	}
+	
+	private Date calculateLimitDate(int days, String timeZone, PersistenceManager pm)  {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		cal.set(Calendar.MILLISECOND, 0);
@@ -66,87 +52,51 @@ public class JdoBudgetDao implements BudgetDao {
 		return cal.getTime();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Budget findActiveBudget(User user)  {
-		PersistenceManager pm = null;
+	public Budget findActiveBudget(User user, PersistenceManager pm)  {
 		Budget budget = null;
-		try  {
-			pm = PMF.get().getPersistenceManager();
-			
-			Query query = pm.newQuery(
+		Query query = pm.newQuery(
+				"select from net.switchcase.easymoney.server.domain.Budget " +
+				"where owner == ownerParam " +
+				"parameters com.google.appengine.api.users.User ownerParam ");
+		List<Budget> budgets = (List<Budget>) query.execute(user);
+		if ((null == budgets) || (0 == budgets.size()))  {
+			query = pm.newQuery(
 					"select from net.switchcase.easymoney.server.domain.Budget " +
-					"where owner == ownerParam " +
-					"parameters com.google.appengine.api.users.User ownerParam ");
-			List<Budget> budgets = (List<Budget>) query.execute(user);
-			if ((null == budgets) || (0 == budgets.size()))  {
-				query = pm.newQuery(
-						"select from net.switchcase.easymoney.server.domain.Budget " +
-						"where sharedWith == sharedWithParam " +
-						"parameters String sharedWithParam ");
-				
-				budgets = (List<Budget>) query.execute(user.getEmail());
-			}
+					"where sharedWith == sharedWithParam " +
+					"parameters String sharedWithParam ");
 			
-			if ((null != budgets) && (0 != budgets.size()))  {
-				budget = budgets.iterator().next();
-			}
-		} finally {
-			pm.close();
+			budgets = (List<Budget>) query.execute(user.getEmail());
+		}
+			
+		if ((null != budgets) && (0 != budgets.size()))  {
+			budget = budgets.iterator().next();
 		}
 		return budget;
 	}
 	
-	public void saveBudget(Budget budget) {
-		PersistenceManager pm = null;
-		try {
-			pm = PMF.get().getPersistenceManager();
-			pm.makePersistent(budget);
-			for(Income income : budget.getIncomes())  {
-				pm.makePersistent(income);
-			}
-			for(Bill bill : budget.getMonthlyBills())  {
-				pm.makePersistent(bill);
-			}
-			for(CashEnvelope envelope : budget.getEnvelopes())  {
-				pm.makePersistent(envelope);
-			}
-		} finally {
-			pm.close();
+	public void saveBudget(Budget budget, PersistenceManager pm) {
+		pm.makePersistent(budget);
+		for(Income income : budget.getIncomes())  {
+			pm.makePersistent(income);
+		}
+		for(Bill bill : budget.getMonthlyBills())  {
+			pm.makePersistent(bill);
+		}
+		for(CashEnvelope envelope : budget.getEnvelopes())  {
+			pm.makePersistent(envelope);
 		}
 	}
 
-	public Device findDevice(String id)  {
-		PersistenceManager pm = null;
-		Device device = null;
-		try  {
-			pm = PMF.get().getPersistenceManager();
-			device = pm.getObjectById(Device.class, id);
-		} finally {
-			pm.close();
-		}
-		return device;
+	public Device findDevice(String id, PersistenceManager pm)  {
+		return pm.getObjectById(Device.class, id);
 	}
 
-	public void saveDevice(Device device) {
-		PersistenceManager pm = null;
-		try {
-			pm = PMF.get().getPersistenceManager();
-			pm.makePersistent(device);
-		} finally {
-			pm.close();
-		}
+	public void saveDevice(Device device, PersistenceManager pm) {
+		pm.makePersistent(device);
 	}
 	
-	public CashEnvelope findExpenseCategory(String id)  {
-		PersistenceManager pm = null;
-		CashEnvelope expenseCategory = null;
-		try {
-			pm = PMF.get().getPersistenceManager();
-			expenseCategory = pm.getObjectById(CashEnvelope.class, id);
-		} finally {
-			pm.close();
-		}
-		return expenseCategory;
+	public CashEnvelope findExpenseCategory(String id, PersistenceManager pm)   {
+		return pm.getObjectById(CashEnvelope.class, id);
 	}
 
 }

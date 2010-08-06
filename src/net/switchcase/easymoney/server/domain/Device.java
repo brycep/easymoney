@@ -17,6 +17,7 @@ public class Device {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 	private String id;
+
 	@Persistent private Date createDate = new Date();
 	@Persistent private User user;
 	@Persistent private String name;

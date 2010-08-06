@@ -8,10 +8,12 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.PersistenceManagerProvider;
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.CashEnvelope;
@@ -33,6 +35,8 @@ public class GetActiveBudgetServletTest {
 	@Mock private HttpServletRequest request;
 	@Mock private HttpServletResponse response;
 	@Mock private PrintWriter writer;
+	@Mock private PersistenceManagerProvider pmProvider;
+	@Mock private PersistenceManager pm;
 	
 	private GetActiveBudgetServlet servlet;
 	private Budget budget = new Budget();
@@ -42,6 +46,8 @@ public class GetActiveBudgetServletTest {
 	@Before
 	public void setUp() throws IOException {
 		MockitoAnnotations.initMocks(this);
+		
+		when(pmProvider.getPersistenceManager()).thenReturn(pm);
 		
 		budget.setCreateDate(new Date(2000));
 		budget.setId("100");
@@ -64,10 +70,10 @@ public class GetActiveBudgetServletTest {
 		testUser = new User("test@switchcase.net", "switchcase.net");
 		device = new Device(testUser);
 		
-		servlet = new GetActiveBudgetServlet(budgetDao);
+		servlet = new GetActiveBudgetServlet(budgetDao, pmProvider);
 		
-		when(budgetDao.findDevice("TestDeviceKey")).thenReturn(device);
-		when(budgetDao.findActiveBudget(testUser)).thenReturn(budget);
+		when(budgetDao.findDevice("TestDeviceKey", pm)).thenReturn(device);
+		when(budgetDao.findActiveBudget(testUser, pm)).thenReturn(budget);
 		when(response.getWriter()).thenReturn(writer);
 	}
 
@@ -108,7 +114,7 @@ public class GetActiveBudgetServletTest {
 
 		servlet.doPost(request, response);
 		
-		verify(budgetDao).findActiveBudget(testUser);
+		verify(budgetDao).findActiveBudget(testUser, pm);
 		
 	}
 	

@@ -26,6 +26,11 @@ public class CashEnvelope {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 	private String id;
+
+	@Persistent
+	@Extension(vendorName="datanucleus", key="gae.pk-id", value="true")
+	private Long keyId;
+	
 	@Persistent private String name;
 	@Persistent private Long amount = 0L;
 	@Persistent private EnvelopeType type;
@@ -55,6 +60,15 @@ public class CashEnvelope {
     	this.id = id;
     }
     
+	public Long getKeyId()  {
+		return keyId;
+	}
+	
+	public void setKeyId(Long id)  {
+		this.keyId = id;
+	}
+	
+
     public String getName() {
         return name;
     }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/paydayJob</url>
+    <description>Update balance if today is payday</description>
+    <schedule>every day 07:00</schedule>
+    <timezone>America/Chicago</timezone>
+  </cron>
+</cronentries>

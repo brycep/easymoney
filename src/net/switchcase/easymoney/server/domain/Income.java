@@ -6,6 +6,8 @@
 
 package net.switchcase.easymoney.server.domain;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.jdo.annotations.Extension;
@@ -30,6 +32,11 @@ public class Income {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 	private String id;
+	
+	@Persistent
+	@Extension(vendorName="datanucleus", key="gae.pk-id", value="true")
+	private Long keyId;
+	
 	@Persistent private String name;
 	@Persistent private Long amount;
 	@Persistent private Frequency frequency;
@@ -45,8 +52,15 @@ public class Income {
 	public void setId(String id) {
 		this.id = id;
 	}
-
-
+	
+	public Long getKeyId()  {
+		return keyId;
+	}
+	
+	public void setKeyId(Long id)  {
+		this.keyId = id;
+	}
+	
 	public Long getAmount() {
 		return amount;
 	}
@@ -107,5 +121,22 @@ public class Income {
 		return true;
 	}
     
+	public void moveToNextPayDate()  {
+		if (Frequency.BiWeekly.equals(frequency))  {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(nextPayDate);
+			cal.add(Calendar.DATE, 14);
+			nextPayDate = cal.getTime();
+		}
+		
+	}
     
+	public boolean isPaidToday(Date now)  {
+		if (null == nextPayDate)  {
+			return false;
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("MMddyyyy");
+		return format.format(now).equals(format.format(this.nextPayDate)); 
+	}
 }

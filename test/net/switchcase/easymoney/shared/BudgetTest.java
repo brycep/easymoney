@@ -57,5 +57,5 @@ public class BudgetTest {
 		
 		assertEquals(new MoneyTo(0, 0), budget.calculateExpenseAmountTotal());
 	}
-
+	
 }

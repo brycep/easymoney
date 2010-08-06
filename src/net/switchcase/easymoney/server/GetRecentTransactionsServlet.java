@@ -10,5 +10,6 @@ public class GetRecentTransactionsServlet extends EasyMoneyServlet {
 	
 	private final Logger log = Logger.getLogger(GetActiveBudgetServlet.class.getName());
 	
+	
 
 }

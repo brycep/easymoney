@@ -17,6 +17,7 @@ import java.io.Serializable;
 public class CashEnvelopeTo implements Serializable {
 
 	private String id;
+	private Long keyId;
     private String name;
     private MoneyTo amount = new MoneyTo();
     private EnvelopeType type;
@@ -31,6 +32,14 @@ public class CashEnvelopeTo implements Serializable {
     
     public void setId(String id)  {
     	this.id = id;
+    }
+    
+    public Long getKeyId()  {
+    	return keyId;
+    }
+    
+    public void setKeyId(Long id)  {
+    	this.keyId = id;
     }
     
     public String getName() {

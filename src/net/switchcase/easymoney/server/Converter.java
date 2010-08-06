@@ -66,8 +66,8 @@ public class Converter {
 	private void transformEnvelopes(Budget budget, BudgetTo budgetTo)  {
 		for(CashEnvelopeTo envelopeTo : budgetTo.getEnvelopes())  {
 			CashEnvelope envelope;
-			if (null != envelopeTo.getId())  {
-				envelope = budget.findEnvelope(envelopeTo.getId());
+			if (null != envelopeTo.getKeyId())  {
+				envelope = budget.findEnvelope(envelopeTo.getKeyId());
 			} else  {
 				envelope = new CashEnvelope();
 				budget.getEnvelopes().add(envelope);

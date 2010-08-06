@@ -15,10 +15,12 @@ public class Bill {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
 	private String id;
+
 	@Persistent private String name;
 	@Persistent private Integer dayOfMonth;
 	@Persistent private Date nextDueDate;
 	@Persistent private Long amount;
+	@Persistent private Boolean due;
 	
 	@Persistent private String billAccountKey;
 	
@@ -70,6 +72,14 @@ public class Bill {
 
 	public void setBillAccountKey(String billAccountKey) {
 		this.billAccountKey = billAccountKey;
+	}
+	
+	public Boolean isDue() {
+		return due;
+	}
+
+	public void setDue(Boolean due) {
+		this.due = due;
 	}
 
 	@Override

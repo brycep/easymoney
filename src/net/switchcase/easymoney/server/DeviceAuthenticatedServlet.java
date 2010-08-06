@@ -2,6 +2,7 @@ package net.switchcase.easymoney.server;
 
 import java.io.IOException;
 
+import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.PersistenceManagerProvider;
 import net.switchcase.easymoney.server.domain.Device;
 
 import com.google.appengine.api.users.User;
@@ -22,10 +24,13 @@ import com.google.inject.Singleton;
 public class DeviceAuthenticatedServlet extends HttpServlet {
 	
 	private BudgetDao budgetDao; 
+	private PersistenceManagerProvider pmProvider;
 	
 	@Inject
-	public DeviceAuthenticatedServlet(BudgetDao budgetDao)  {
+	public DeviceAuthenticatedServlet(BudgetDao budgetDao,
+									  PersistenceManagerProvider pmProvider)  {
 		this.budgetDao = budgetDao;
+		this.pmProvider = pmProvider;
 	}
 	
 	@Override
@@ -67,7 +72,13 @@ public class DeviceAuthenticatedServlet extends HttpServlet {
 
 	private String createDeviceKey(User user)  {
 		Device device = new Device(user);
-		budgetDao.saveDevice(device);
+		PersistenceManager pm = null;
+		try  {
+			pm = pmProvider.getPersistenceManager();
+			budgetDao.saveDevice(device, pm);
+		} finally {
+			pm.close();
+		}
 		return device.getId();
 	}
 }

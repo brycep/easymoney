@@ -2,8 +2,11 @@ package net.switchcase.easymoney.server;
 
 import java.util.Date;
 
+import javax.jdo.PersistenceManager;
+
 import net.switchcase.easymoney.client.EasyMoneyService;
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.PersistenceManagerProvider;
 import net.switchcase.easymoney.server.domain.Bill;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.CashEnvelope;
@@ -27,11 +30,14 @@ import com.google.inject.Inject;
 public class EasyMoneyServiceImpl implements EasyMoneyService {
 
 	private BudgetDao budgetDao; 
+	private PersistenceManagerProvider pmProvider;
 	final private Converter converter = new Converter();
 	
 	@Inject
-	public EasyMoneyServiceImpl(BudgetDao budgetDao)  {
+	public EasyMoneyServiceImpl(BudgetDao budgetDao,
+							    PersistenceManagerProvider pmProvider)  {
 		this.budgetDao = budgetDao;
+		this.pmProvider = pmProvider;
 	}
 	
 	public LoginInfo login(String requestUri)  {
@@ -56,35 +62,50 @@ public class EasyMoneyServiceImpl implements EasyMoneyService {
 	public BudgetTo getActiveBudget() throws NotLoggedInException {
 		checkLoggedIn();
 		User user = getUser();
-		Budget budget = budgetDao.findActiveBudget(user);
 		
-		if (null == budget)  {
-			budget = new Budget();
-			budget.setOwner(user);
-			budget.setCreateDate(new Date());
-			buildTemplateBudget(budget);
+		PersistenceManager pm = null;
+		BudgetTo budgetTo = null;
+		try  {
+			pm = pmProvider.getPersistenceManager();
+			Budget budget = budgetDao.findActiveBudget(user, pm);
+			
+			if (null == budget)  {
+				budget = new Budget();
+				budget.setOwner(user);
+				budget.setCreateDate(new Date());
+				buildTemplateBudget(budget);
+			}
+			
+			budget.setLastAccessed(new Date());
+			
+			budgetTo = converter.toTransferObject(budget);
+		} finally {
+			pm.close();
 		}
-		
-		budget.setLastAccessed(new Date());
-		
-		BudgetTo budgetTo = converter.toTransferObject(budget);
 		return budgetTo;
 	}
 	
 	public BudgetTo saveBudget(BudgetTo budgetTo) throws NotLoggedInException {
-		checkLoggedIn();
-		Budget budget;
-		if (null == budgetTo.getId())  {
-			budget = new Budget();
-			budget.setCreateDate(new Date());
-			budget.setLastAccessed(new Date());
-			budget.setOwner(getUser());
-		} else  {
-			budget = budgetDao.findBudget(budgetTo.getId());
+		PersistenceManager pm = null;
+		try  {
+			pm = pmProvider.getPersistenceManager();
+			
+			checkLoggedIn();
+			Budget budget;
+			if (null == budgetTo.getId())  {
+				budget = new Budget();
+				budget.setCreateDate(new Date());
+				budget.setLastAccessed(new Date());
+				budget.setOwner(getUser());
+			} else  {
+				budget = budgetDao.findBudget(budgetTo.getId(), pm);
+			}
+			
+			converter.mergeTransferObjectIntoDomain(budget, budgetTo);
+			budgetDao.saveBudget(budget, pm);
+		} finally {
+			pm.close();
 		}
-		
-		converter.mergeTransferObjectIntoDomain(budget, budgetTo);
-		budgetDao.saveBudget(budget);
 		return getActiveBudget();
 	}
 	

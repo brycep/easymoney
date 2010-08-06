@@ -8,8 +8,10 @@ package net.switchcase.easymoney.server.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -33,6 +35,10 @@ import com.google.common.collect.Lists;
 @SuppressWarnings("serial")
 @PersistenceCapable
 public class Budget implements Serializable {
+	private static final long MILLISECS_PER_DAY = 1000 *  // millis / second
+												  60 * // seconds / minute
+												  60 * // minutes / hour
+												  24; // hours / day
 	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -199,9 +205,11 @@ public class Budget implements Serializable {
 		return null;
 	}
 
-	public CashEnvelope getCashEnvelope(String key)  {
+	public CashEnvelope getCashEnvelope(Long keyId, Logger logger)  {
+		logger.info("Trying to find keyId: " + keyId);
 		for(CashEnvelope envelope : envelopes)  {
-			if (key.equals(envelope.getId()) )  {
+			logger.info("Comparing id to envelope with id: " + envelope.getId() + " and keyId: " + envelope.getKeyId());
+			if (keyId.equals(envelope.getKeyId()) )  {
 				return envelope;
 			}
 		}
@@ -239,9 +247,9 @@ public class Budget implements Serializable {
 		return null;
 	}
 	
-	public CashEnvelope findEnvelope(String envelopeId)  {
+	public CashEnvelope findEnvelope(Long keyId)  {
 		for(CashEnvelope envelope : envelopes)  {
-			if (envelope.getId().equals(envelopeId))  {
+			if (envelope.getKeyId().equals(keyId))  {
 				return envelope;
 			}
 		}
@@ -255,6 +263,65 @@ public class Budget implements Serializable {
 			}
 		}
 		return null;
+	}
+	
+	public void payday(Date now)  {
+
+		Income income = getFirstIncome();
+		if (income.isPaidToday(now))  {
+			income.moveToNextPayDate();
+			
+			long distributedCash = 0;
+			
+			long daysUntilNextPay = calculateDaysUntilDate(now, income.getNextPayDate());
+			
+			distributedCash =+ processBills(daysUntilNextPay, now);
+			
+			for(CashEnvelope envelope : envelopes)  {
+				if (EnvelopeType.Expense.equals(envelope.getType()))  {
+					distributedCash += processExpense(envelope);
+				}
+			}
+			
+			long leftOver = income.getAmount() - distributedCash;
+			this.getDefaultSavings().addBalance(leftOver);
+		}	
+	}
+	
+	private long processExpense(CashEnvelope expense)  {
+		long newBalance = expense.getBalance() + expense.getAmount();
+		expense.setBalance(newBalance);
+		return expense.getAmount();
+	}
+	
+	private long processBills(long daysUntilNextPay, Date now)  {
+		long distributedCash = 0;
+		CashEnvelope billsEnvelope = this.getBillsEnvelope();
+		for(Bill bill : monthlyBills)  {
+			long daysUntilDue = calculateDaysUntilDate(now, bill.getNextDueDate() );
+			if (daysUntilDue < daysUntilNextPay)  {
+				bill.setDue(true);
+				billsEnvelope.addBalance(bill.getAmount());
+				distributedCash += bill.getAmount();
+			}
+		}
+		return distributedCash;
+	}
+	
+	private long calculateDaysUntilDate(Date start, Date end)  {
+		Calendar startCal = Calendar.getInstance();
+		Calendar endCal = Calendar.getInstance();
+		
+		startCal.setTime(start);
+		endCal.setTime(end);
+		
+		long endL = endCal.getTimeInMillis() + endCal.getTimeZone().getOffset( endCal.getTimeInMillis() ); 
+		long startL = startCal.getTimeInMillis() + startCal.getTimeZone().getOffset( startCal.getTimeInMillis() );
+		return (endL - startL) / MILLISECS_PER_DAY;
+	}
+	
+	private Income getFirstIncome()  {
+		return incomes.iterator().next();
 	}
 	    
 }

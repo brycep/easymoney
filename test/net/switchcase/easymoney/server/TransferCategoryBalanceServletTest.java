@@ -6,10 +6,12 @@ import static org.mockito.Mockito.when;
 
 import java.io.PrintWriter;
 
+import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.switchcase.easymoney.server.dao.BudgetDao;
+import net.switchcase.easymoney.server.dao.PersistenceManagerProvider;
 import net.switchcase.easymoney.server.dao.TransactionDao;
 import net.switchcase.easymoney.server.domain.Budget;
 import net.switchcase.easymoney.server.domain.CashEnvelope;
@@ -27,6 +29,8 @@ public class TransferCategoryBalanceServletTest {
 	
 	@Mock private BudgetDao budgetDao;
 	@Mock private TransactionDao txnDao;
+	@Mock private PersistenceManagerProvider pmProvider;
+	@Mock private PersistenceManager pm;
 	@Mock private HttpServletRequest request;
 	@Mock private HttpServletResponse response;
 	@Mock private PrintWriter printWriter;
@@ -41,7 +45,9 @@ public class TransferCategoryBalanceServletTest {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		
-		servlet = new TransferCategoryBalanceServlet(budgetDao, txnDao);
+		when(pmProvider.getPersistenceManager()).thenReturn(pm);
+		
+		servlet = new TransferCategoryBalanceServlet(budgetDao, txnDao, pmProvider);
 		
 		when(response.getWriter()).thenReturn(printWriter);		
 		
@@ -53,8 +59,8 @@ public class TransferCategoryBalanceServletTest {
 		budget.addExpense(sourceEnvelope);
 		budget.addExpense(destinationEnvelope);
 
-		when(budgetDao.findActiveBudget(device.getUser())).thenReturn(budget);
-		when(budgetDao.findDevice("TestDeviceKey")).thenReturn(device);
+		when(budgetDao.findActiveBudget(device.getUser(), pm)).thenReturn(budget);
+		when(budgetDao.findDevice("TestDeviceKey", pm)).thenReturn(device);
 
 	}
 
@@ -93,7 +99,7 @@ public class TransferCategoryBalanceServletTest {
 		
 		servlet.doPost(request, response);
 		
-		verify(budgetDao).findDevice("TestDeviceKey");
+		verify(budgetDao).findDevice("TestDeviceKey", pm);
 	}
 	
 	@Test
